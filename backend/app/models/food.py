@@ -29,12 +29,18 @@ class Dish(Base):
             "nutrition_source IN ('usda', 'ifct_2017')",
             name="ck_dishes_nutrition_source",
         ),
+        CheckConstraint(
+            "nutrition_confidence IN ('high', 'medium', 'low')",
+            name="ck_dishes_nutrition_confidence",
+        ),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String, nullable=False)
     cuisine: Mapped[str] = mapped_column(String, nullable=False)
     nutrition_source: Mapped[str] = mapped_column(Text, nullable=False)
+    nutrition_confidence: Mapped[str] = mapped_column(Text, nullable=False)
+    match_coverage_pct: Mapped[float | None] = mapped_column(Float, nullable=True)
     default_serving_g: Mapped[int] = mapped_column(Integer, nullable=False)
     nutrition_per_100g: Mapped[dict] = mapped_column(JSONB, nullable=False)
 

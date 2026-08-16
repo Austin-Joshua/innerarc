@@ -57,12 +57,25 @@ def seed(db: Session) -> None:
         display_name = dish_row["name"]
         ingredients = dish_row.get("ingredients")
         if dish_row["nutrition_source"] == "ifct_2017":
-            csv_key = _norm(display_name)
-            csv_key_alt = _norm(class_name.replace("_", " "))
-            names = csv_ingredients.get(csv_key) or csv_ingredients.get(csv_key_alt)
-            if not names:
-                raise KeyError(f"No indian_food.csv ingredients for {display_name!r} / {class_name!r}")
-            ingredients = [{"name": n, "typical_quantity": "as prepared"} for n in names]
+            # Prefer seed rows that already carry estimated_quantity_g + IFCT codes.
+            if ingredients and any("estimated_quantity_g" in item for item in ingredients):
+                ingredients = [
+                    {
+                        "name": item["name"],
+                        "typical_quantity": item.get(
+                            "typical_quantity",
+                            f"{item['estimated_quantity_g']:g} g (estimated)",
+                        ),
+                    }
+                    for item in ingredients
+                ]
+            else:
+                csv_key = _norm(display_name)
+                csv_key_alt = _norm(class_name.replace("_", " "))
+                names = csv_ingredients.get(csv_key) or csv_ingredients.get(csv_key_alt)
+                if not names:
+                    raise KeyError(f"No indian_food.csv ingredients for {display_name!r} / {class_name!r}")
+                ingredients = [{"name": n, "typical_quantity": "as prepared"} for n in names]
         if not ingredients:
             raise ValueError(f"No ingredients for {class_name}")
 
@@ -72,6 +85,10 @@ def seed(db: Session) -> None:
             db.add(dish)
         dish.cuisine = dish_row["cuisine"]
         dish.nutrition_source = dish_row["nutrition_source"]
+        dish.nutrition_confidence = dish_row.get("nutrition_confidence") or (
+            "high" if dish_row["nutrition_source"] == "usda" else "medium"
+        )
+        dish.match_coverage_pct = dish_row.get("match_coverage_pct")
         dish.default_serving_g = dish_row["default_serving_g"]
         dish.nutrition_per_100g = dish_row["nutrition_per_100g"]
         db.flush()
@@ -86,7 +103,10 @@ def seed(db: Session) -> None:
                     typical_quantity=item["typical_quantity"],
                 )
             )
-        print(f"seeded {class_name} source={dish.nutrition_source} serving={dish.default_serving_g}g")
+        print(
+            f"seeded {class_name} source={dish.nutrition_source} "
+            f"confidence={dish.nutrition_confidence} serving={dish.default_serving_g}g"
+        )
     db.commit()
 
 

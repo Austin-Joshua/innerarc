@@ -14,6 +14,8 @@ class DishOut(BaseModel):
     name: str
     cuisine: str
     nutrition_source: str
+    nutrition_confidence: str
+    match_coverage_pct: float | None = None
     default_serving_g: int
     nutrition_per_100g: dict
     ingredients: list[IngredientOut]
@@ -38,3 +40,4 @@ class FoodLogOut(BaseModel):
     serving_size_g: float
     image_url: str
     logged_at: str
+    gamification: dict | None = None

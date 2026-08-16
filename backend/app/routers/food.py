@@ -12,6 +12,7 @@ from app.models.user import User
 from app.schemas.food import ClassifyResponse, DishOut, FoodLogCreate, FoodLogOut, IngredientOut
 from app.security import get_current_user
 from app.services.classifier import classify_image
+from app.services.gamification import apply_event, state_dict
 
 router = APIRouter(prefix="/food", tags=["food"])
 dishes_router = APIRouter(tags=["dishes"])
@@ -60,6 +61,8 @@ def _dish_out(dish: Dish) -> DishOut:
         name=dish.name,
         cuisine=dish.cuisine,
         nutrition_source=dish.nutrition_source,
+        nutrition_confidence=dish.nutrition_confidence,
+        match_coverage_pct=dish.match_coverage_pct,
         default_serving_g=dish.default_serving_g,
         nutrition_per_100g=dish.nutrition_per_100g,
         ingredients=ingredients,
@@ -140,6 +143,8 @@ def create_log(
     db.add(log)
     db.commit()
     db.refresh(log)
+    gamification = apply_event(db, user.id, "meal")
+    db.commit()
     return FoodLogOut(
         id=log.id,
         dish=_dish_out(dish),
@@ -147,4 +152,5 @@ def create_log(
         serving_size_g=log.serving_size_g,
         image_url=log.image_url,
         logged_at=log.logged_at.isoformat(),
+        gamification=state_dict(gamification),
     )
