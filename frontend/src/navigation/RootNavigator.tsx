@@ -1,0 +1,52 @@
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import AuthScreen from "../screens/AuthScreen";
+import FoodCaptureScreen from "../screens/FoodCaptureScreen";
+import FoodEditScreen from "../screens/FoodEditScreen";
+import FoodNutritionScreen from "../screens/FoodNutritionScreen";
+import FoodResultScreen from "../screens/FoodResultScreen";
+import HomeScreen from "../screens/HomeScreen";
+import OnboardingScreen from "../screens/OnboardingScreen";
+import SplashScreen from "../screens/SplashScreen";
+import { colors } from "../theme";
+import { RootStackParamList } from "./types";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.background,
+    card: colors.background,
+    text: colors.text,
+    border: colors.border,
+    primary: colors.accent,
+  },
+};
+
+export default function RootNavigator() {
+  return (
+    <NavigationContainer theme={navTheme}>
+      <Stack.Navigator
+        initialRouteName="Splash"
+        screenOptions={{
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.text,
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
+        <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Auth" component={AuthScreen} options={{ title: "Sign in" }} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ title: "About you" }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Innerarc" }} />
+        <Stack.Screen name="FoodCapture" component={FoodCaptureScreen} options={{ title: "Log meal" }} />
+        <Stack.Screen name="FoodResult" component={FoodResultScreen} options={{ title: "Is this right?" }} />
+        <Stack.Screen name="FoodEdit" component={FoodEditScreen} options={{ title: "Edit dish" }} />
+        <Stack.Screen name="FoodNutrition" component={FoodNutritionScreen} options={{ title: "Nutrition" }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

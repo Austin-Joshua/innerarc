@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "notes": {
+    "ifct": "IFCT 2017 (NIN) publishes 528 key foods, mostly ingredients, not mixed restaurant dishes. Indian mixed-dish per-100g values are recipe-aggregated from IFCT 2017 ingredient codes listed in ifct_components. nutrition_source remains ifct_2017 because USDA is not used. Indian_Food_Nutrition_Processed.csv was spot-checked and does not match IFCT (e.g. Poha CSV 294 kcal / 14 g fat vs IFCT A011 rice flakes 354 kcal / 1.14 g fat; Naan CSV 286/4.99 fat vs A018 refined wheat flour 352 kcal / 0.76 g fat). CSV is cross-reference only.",
+    "usda": "International dishes use FoodData Central per-100g values. fdc_id is recorded here, not as a DB column."
+  },
+  "dishes": [
+    {
+      "class_name": "pizza",
+      "name": "Pizza",
+      "cuisine": "italian",
+      "nutrition_source": "usda",
+      "fdc_id": 173275,
+      "default_serving_g": 150,
+      "nutrition_per_100g": {"calories": 266, "protein": 11.4, "carbs": 33.3, "fat": 9.7},
+      "ingredients": [
+        {"name": "wheat flour", "typical_quantity": "as prepared"},
+        {"name": "mozzarella", "typical_quantity": "as prepared"},
+        {"name": "tomato sauce", "typical_quantity": "as prepared"},
+        {"name": "olive oil", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "hamburger",
+      "name": "Hamburger",
+      "cuisine": "american",
+      "nutrition_source": "usda",
+      "fdc_id": 170695,
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 263, "protein": 13.3, "carbs": 30.3, "fat": 10.1},
+      "ingredients": [
+        {"name": "beef patty", "typical_quantity": "as prepared"},
+        {"name": "bun", "typical_quantity": "1 bun"},
+        {"name": "lettuce", "typical_quantity": "as prepared"},
+        {"name": "tomato", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "fried_rice",
+      "name": "Fried rice",
+      "cuisine": "chinese",
+      "nutrition_source": "usda",
+      "fdc_id": 168049,
+      "default_serving_g": 250,
+      "nutrition_per_100g": {"calories": 174, "protein": 4.1, "carbs": 32.8, "fat": 3.2},
+      "ingredients": [
+        {"name": "rice", "typical_quantity": "as prepared"},
+        {"name": "egg", "typical_quantity": "as prepared"},
+        {"name": "soy sauce", "typical_quantity": "as prepared"},
+        {"name": "vegetables", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "spaghetti_bolognese",
+      "name": "Spaghetti bolognese",
+      "cuisine": "italian",
+      "nutrition_source": "usda",
+      "fdc_id": 172216,
+      "default_serving_g": 300,
+      "nutrition_per_100g": {"calories": 132, "protein": 6.8, "carbs": 15.2, "fat": 4.7},
+      "ingredients": [
+        {"name": "spaghetti", "typical_quantity": "as prepared"},
+        {"name": "beef", "typical_quantity": "as prepared"},
+        {"name": "tomato", "typical_quantity": "as prepared"},
+        {"name": "onion", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "caesar_salad",
+      "name": "Caesar salad",
+      "cuisine": "american",
+      "nutrition_source": "usda",
+      "fdc_id": 323794,
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 160, "protein": 6.1, "carbs": 7.5, "fat": 12.2},
+      "ingredients": [
+        {"name": "romaine lettuce", "typical_quantity": "as prepared"},
+        {"name": "parmesan", "typical_quantity": "as prepared"},
+        {"name": "croutons", "typical_quantity": "as prepared"},
+        {"name": "caesar dressing", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "grilled_salmon",
+      "name": "Grilled salmon",
+      "cuisine": "international",
+      "nutrition_source": "usda",
+      "fdc_id": 175167,
+      "default_serving_g": 170,
+      "nutrition_per_100g": {"calories": 206, "protein": 22.1, "carbs": 0.0, "fat": 12.4},
+      "ingredients": [
+        {"name": "salmon", "typical_quantity": "170 g"},
+        {"name": "oil", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "omelette",
+      "name": "Omelette",
+      "cuisine": "international",
+      "nutrition_source": "usda",
+      "fdc_id": 172771,
+      "default_serving_g": 120,
+      "nutrition_per_100g": {"calories": 154, "protein": 10.6, "carbs": 0.6, "fat": 12.0},
+      "ingredients": [
+        {"name": "egg", "typical_quantity": "2 large"},
+        {"name": "butter", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "pancakes",
+      "name": "Pancakes",
+      "cuisine": "american",
+      "nutrition_source": "usda",
+      "fdc_id": 175039,
+      "default_serving_g": 150,
+      "nutrition_per_100g": {"calories": 227, "protein": 6.4, "carbs": 28.3, "fat": 9.7},
+      "ingredients": [
+        {"name": "wheat flour", "typical_quantity": "as prepared"},
+        {"name": "milk", "typical_quantity": "as prepared"},
+        {"name": "egg", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "sushi",
+      "name": "Sushi",
+      "cuisine": "japanese",
+      "nutrition_source": "usda",
+      "fdc_id": 168180,
+      "default_serving_g": 180,
+      "nutrition_per_100g": {"calories": 143, "protein": 4.3, "carbs": 27.5, "fat": 1.5},
+      "ingredients": [
+        {"name": "rice", "typical_quantity": "as prepared"},
+        {"name": "nori", "typical_quantity": "as prepared"},
+        {"name": "fish", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "ramen",
+      "name": "Ramen",
+      "cuisine": "japanese",
+      "nutrition_source": "usda",
+      "fdc_id": 168094,
+      "default_serving_g": 400,
+      "nutrition_per_100g": {"calories": 87, "protein": 3.0, "carbs": 12.5, "fat": 2.6},
+      "ingredients": [
+        {"name": "noodles", "typical_quantity": "as prepared"},
+        {"name": "broth", "typical_quantity": "as prepared"},
+        {"name": "egg", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "tacos",
+      "name": "Tacos",
+      "cuisine": "mexican",
+      "nutrition_source": "usda",
+      "fdc_id": 170360,
+      "default_serving_g": 150,
+      "nutrition_per_100g": {"calories": 226, "protein": 8.9, "carbs": 19.8, "fat": 12.7},
+      "ingredients": [
+        {"name": "tortilla", "typical_quantity": "2"},
+        {"name": "beef", "typical_quantity": "as prepared"},
+        {"name": "lettuce", "typical_quantity": "as prepared"},
+        {"name": "cheese", "typical_quantity": "as prepared"}
+      ]
+    },
+    {
+      "class_name": "samosa",
+      "name": "Samosa",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["A018 Wheat flour, refined", "potato", "fried in fat"],
+      "default_serving_g": 100,
+      "nutrition_per_100g": {"calories": 262, "protein": 5.2, "carbs": 31.8, "fat": 13.1}
+    },
+    {
+      "class_name": "biryani",
+      "name": "Biryani",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["A010 cooked rice analogue from rice grain", "N001 chicken muscle", "spices"],
+      "default_serving_g": 300,
+      "nutrition_per_100g": {"calories": 148, "protein": 6.8, "carbs": 18.4, "fat": 5.2}
+    },
+    {
+      "class_name": "paneer_butter_masala",
+      "name": "Paneer butter masala",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["L003 Paneer", "tomato", "cream", "butter"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 168, "protein": 7.4, "carbs": 8.1, "fat": 11.6}
+    },
+    {
+      "class_name": "dal_tadka",
+      "name": "Dal tadka",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["B011 Pigeon pea dal (cooked, diluted)", "ghee tadka"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 108, "protein": 5.6, "carbs": 13.8, "fat": 3.4}
+    },
+    {
+      "class_name": "palak_paneer",
+      "name": "Palak paneer",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["L003 Paneer", "spinach greens"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 97, "protein": 5.8, "carbs": 4.6, "fat": 6.4}
+    },
+    {
+      "class_name": "butter_chicken",
+      "name": "Butter chicken",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["chicken muscle", "cream", "butter", "tomato"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 171, "protein": 10.8, "carbs": 6.2, "fat": 11.2}
+    },
+    {
+      "class_name": "chana_masala",
+      "name": "Chana masala",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["B002 Bengal gram, whole (cooked)"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 140, "protein": 6.9, "carbs": 16.4, "fat": 5.3}
+    },
+    {
+      "class_name": "dal_makhani",
+      "name": "Dal makhani",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["urad dal", "kidney beans", "cream"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 112, "protein": 5.1, "carbs": 12.2, "fat": 4.8}
+    },
+    {
+      "class_name": "chicken_tikka_masala",
+      "name": "Chicken tikka masala",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["chicken muscle", "tomato", "cream"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 163, "protein": 11.0, "carbs": 7.1, "fat": 9.6}
+    },
+    {
+      "class_name": "naan",
+      "name": "Naan",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["A018 Wheat flour, refined"],
+      "default_serving_g": 90,
+      "nutrition_per_100g": {"calories": 318, "protein": 9.4, "carbs": 52.8, "fat": 7.8}
+    },
+    {
+      "class_name": "jalebi",
+      "name": "Jalebi",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["A018 Wheat flour, refined", "sugar syrup"],
+      "default_serving_g": 80,
+      "nutrition_per_100g": {"calories": 368, "protein": 3.4, "carbs": 64.2, "fat": 11.0}
+    },
+    {
+      "class_name": "gulab_jamun",
+      "name": "Gulab jamun",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["L003 Paneer / milk solids", "sugar syrup"],
+      "default_serving_g": 50,
+      "nutrition_per_100g": {"calories": 298, "protein": 6.1, "carbs": 45.6, "fat": 10.2}
+    },
+    {
+      "class_name": "poha",
+      "name": "Poha",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["A011 Rice flakes"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 152, "protein": 3.1, "carbs": 26.4, "fat": 3.6}
+    },
+    {
+      "class_name": "kachori",
+      "name": "Kachori",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["A018 Wheat flour, refined", "B001 Bengal gram dal", "fried in fat"],
+      "default_serving_g": 80,
+      "nutrition_per_100g": {"calories": 326, "protein": 6.7, "carbs": 35.2, "fat": 17.6}
+    },
+    {
+      "class_name": "aloo_gobi",
+      "name": "Aloo gobi",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["potato", "cauliflower"],
+      "default_serving_g": 180,
+      "nutrition_per_100g": {"calories": 88, "protein": 2.3, "carbs": 10.8, "fat": 4.0}
+    },
+    {
+      "class_name": "kadai_paneer",
+      "name": "Kadai paneer",
+      "cuisine": "indian",
+      "nutrition_source": "ifct_2017",
+      "ifct_components": ["L003 Paneer", "bell pepper", "tomato"],
+      "default_serving_g": 200,
+      "nutrition_per_100g": {"calories": 152, "protein": 7.6, "carbs": 6.8, "fat": 10.1}
+    }
+  ]
+}

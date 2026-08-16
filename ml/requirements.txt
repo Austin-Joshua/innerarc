@@ -1,0 +1,10 @@
+# Training (Food module): pin versions when the classifier is implemented.
+torch>=2.4.0
+torchvision>=0.19.0
+
+# Progress Intelligence (later): pose landmarks only — no body-fat models.
+mediapipe>=0.10.14
+
+# Shared utilities
+pillow>=10.4.0
+numpy>=1.26.0

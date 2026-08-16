@@ -1,0 +1,110 @@
+{
+  "biryani": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "paneer_butter_masala": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "dal_tadka": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "palak_paneer": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "butter_chicken": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "chana_masala": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "dal_makhani": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "chicken_tikka_masala": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "naan": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "jalebi": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "gulab_jamun": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "poha": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "kachori": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "aloo_gobi": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "kadai_paneer": {
+    "source": "indian_food_images",
+    "images": 50
+  },
+  "pizza": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "hamburger": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "fried_rice": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "spaghetti_bolognese": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "caesar_salad": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "grilled_salmon": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "omelette": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "pancakes": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "sushi": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "ramen": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "tacos": {
+    "source": "food-101",
+    "images": 1000
+  },
+  "samosa": {
+    "source": "food-101",
+    "images": 1000
+  }
+}

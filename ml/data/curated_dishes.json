@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "note": "27 classes verified non-empty on disk before training.",
+  "classes": [
+    "pizza",
+    "hamburger",
+    "fried_rice",
+    "spaghetti_bolognese",
+    "caesar_salad",
+    "grilled_salmon",
+    "omelette",
+    "pancakes",
+    "sushi",
+    "ramen",
+    "tacos",
+    "samosa",
+    "biryani",
+    "paneer_butter_masala",
+    "dal_tadka",
+    "palak_paneer",
+    "butter_chicken",
+    "chana_masala",
+    "dal_makhani",
+    "chicken_tikka_masala",
+    "naan",
+    "jalebi",
+    "gulab_jamun",
+    "poha",
+    "kachori",
+    "aloo_gobi",
+    "kadai_paneer"
+  ]
+}
