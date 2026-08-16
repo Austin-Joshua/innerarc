@@ -3,7 +3,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { api } from "../api";
+import { api, BadgeEarned } from "../api";
+import BadgeBanner from "../components/BadgeBanner";
 import { getFoodDraft } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
@@ -20,6 +21,7 @@ export default function FoodNutritionScreen() {
   }, [draft?.dish.id, draft?.dish.default_serving_g]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [badges, setBadges] = useState<BadgeEarned[]>([]);
 
   const scaled = useMemo(() => {
     if (!draft) return null;
@@ -39,14 +41,19 @@ export default function FoodNutritionScreen() {
     setBusy(true);
     setError(null);
     try {
-      await api.logMeal({
+      const logged = await api.logMeal({
         dish_id: draft.dish.id,
         confidence_score: draft.confidence_score,
         serving_size_g: Number(serving),
         image_url: draft.image_url,
       });
-      navigation.popToTop();
-      navigation.navigate("Home");
+      const earned = logged.gamification?.new_badges ?? [];
+      if (earned.length) {
+        setBadges(earned);
+      } else {
+        navigation.popToTop();
+        navigation.navigate("Home");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log meal");
     } finally {
@@ -65,6 +72,18 @@ export default function FoodNutritionScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
       <Text style={styles.title}>{draft.dish.name}</Text>
+      <BadgeBanner badges={badges} />
+      {badges.length ? (
+        <Pressable
+          style={styles.button}
+          onPress={() => {
+            navigation.popToTop();
+            navigation.navigate("Home");
+          }}
+        >
+          <Text style={styles.buttonLabel}>Continue</Text>
+        </Pressable>
+      ) : null}
       <Text style={styles.muted}>
         Source: {draft.dish.nutrition_source}. Ingredients are from the recipe table, not the photo.
       </Text>
