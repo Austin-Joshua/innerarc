@@ -1,0 +1,4610 @@
+{
+  "report_version": 3,
+  "title": "IFCT 2017 Indian dish nutrition - full audit",
+  "coverage_threshold_pct": 70.0,
+  "coverage_high_threshold_pct": 85.0,
+  "coverage_definition": "matched_mass_g / total_estimated_mass_g * 100",
+  "summary": {
+    "generated_at": "2026-08-16T14:00:53.689538+00:00",
+    "verdict": "10/15 dishes meet the 70% mass-coverage bar (8 high, 2 medium, 5 low). Mean coverage 81.9%, mass-weighted 81.3%. Primary remaining gaps are dairy fats/cream and dessert milk powder - absent from IFCT Table 1.",
+    "n_dishes": 15,
+    "coverage_threshold_pct": 70.0,
+    "coverage_high_threshold_pct": 85.0,
+    "coverage_mean_pct": 81.9,
+    "coverage_median_pct": 85.1,
+    "coverage_mass_weighted_pct": 81.3,
+    "coverage_min_pct": 53.2,
+    "coverage_max_pct": 100.0,
+    "total_matched_mass_g": 2280.0,
+    "total_estimated_mass_g": 2805.2,
+    "n_high_confidence": 8,
+    "n_medium_confidence": 2,
+    "n_low_confidence": 5,
+    "n_atwater_ok": 15,
+    "fully_matched_dishes": [
+      "poha"
+    ],
+    "low_confidence_dishes": [
+      {
+        "class_name": "gulab_jamun",
+        "display_name": "Gulab jamun",
+        "match_coverage_pct": 53.2,
+        "ingredient_count_coverage_pct": 50.0,
+        "unmatched_mass_g": 73.0,
+        "nutrition_per_100g": {
+          "calories": 384.6,
+          "protein": 2.68,
+          "carbs": 49.25,
+          "fat": 19.3
+        },
+        "top_blockers": [
+          {
+            "ingredient": "Milk powder",
+            "estimated_quantity_g": 40.0,
+            "share_of_total_mass_pct": 25.6,
+            "reason": "no_close_match (not forced to L004 Khoa)"
+          },
+          {
+            "ingredient": "water",
+            "estimated_quantity_g": 30.0,
+            "share_of_total_mass_pct": 19.2,
+            "reason": "zero_macro_solvent (no IFCT food code; mass only)"
+          },
+          {
+            "ingredient": "rose water",
+            "estimated_quantity_g": 2.0,
+            "share_of_total_mass_pct": 1.3,
+            "reason": "no_ifct_entry"
+          },
+          {
+            "ingredient": "baking powder",
+            "estimated_quantity_g": 1.0,
+            "share_of_total_mass_pct": 0.6,
+            "reason": "additive (not a food composition entry)"
+          }
+        ],
+        "quality_flags": [
+          "coverage_below_threshold",
+          "uses_supplemental_oil_fat_values",
+          "sugar_proxied_as_jaggery_i001"
+        ]
+      },
+      {
+        "class_name": "butter_chicken",
+        "display_name": "Butter chicken",
+        "match_coverage_pct": 61.3,
+        "ingredient_count_coverage_pct": 33.3,
+        "unmatched_mass_g": 104.0,
+        "nutrition_per_100g": {
+          "calories": 234.6,
+          "protein": 18.23,
+          "carbs": 2.31,
+          "fat": 17.05
+        },
+        "top_blockers": [
+          {
+            "ingredient": "greek yogurt",
+            "estimated_quantity_g": 40.0,
+            "share_of_total_mass_pct": 14.9,
+            "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+          },
+          {
+            "ingredient": "cream",
+            "estimated_quantity_g": 40.0,
+            "share_of_total_mass_pct": 14.9,
+            "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+          },
+          {
+            "ingredient": "butter",
+            "estimated_quantity_g": 20.0,
+            "share_of_total_mass_pct": 7.4,
+            "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+          },
+          {
+            "ingredient": "garam masala powder",
+            "estimated_quantity_g": 4.0,
+            "share_of_total_mass_pct": 1.5,
+            "reason": "blend (no single IFCT food code)"
+          }
+        ],
+        "quality_flags": [
+          "coverage_below_threshold"
+        ]
+      },
+      {
+        "class_name": "kadai_paneer",
+        "display_name": "Kadai paneer",
+        "match_coverage_pct": 65.8,
+        "ingredient_count_coverage_pct": 60.0,
+        "unmatched_mass_g": 83.0,
+        "nutrition_per_100g": {
+          "calories": 232.4,
+          "protein": 13.31,
+          "carbs": 3.67,
+          "fat": 18.42
+        },
+        "top_blockers": [
+          {
+            "ingredient": "gravy",
+            "estimated_quantity_g": 80.0,
+            "share_of_total_mass_pct": 32.9,
+            "reason": "prepared_composite (not a raw IFCT food)"
+          },
+          {
+            "ingredient": "garam masala",
+            "estimated_quantity_g": 3.0,
+            "share_of_total_mass_pct": 1.2,
+            "reason": "blend (no single IFCT food code)"
+          }
+        ],
+        "quality_flags": [
+          "coverage_below_threshold"
+        ]
+      },
+      {
+        "class_name": "paneer_butter_masala",
+        "display_name": "Paneer butter masala",
+        "match_coverage_pct": 66.5,
+        "ingredient_count_coverage_pct": 40.0,
+        "unmatched_mass_g": 58.0,
+        "nutrition_per_100g": {
+          "calories": 341.6,
+          "protein": 18.85,
+          "carbs": 5.42,
+          "fat": 27.44
+        },
+        "top_blockers": [
+          {
+            "ingredient": "whipping cream",
+            "estimated_quantity_g": 40.0,
+            "share_of_total_mass_pct": 23.1,
+            "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+          },
+          {
+            "ingredient": "butter",
+            "estimated_quantity_g": 15.0,
+            "share_of_total_mass_pct": 8.7,
+            "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+          },
+          {
+            "ingredient": "garam masala",
+            "estimated_quantity_g": 3.0,
+            "share_of_total_mass_pct": 1.7,
+            "reason": "blend (no single IFCT food code)"
+          }
+        ],
+        "quality_flags": [
+          "coverage_below_threshold"
+        ]
+      },
+      {
+        "class_name": "jalebi",
+        "display_name": "Jalebi",
+        "match_coverage_pct": 66.8,
+        "ingredient_count_coverage_pct": 45.5,
+        "unmatched_mass_g": 58.2,
+        "nutrition_per_100g": {
+          "calories": 421.5,
+          "protein": 5.35,
+          "carbs": 68.84,
+          "fat": 13.28
+        },
+        "top_blockers": [
+          {
+            "ingredient": "water",
+            "estimated_quantity_g": 30.0,
+            "share_of_total_mass_pct": 17.1,
+            "reason": "zero_macro_solvent (no IFCT food code; mass only)"
+          },
+          {
+            "ingredient": "curd",
+            "estimated_quantity_g": 20.0,
+            "share_of_total_mass_pct": 11.4,
+            "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+          },
+          {
+            "ingredient": "corn flour",
+            "estimated_quantity_g": 5.0,
+            "share_of_total_mass_pct": 2.9,
+            "reason": "no_close_match (maize starch \u2260 A006 dry maize grain)"
+          },
+          {
+            "ingredient": "vinegar",
+            "estimated_quantity_g": 2.0,
+            "share_of_total_mass_pct": 1.1,
+            "reason": "no_ifct_entry"
+          }
+        ],
+        "quality_flags": [
+          "coverage_below_threshold",
+          "uses_supplemental_oil_fat_values",
+          "sugar_proxied_as_jaggery_i001"
+        ]
+      }
+    ],
+    "coverage_leaderboard": [
+      {
+        "class_name": "poha",
+        "display_name": "Poha",
+        "match_coverage_pct": 100.0,
+        "ingredient_count_coverage_pct": 100.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 136.0,
+        "unmatched_mass_g": 0.0,
+        "total_estimated_mass_g": 136.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 233.7,
+          "protein": 5.1,
+          "carbs": 50.25,
+          "fat": 0.83
+        },
+        "nutrition_per_default_serving": {
+          "calories": 467.4,
+          "protein": 10.2,
+          "carbs": 100.5,
+          "fat": 1.66
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "A011",
+          "F006",
+          "G010",
+          "G008",
+          "E033"
+        ],
+        "quality_flags": []
+      },
+      {
+        "class_name": "biryani",
+        "display_name": "Biryani",
+        "match_coverage_pct": 99.2,
+        "ingredient_count_coverage_pct": 75.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 260.0,
+        "unmatched_mass_g": 2.0,
+        "total_estimated_mass_g": 262.0,
+        "default_serving_g": 300,
+        "nutrition_per_100g": {
+          "calories": 254.0,
+          "protein": 13.63,
+          "carbs": 30.32,
+          "fat": 8.44
+        },
+        "nutrition_per_default_serving": {
+          "calories": 762.0,
+          "protein": 40.89,
+          "carbs": 90.96,
+          "fat": 25.32
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "N002",
+          "A015",
+          "G008"
+        ],
+        "quality_flags": [
+          "raw_staple_basis_may_overstate_cooked_density"
+        ]
+      },
+      {
+        "class_name": "aloo_gobi",
+        "display_name": "Aloo gobi",
+        "match_coverage_pct": 98.8,
+        "ingredient_count_coverage_pct": 80.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 255.0,
+        "unmatched_mass_g": 3.0,
+        "total_estimated_mass_g": 258.0,
+        "default_serving_g": 180,
+        "nutrition_per_100g": {
+          "calories": 43.8,
+          "protein": 2.02,
+          "carbs": 7.47,
+          "fat": 0.4
+        },
+        "nutrition_per_default_serving": {
+          "calories": 78.8,
+          "protein": 3.64,
+          "carbs": 13.45,
+          "fat": 0.72
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "D036",
+          "F006",
+          "G033",
+          "G010"
+        ],
+        "quality_flags": []
+      },
+      {
+        "class_name": "dal_tadka",
+        "display_name": "Dal tadka",
+        "match_coverage_pct": 97.6,
+        "ingredient_count_coverage_pct": 80.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 120.0,
+        "unmatched_mass_g": 3.0,
+        "total_estimated_mass_g": 123.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 213.2,
+          "protein": 13.37,
+          "carbs": 36.04,
+          "fat": 1.06
+        },
+        "nutrition_per_default_serving": {
+          "calories": 426.4,
+          "protein": 26.74,
+          "carbs": 72.08,
+          "fat": 2.12
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "B021",
+          "G014",
+          "G017",
+          "C020"
+        ],
+        "quality_flags": [
+          "raw_staple_basis_may_overstate_cooked_density"
+        ]
+      },
+      {
+        "class_name": "kachori",
+        "display_name": "Kachori",
+        "match_coverage_pct": 95.5,
+        "ingredient_count_coverage_pct": 60.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 85.0,
+        "unmatched_mass_g": 4.0,
+        "total_estimated_mass_g": 89.0,
+        "default_serving_g": 80,
+        "nutrition_per_100g": {
+          "calories": 342.0,
+          "protein": 14.46,
+          "carbs": 67.21,
+          "fat": 0.93
+        },
+        "nutrition_per_default_serving": {
+          "calories": 273.6,
+          "protein": 11.57,
+          "carbs": 53.77,
+          "fat": 0.74
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "B010",
+          "A022",
+          "A018"
+        ],
+        "quality_flags": [
+          "raw_staple_basis_may_overstate_cooked_density"
+        ]
+      },
+      {
+        "class_name": "chana_masala",
+        "display_name": "Chana masala",
+        "match_coverage_pct": 92.7,
+        "ingredient_count_coverage_pct": 66.7,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 178.0,
+        "unmatched_mass_g": 14.0,
+        "total_estimated_mass_g": 192.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 149.3,
+          "protein": 9.16,
+          "carbs": 21.48,
+          "fat": 2.51
+        },
+        "nutrition_per_default_serving": {
+          "calories": 298.6,
+          "protein": 18.32,
+          "carbs": 42.96,
+          "fat": 5.02
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "B002",
+          "D076",
+          "G014",
+          "G017"
+        ],
+        "quality_flags": [
+          "raw_staple_basis_may_overstate_cooked_density"
+        ]
+      },
+      {
+        "class_name": "palak_paneer",
+        "display_name": "Palak paneer",
+        "match_coverage_pct": 85.8,
+        "ingredient_count_coverage_pct": 40.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 200.0,
+        "unmatched_mass_g": 33.0,
+        "total_estimated_mass_g": 233.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 136.8,
+          "protein": 8.83,
+          "carbs": 2.19,
+          "fat": 10.3
+        },
+        "nutrition_per_default_serving": {
+          "calories": 273.6,
+          "protein": 17.66,
+          "carbs": 4.38,
+          "fat": 20.6
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "L003",
+          "C033"
+        ],
+        "quality_flags": []
+      },
+      {
+        "class_name": "naan",
+        "display_name": "Naan",
+        "match_coverage_pct": 85.1,
+        "ingredient_count_coverage_pct": 50.0,
+        "nutrition_confidence": "high",
+        "matched_mass_g": 74.0,
+        "unmatched_mass_g": 13.0,
+        "total_estimated_mass_g": 87.0,
+        "default_serving_g": 90,
+        "nutrition_per_100g": {
+          "calories": 309.7,
+          "protein": 10.37,
+          "carbs": 61.89,
+          "fat": 1.46
+        },
+        "nutrition_per_default_serving": {
+          "calories": 278.7,
+          "protein": 9.33,
+          "carbs": 55.7,
+          "fat": 1.31
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "A019",
+          "G011"
+        ],
+        "quality_flags": []
+      },
+      {
+        "class_name": "chicken_tikka_masala",
+        "display_name": "Chicken tikka masala",
+        "match_coverage_pct": 83.9,
+        "ingredient_count_coverage_pct": 50.0,
+        "nutrition_confidence": "medium",
+        "matched_mass_g": 230.0,
+        "unmatched_mass_g": 44.0,
+        "total_estimated_mass_g": 274.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 116.6,
+          "protein": 14.54,
+          "carbs": 0.95,
+          "fat": 6.03
+        },
+        "nutrition_per_default_serving": {
+          "calories": 233.2,
+          "protein": 29.08,
+          "carbs": 1.9,
+          "fat": 12.06
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "D076",
+          "N003"
+        ],
+        "quality_flags": []
+      },
+      {
+        "class_name": "dal_makhani",
+        "display_name": "Dal makhani",
+        "match_coverage_pct": 75.6,
+        "ingredient_count_coverage_pct": 60.0,
+        "nutrition_confidence": "medium",
+        "matched_mass_g": 102.0,
+        "unmatched_mass_g": 33.0,
+        "total_estimated_mass_g": 135.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 312.6,
+          "protein": 21.62,
+          "carbs": 49.64,
+          "fat": 1.81
+        },
+        "nutrition_per_default_serving": {
+          "calories": 625.2,
+          "protein": 43.24,
+          "carbs": 99.28,
+          "fat": 3.62
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "B020",
+          "B003",
+          "G022"
+        ],
+        "quality_flags": [
+          "raw_staple_basis_may_overstate_cooked_density"
+        ]
+      },
+      {
+        "class_name": "jalebi",
+        "display_name": "Jalebi",
+        "match_coverage_pct": 66.8,
+        "ingredient_count_coverage_pct": 45.5,
+        "nutrition_confidence": "low",
+        "matched_mass_g": 117.0,
+        "unmatched_mass_g": 58.2,
+        "total_estimated_mass_g": 175.2,
+        "default_serving_g": 80,
+        "nutrition_per_100g": {
+          "calories": 421.5,
+          "protein": 5.35,
+          "carbs": 68.84,
+          "fat": 13.28
+        },
+        "nutrition_per_default_serving": {
+          "calories": 337.2,
+          "protein": 4.28,
+          "carbs": 55.07,
+          "fat": 10.62
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "A018",
+          "G033",
+          "G020",
+          "I001",
+          "T012"
+        ],
+        "quality_flags": [
+          "coverage_below_threshold",
+          "uses_supplemental_oil_fat_values",
+          "sugar_proxied_as_jaggery_i001"
+        ]
+      },
+      {
+        "class_name": "paneer_butter_masala",
+        "display_name": "Paneer butter masala",
+        "match_coverage_pct": 66.5,
+        "ingredient_count_coverage_pct": 40.0,
+        "nutrition_confidence": "low",
+        "matched_mass_g": 115.0,
+        "unmatched_mass_g": 58.0,
+        "total_estimated_mass_g": 173.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 341.6,
+          "protein": 18.85,
+          "carbs": 5.42,
+          "fat": 27.44
+        },
+        "nutrition_per_default_serving": {
+          "calories": 683.2,
+          "protein": 37.7,
+          "carbs": 10.84,
+          "fat": 54.88
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "L003",
+          "H005"
+        ],
+        "quality_flags": [
+          "coverage_below_threshold"
+        ]
+      },
+      {
+        "class_name": "kadai_paneer",
+        "display_name": "Kadai paneer",
+        "match_coverage_pct": 65.8,
+        "ingredient_count_coverage_pct": 60.0,
+        "nutrition_confidence": "low",
+        "matched_mass_g": 160.0,
+        "unmatched_mass_g": 83.0,
+        "total_estimated_mass_g": 243.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 232.4,
+          "protein": 13.31,
+          "carbs": 3.67,
+          "fat": 18.42
+        },
+        "nutrition_per_default_serving": {
+          "calories": 464.8,
+          "protein": 26.62,
+          "carbs": 7.34,
+          "fat": 36.84
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "L003",
+          "D033",
+          "H005"
+        ],
+        "quality_flags": [
+          "coverage_below_threshold"
+        ]
+      },
+      {
+        "class_name": "butter_chicken",
+        "display_name": "Butter chicken",
+        "match_coverage_pct": 61.3,
+        "ingredient_count_coverage_pct": 33.3,
+        "nutrition_confidence": "low",
+        "matched_mass_g": 165.0,
+        "unmatched_mass_g": 104.0,
+        "total_estimated_mass_g": 269.0,
+        "default_serving_g": 200,
+        "nutrition_per_100g": {
+          "calories": 234.6,
+          "protein": 18.23,
+          "carbs": 2.31,
+          "fat": 17.05
+        },
+        "nutrition_per_default_serving": {
+          "calories": 469.2,
+          "protein": 36.46,
+          "carbs": 4.62,
+          "fat": 34.1
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "N002",
+          "H005"
+        ],
+        "quality_flags": [
+          "coverage_below_threshold"
+        ]
+      },
+      {
+        "class_name": "gulab_jamun",
+        "display_name": "Gulab jamun",
+        "match_coverage_pct": 53.2,
+        "ingredient_count_coverage_pct": 50.0,
+        "nutrition_confidence": "low",
+        "matched_mass_g": 83.0,
+        "unmatched_mass_g": 73.0,
+        "total_estimated_mass_g": 156.0,
+        "default_serving_g": 50,
+        "nutrition_per_100g": {
+          "calories": 384.6,
+          "protein": 2.68,
+          "carbs": 49.25,
+          "fat": 19.3
+        },
+        "nutrition_per_default_serving": {
+          "calories": 192.3,
+          "protein": 1.34,
+          "carbs": 24.62,
+          "fat": 9.65
+        },
+        "atwater_ok": true,
+        "ifct_food_codes": [
+          "A018",
+          "T012",
+          "L002",
+          "I001"
+        ],
+        "quality_flags": [
+          "coverage_below_threshold",
+          "uses_supplemental_oil_fat_values",
+          "sugar_proxied_as_jaggery_i001"
+        ]
+      }
+    ],
+    "unmatched_ingredient_frequency": [
+      {
+        "ingredient": "garam masala",
+        "dish_count": 9,
+        "total_estimated_g_across_dishes": 28.0,
+        "reason": "blend (no single IFCT food code)"
+      },
+      {
+        "ingredient": "butter",
+        "dish_count": 4,
+        "total_estimated_g_across_dishes": 53.0,
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "cream",
+        "dish_count": 3,
+        "total_estimated_g_across_dishes": 90.0,
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "water",
+        "dish_count": 2,
+        "total_estimated_g_across_dishes": 60.0,
+        "reason": "zero_macro_solvent (no IFCT food code; mass only)"
+      },
+      {
+        "ingredient": "star anise",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 2.0,
+        "reason": "no_ifct_entry (Illicium not listed)"
+      },
+      {
+        "ingredient": "whipping cream",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 40.0,
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "greek yogurt",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 40.0,
+        "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "garam masala powder",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 4.0,
+        "reason": "blend (no single IFCT food code)"
+      },
+      {
+        "ingredient": "avocado oil",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 10.0,
+        "reason": "no_table1_proximate (oils only in fatty-acid Table 12; not mapped to Atwater here)"
+      },
+      {
+        "ingredient": "heavy cream",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 40.0,
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "honey",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 5.0,
+        "reason": "no_table1_proximate (mentioned in narrative only)"
+      },
+      {
+        "ingredient": "corn flour",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 5.0,
+        "reason": "no_close_match (maize starch \u2260 A006 dry maize grain)"
+      },
+      {
+        "ingredient": "baking soda",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 1.0,
+        "reason": "additive (not a food composition entry)"
+      },
+      {
+        "ingredient": "vinegar",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 2.0,
+        "reason": "no_ifct_entry"
+      },
+      {
+        "ingredient": "curd",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 20.0,
+        "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "saffron",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 0.2,
+        "reason": "no_ifct_entry"
+      },
+      {
+        "ingredient": "Milk powder",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 40.0,
+        "reason": "no_close_match (not forced to L004 Khoa)"
+      },
+      {
+        "ingredient": "baking powder",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 1.0,
+        "reason": "additive (not a food composition entry)"
+      },
+      {
+        "ingredient": "rose water",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 2.0,
+        "reason": "no_ifct_entry"
+      },
+      {
+        "ingredient": "fennel seeds",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 2.0,
+        "reason": "no_ifct_entry (Foeniculum not listed)"
+      },
+      {
+        "ingredient": "gravy",
+        "dish_count": 1,
+        "total_estimated_g_across_dishes": 80.0,
+        "reason": "prepared_composite (not a raw IFCT food)"
+      }
+    ],
+    "unmatched_mass_by_reason": [
+      {
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)",
+        "total_estimated_g": 223.0
+      },
+      {
+        "reason": "prepared_composite (not a raw IFCT food)",
+        "total_estimated_g": 80.0
+      },
+      {
+        "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)",
+        "total_estimated_g": 60.0
+      },
+      {
+        "reason": "zero_macro_solvent (no IFCT food code; mass only)",
+        "total_estimated_g": 60.0
+      },
+      {
+        "reason": "no_close_match (not forced to L004 Khoa)",
+        "total_estimated_g": 40.0
+      },
+      {
+        "reason": "blend (no single IFCT food code)",
+        "total_estimated_g": 32.0
+      },
+      {
+        "reason": "no_table1_proximate (oils only in fatty-acid Table 12; not mapped to Atwater here)",
+        "total_estimated_g": 10.0
+      },
+      {
+        "reason": "no_table1_proximate (mentioned in narrative only)",
+        "total_estimated_g": 5.0
+      },
+      {
+        "reason": "no_close_match (maize starch \u2260 A006 dry maize grain)",
+        "total_estimated_g": 5.0
+      },
+      {
+        "reason": "no_ifct_entry",
+        "total_estimated_g": 4.2
+      },
+      {
+        "reason": "no_ifct_entry (Illicium not listed)",
+        "total_estimated_g": 2.0
+      },
+      {
+        "reason": "additive (not a food composition entry)",
+        "total_estimated_g": 2.0
+      },
+      {
+        "reason": "no_ifct_entry (Foeniculum not listed)",
+        "total_estimated_g": 2.0
+      }
+    ],
+    "ingredient_to_ifct_map": [
+      {
+        "ingredient": "avocado oil",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (oils only in fatty-acid Table 12; not mapped to Atwater here)"
+      },
+      {
+        "ingredient": "baking powder",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "additive (not a food composition entry)"
+      },
+      {
+        "ingredient": "baking soda",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "additive (not a food composition entry)"
+      },
+      {
+        "ingredient": "basmati rice",
+        "ifct_code": "A015",
+        "ifct_name": "Rice, raw, milled (Oryza sativa )",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "beaten rice flakes",
+        "ifct_code": "A011",
+        "ifct_name": "Rice flakes (Oryza sativa )",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "bell peppers",
+        "ifct_code": "D033",
+        "ifct_name": "Capsicum, green (Capsicum annuum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "butter",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "cardamom",
+        "ifct_code": "G020",
+        "ifct_name": "Cardamom, green (Elettaria cardamomum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "cashew nuts",
+        "ifct_code": "H005",
+        "ifct_name": "Cashew nut (Anacardium occidentale)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "cauliflower",
+        "ifct_code": "D036",
+        "ifct_name": "Cauliflower (Brassica oleracea var. botrytis)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "chicken",
+        "ifct_code": "N002",
+        "ifct_name": "Chicken, poultry, thigh, skinless",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "chicken thighs",
+        "ifct_code": "N002",
+        "ifct_name": "Chicken, poultry, thigh, skinless",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "chickpeas",
+        "ifct_code": "B002",
+        "ifct_name": "Bengal gram, whole (Cicer arietinum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "chili powder",
+        "ifct_code": "G022",
+        "ifct_name": "Chillies, red (Capsicum annum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "corn flour",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_close_match (maize starch \u2260 A006 dry maize grain)"
+      },
+      {
+        "ingredient": "cottage cheese",
+        "ifct_code": "L003",
+        "ifct_name": "Paneer",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "cream",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "curd",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "curry leaves",
+        "ifct_code": "G010",
+        "ifct_name": "Curry leaves (Murraya koenigii)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "dough",
+        "ifct_code": "A018",
+        "ifct_name": "Wheat flour, refined (Triticum aestivum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "fennel seeds",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_ifct_entry (Foeniculum not listed)"
+      },
+      {
+        "ingredient": "garam masala",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "blend (no single IFCT food code)"
+      },
+      {
+        "ingredient": "garam masala powder",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "blend (no single IFCT food code)"
+      },
+      {
+        "ingredient": "garlic",
+        "ifct_code": "G011",
+        "ifct_name": "Garlic, big clove (Allium sativum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "ghee",
+        "ifct_code": "T012",
+        "ifct_name": "Ghee (IFCT Edible Oils and Fats; Table 12 fatty-acid profile)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "ginger",
+        "ifct_code": "G014",
+        "ifct_name": "Ginger, fresh (Zingiber officinale)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "gravy",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "prepared_composite (not a raw IFCT food)"
+      },
+      {
+        "ingredient": "greek yogurt",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "green chilies",
+        "ifct_code": "G008",
+        "ifct_name": "Chillies, green - all varieties (Capsicum annum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "green chillies",
+        "ifct_code": "G008",
+        "ifct_name": "Chillies, green - all varieties (Capsicum annum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "heavy cream",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "honey",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (mentioned in narrative only)"
+      },
+      {
+        "ingredient": "kasuri methi",
+        "ifct_code": "C020",
+        "ifct_name": "Fenugreek leaves (Trigonella foenum graecum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "lemon juice",
+        "ifct_code": "E033",
+        "ifct_name": "Lemon, juice (Citrus limon)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "maida",
+        "ifct_code": "A018",
+        "ifct_name": "Wheat flour, refined (Triticum aestivum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "milk",
+        "ifct_code": "L002",
+        "ifct_name": "Milk, whole, Cow",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "milk powder",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_close_match (not forced to L004 Khoa)"
+      },
+      {
+        "ingredient": "moong dal",
+        "ifct_code": "B010",
+        "ifct_name": "Green gram, dal ( a) Vigna radiat",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "naan bread",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "prepared_dish (not a raw IFCT food)"
+      },
+      {
+        "ingredient": "palak",
+        "ifct_code": "C033",
+        "ifct_name": "Spinach (Spinacia oleracea)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "paneer",
+        "ifct_code": "L003",
+        "ifct_name": "Paneer",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "pigeon peas",
+        "ifct_code": "B021",
+        "ifct_name": "Red gram, dal (Cajanus cajan)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "plain flour",
+        "ifct_code": "A018",
+        "ifct_name": "Wheat flour, refined (Triticum aestivum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "potato",
+        "ifct_code": "F006",
+        "ifct_name": "Potato, brown skin, big (Solanum tuberosum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "rava",
+        "ifct_code": "A022",
+        "ifct_name": "Wheat, semolina (Triticum aestivum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "red kidney beans",
+        "ifct_code": "B020",
+        "ifct_name": "Rajmah, red (Phaseolus vulgaris)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "red onion",
+        "ifct_code": "G017",
+        "ifct_name": "Onion, big (Allium cepa)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "rose water",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_ifct_entry"
+      },
+      {
+        "ingredient": "saffron",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_ifct_entry"
+      },
+      {
+        "ingredient": "skinless chicken breasts",
+        "ifct_code": "N003",
+        "ifct_name": "Chicken, poultry, breast, skinless",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "star anise",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_ifct_entry (Illicium not listed)"
+      },
+      {
+        "ingredient": "sugar",
+        "ifct_code": "I001",
+        "ifct_name": "Jaggery, cane (Saccharum officinarum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "sugar syrup",
+        "ifct_code": "I001",
+        "ifct_name": "Jaggery, cane (Saccharum officinarum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "sweet",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "csv_noise (non-ingredient token)"
+      },
+      {
+        "ingredient": "tomato paste",
+        "ifct_code": "D076",
+        "ifct_name": "Tomato, ripe, local (Lycopersicon esculentum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "tomato sauce",
+        "ifct_code": "D076",
+        "ifct_name": "Tomato, ripe, local (Lycopersicon esculentum)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "turmeric",
+        "ifct_code": "G033",
+        "ifct_name": "Turmeric powder (Curcuma domestica)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "urad dal",
+        "ifct_code": "B003",
+        "ifct_name": "Black gram, dal (Phaseolus mungo)",
+        "status": "matched",
+        "reason": null
+      },
+      {
+        "ingredient": "vinegar",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_ifct_entry"
+      },
+      {
+        "ingredient": "water",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "zero_macro_solvent (no IFCT food code; mass only)"
+      },
+      {
+        "ingredient": "whipping cream",
+        "ifct_code": null,
+        "ifct_name": null,
+        "status": "unmatched",
+        "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+      },
+      {
+        "ingredient": "whole wheat flour",
+        "ifct_code": "A019",
+        "ifct_name": "Wheat flour, atta (Triticum aestivum)",
+        "status": "matched",
+        "reason": null
+      }
+    ],
+    "ifct_code_inventory": [
+      {
+        "code": "L003",
+        "name": "Paneer",
+        "uses_across_dishes": 3,
+        "per_100g": {
+          "calories": 305.4,
+          "protein": 18.86,
+          "carbs": 2.41,
+          "fat": 24.78
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "H005",
+        "name": "Cashew nut (Anacardium occidentale)",
+        "uses_across_dishes": 3,
+        "per_100g": {
+          "calories": 582.7,
+          "protein": 18.78,
+          "carbs": 25.46,
+          "fat": 45.2
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "A018",
+        "name": "Wheat flour, refined (Triticum aestivum)",
+        "uses_across_dishes": 3,
+        "per_100g": {
+          "calories": 351.8,
+          "protein": 10.36,
+          "carbs": 74.27,
+          "fat": 0.76
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "N002",
+        "name": "Chicken, poultry, thigh, skinless",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 199.8,
+          "protein": 18.18,
+          "carbs": 0.0,
+          "fat": 14.23
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G008",
+        "name": "Chillies, green - all varieties (Capsicum annum)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 42.3,
+          "protein": 2.36,
+          "carbs": 5.86,
+          "fat": 0.72
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G014",
+        "name": "Ginger, fresh (Zingiber officinale)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 55.0,
+          "protein": 2.22,
+          "carbs": 8.97,
+          "fat": 0.85
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G017",
+        "name": "Onion, big (Allium cepa)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 48.0,
+          "protein": 1.5,
+          "carbs": 9.56,
+          "fat": 0.24
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "D076",
+        "name": "Tomato, ripe, local (Lycopersicon esculentum)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 19.6,
+          "protein": 0.9,
+          "carbs": 2.71,
+          "fat": 0.47
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G033",
+        "name": "Turmeric powder (Curcuma domestica)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 280.6,
+          "protein": 7.66,
+          "carbs": 49.22,
+          "fat": 5.03
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "I001",
+        "name": "Jaggery, cane (Saccharum officinarum)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 353.7,
+          "protein": 1.85,
+          "carbs": 84.87,
+          "fat": 0.16
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "T012",
+        "name": "Ghee (IFCT Edible Oils and Fats; Table 12 fatty-acid profile)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 900.0,
+          "protein": 0.0,
+          "carbs": 0.0,
+          "fat": 100.0
+        },
+        "supplemental": true,
+        "source_note": "No Table-1 proximate row for T012; IFCT lists ghee under Edible Oils and Fats (fatty-acid table). Values use IFCT Atwater fat factor (9 kcal/g) for a pure lipid food."
+      },
+      {
+        "code": "F006",
+        "name": "Potato, brown skin, big (Solanum tuberosum)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 69.8,
+          "protein": 1.54,
+          "carbs": 14.89,
+          "fat": 0.23
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G010",
+        "name": "Curry leaves (Murraya koenigii)",
+        "uses_across_dishes": 2,
+        "per_100g": {
+          "calories": 63.6,
+          "protein": 7.41,
+          "carbs": 4.51,
+          "fat": 1.06
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "A015",
+        "name": "Rice, raw, milled (Oryza sativa )",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 356.4,
+          "protein": 7.94,
+          "carbs": 78.24,
+          "fat": 0.52
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "B021",
+        "name": "Red gram, dal (Cajanus cajan)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 330.8,
+          "protein": 21.7,
+          "carbs": 55.23,
+          "fat": 1.56
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "C020",
+        "name": "Fenugreek leaves (Trigonella foenum graecum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 34.4,
+          "protein": 3.68,
+          "carbs": 2.17,
+          "fat": 0.83
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "C033",
+        "name": "Spinach (Spinacia oleracea)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 24.4,
+          "protein": 2.14,
+          "carbs": 2.05,
+          "fat": 0.64
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "B002",
+        "name": "Bengal gram, whole (Cicer arietinum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 287.0,
+          "protein": 18.77,
+          "carbs": 39.56,
+          "fat": 5.11
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "B020",
+        "name": "Rajmah, red (Phaseolus vulgaris)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 299.2,
+          "protein": 19.91,
+          "carbs": 48.61,
+          "fat": 1.77
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "B003",
+        "name": "Black gram, dal (Phaseolus mungo)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 324.1,
+          "protein": 23.06,
+          "carbs": 51.0,
+          "fat": 1.69
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G022",
+        "name": "Chillies, red (Capsicum annum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 236.6,
+          "protein": 12.69,
+          "carbs": 29.46,
+          "fat": 6.4
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "N003",
+        "name": "Chicken, poultry, breast, skinless",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 168.3,
+          "protein": 21.81,
+          "carbs": 0.01,
+          "fat": 9.0
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "A019",
+        "name": "Wheat flour, atta (Triticum aestivum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 320.3,
+          "protein": 10.57,
+          "carbs": 64.17,
+          "fat": 1.53
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G011",
+        "name": "Garlic, big clove (Allium sativum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 123.8,
+          "protein": 6.92,
+          "carbs": 21.93,
+          "fat": 0.16
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "G020",
+        "name": "Cardamom, green (Elettaria cardamomum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 255.0,
+          "protein": 8.1,
+          "carbs": 47.76,
+          "fat": 2.6
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "L002",
+        "name": "Milk, whole, Cow",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 72.9,
+          "protein": 3.26,
+          "carbs": 4.94,
+          "fat": 4.48
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "A011",
+        "name": "Rice flakes (Oryza sativa )",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 353.7,
+          "protein": 7.44,
+          "carbs": 76.75,
+          "fat": 1.14
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "E033",
+        "name": "Lemon, juice (Citrus limon)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 36.6,
+          "protein": 0.41,
+          "carbs": 6.97,
+          "fat": 0.75
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "B010",
+        "name": "Green gram, dal ( a) Vigna radiat",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 325.8,
+          "protein": 23.88,
+          "carbs": 52.59,
+          "fat": 1.35
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "A022",
+        "name": "Wheat, semolina (Triticum aestivum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 333.7,
+          "protein": 11.38,
+          "carbs": 68.43,
+          "fat": 0.74
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "D036",
+        "name": "Cauliflower (Brassica oleracea var. botrytis)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 22.9,
+          "protein": 2.15,
+          "carbs": 2.03,
+          "fat": 0.44
+        },
+        "supplemental": false,
+        "source_note": null
+      },
+      {
+        "code": "D033",
+        "name": "Capsicum, green (Capsicum annuum)",
+        "uses_across_dishes": 1,
+        "per_100g": {
+          "calories": 16.3,
+          "protein": 1.11,
+          "carbs": 1.84,
+          "fat": 0.34
+        },
+        "supplemental": false,
+        "source_note": null
+      }
+    ],
+    "limitations": [
+      "IFCT values are for raw edible portions; cooked dishes absorb water/oil not always listed in CSV.",
+      "estimated_quantity_g values are household recipe estimates, not weighed lab measures.",
+      "Normalization uses matched mass only, so unmatched high-calorie fats (butter/cream) bias density.",
+      "Sugar uses I001 cane jaggery as the IFCT Sugars-group proxy; refined white sugar is not tabulated.",
+      "Ghee uses supplemental T012 Atwater lipid values because Table 1 has no oil/fat proximate rows.",
+      "Milk powder was not forced to L004 Khoa (related but not identical).",
+      "Indian_Food_Nutrition_Processed.csv is cross-reference only and was not used as IFCT."
+    ],
+    "sources": {
+      "pdf": "ml/data/raw/IFCT2017.pdf",
+      "pdf_bytes": 12401190,
+      "extracted_text": "ml/data/raw/IFCT2017.txt",
+      "proximate_catalog": "ml/data/raw/ifct2017_proximate.json",
+      "catalog_foods": 537,
+      "supplemental_foods": [
+        "T012"
+      ],
+      "seed": "backend/seed/dishes.json",
+      "csv_ingredients": "ml/data/raw/indian_food.csv",
+      "report_json": "ml/reports/ifct2017_dish_recompute.json",
+      "report_md": "ml/reports/ifct2017_dish_recompute.md"
+    },
+    "methodology": {
+      "ingredient_lists": "indian_food.csv (+ manual sugar syrup/ghee on jalebi)",
+      "quantities": "estimated_quantity_g household estimates; not lab-measured",
+      "nutrient_source": "IFCT 2017 Table-1 proximate where available",
+      "sugar": "I001 Jaggery, cane (Sugars group; refined sugar absent)",
+      "ghee": "T012 supplemental Atwater lipid from oils/fats group",
+      "normalization": "matched-mass only; unmatched excluded from numerator and denominator",
+      "coverage": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+      "confidence_rule": "high>=85%; medium 70-<85%; low<70%",
+      "atwater_check": "flag when |reported_kcal - (4P+4C+9F)| exceeds max(8 kcal, 8% of reported)"
+    }
+  },
+  "spot_check_dishes": [
+    {
+      "class_name": "biryani",
+      "display_name": "Biryani",
+      "ingredients": [
+        {
+          "name": "Chicken thighs",
+          "estimated_quantity_g": 150.0,
+          "typical_quantity": "150 g (estimated)",
+          "ifct_code": "N002",
+          "ifct_name": "Chicken, poultry, thigh, skinless",
+          "ifct_per_100g": {
+            "calories": 199.8,
+            "protein": 18.18,
+            "carbs": 0.0,
+            "fat": 14.23
+          },
+          "contribution": {
+            "calories": 299.7,
+            "protein": 27.27,
+            "carbs": 0.0,
+            "fat": 21.34
+          }
+        },
+        {
+          "name": "basmati rice",
+          "estimated_quantity_g": 100.0,
+          "typical_quantity": "100 g (estimated)",
+          "ifct_code": "A015",
+          "ifct_name": "Rice, raw, milled (Oryza sativa )",
+          "ifct_per_100g": {
+            "calories": 356.4,
+            "protein": 7.94,
+            "carbs": 78.24,
+            "fat": 0.52
+          },
+          "contribution": {
+            "calories": 356.4,
+            "protein": 7.94,
+            "carbs": 78.24,
+            "fat": 0.52
+          }
+        },
+        {
+          "name": "star anise",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "sweet",
+          "estimated_quantity_g": 0.0,
+          "typical_quantity": "0 g (excluded)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "green chillies",
+          "estimated_quantity_g": 10.0,
+          "typical_quantity": "10 g (estimated)",
+          "ifct_code": "G008",
+          "ifct_name": "Chillies, green - all varieties (Capsicum annum)",
+          "ifct_per_100g": {
+            "calories": 42.3,
+            "protein": 2.36,
+            "carbs": 5.86,
+            "fat": 0.72
+          },
+          "contribution": {
+            "calories": 4.23,
+            "protein": 0.24,
+            "carbs": 0.59,
+            "fat": 0.07
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "N002",
+        "A015",
+        "G008"
+      ],
+      "matched_mass_g": 260.0,
+      "unmatched_mass_g": 2.0,
+      "total_estimated_mass_g": 262.0,
+      "match_coverage_pct": 99.2,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 254.0,
+        "protein": 13.63,
+        "carbs": 30.32,
+        "fat": 8.44
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "star anise"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 660.33,
+          "protein": 35.45,
+          "carbs": 78.83,
+          "fat": 21.94
+        }
+      },
+      "default_serving_g": 300,
+      "nutrition_per_default_serving": {
+        "calories": 762.0,
+        "protein": 40.89,
+        "carbs": 90.96,
+        "fat": 25.32
+      },
+      "atwater_check": {
+        "reported_calories": 254.0,
+        "atwater_4p_4c_9f": 251.8,
+        "delta_kcal": 2.2,
+        "relative_error_pct": 0.9,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 75.0,
+      "matched_ingredient_count": 3,
+      "active_ingredient_count": 4,
+      "unmatched_blockers": [
+        {
+          "ingredient": "star anise",
+          "estimated_quantity_g": 2.0,
+          "share_of_total_mass_pct": 0.8,
+          "reason": "no_ifct_entry (Illicium not listed)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "dal_tadka",
+      "display_name": "Dal tadka",
+      "ingredients": [
+        {
+          "name": "Pigeon peas",
+          "estimated_quantity_g": 70.0,
+          "typical_quantity": "70 g (estimated)",
+          "ifct_code": "B021",
+          "ifct_name": "Red gram, dal (Cajanus cajan)",
+          "ifct_per_100g": {
+            "calories": 330.8,
+            "protein": 21.7,
+            "carbs": 55.23,
+            "fat": 1.56
+          },
+          "contribution": {
+            "calories": 231.56,
+            "protein": 15.19,
+            "carbs": 38.66,
+            "fat": 1.09
+          }
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "ginger",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": "G014",
+          "ifct_name": "Ginger, fresh (Zingiber officinale)",
+          "ifct_per_100g": {
+            "calories": 55.0,
+            "protein": 2.22,
+            "carbs": 8.97,
+            "fat": 0.85
+          },
+          "contribution": {
+            "calories": 4.4,
+            "protein": 0.18,
+            "carbs": 0.72,
+            "fat": 0.07
+          }
+        },
+        {
+          "name": "red onion",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "G017",
+          "ifct_name": "Onion, big (Allium cepa)",
+          "ifct_per_100g": {
+            "calories": 48.0,
+            "protein": 1.5,
+            "carbs": 9.56,
+            "fat": 0.24
+          },
+          "contribution": {
+            "calories": 19.2,
+            "protein": 0.6,
+            "carbs": 3.82,
+            "fat": 0.1
+          }
+        },
+        {
+          "name": "kasuri methi",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": "C020",
+          "ifct_name": "Fenugreek leaves (Trigonella foenum graecum)",
+          "ifct_per_100g": {
+            "calories": 34.4,
+            "protein": 3.68,
+            "carbs": 2.17,
+            "fat": 0.83
+          },
+          "contribution": {
+            "calories": 0.69,
+            "protein": 0.07,
+            "carbs": 0.04,
+            "fat": 0.02
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "B021",
+        "G014",
+        "G017",
+        "C020"
+      ],
+      "matched_mass_g": 120.0,
+      "unmatched_mass_g": 3.0,
+      "total_estimated_mass_g": 123.0,
+      "match_coverage_pct": 97.6,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 213.2,
+        "protein": 13.37,
+        "carbs": 36.04,
+        "fat": 1.06
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "garam masala"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 255.85,
+          "protein": 16.04,
+          "carbs": 43.25,
+          "fat": 1.27
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 426.4,
+        "protein": 26.74,
+        "carbs": 72.08,
+        "fat": 2.12
+      },
+      "atwater_check": {
+        "reported_calories": 213.2,
+        "atwater_4p_4c_9f": 207.2,
+        "delta_kcal": 6.0,
+        "relative_error_pct": 2.8,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 80.0,
+      "matched_ingredient_count": 4,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 2.4,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "poha",
+      "display_name": "Poha",
+      "ingredients": [
+        {
+          "name": "Beaten rice flakes",
+          "estimated_quantity_g": 80.0,
+          "typical_quantity": "80 g (estimated)",
+          "ifct_code": "A011",
+          "ifct_name": "Rice flakes (Oryza sativa )",
+          "ifct_per_100g": {
+            "calories": 353.7,
+            "protein": 7.44,
+            "carbs": 76.75,
+            "fat": 1.14
+          },
+          "contribution": {
+            "calories": 282.96,
+            "protein": 5.95,
+            "carbs": 61.4,
+            "fat": 0.91
+          }
+        },
+        {
+          "name": "potato",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "F006",
+          "ifct_name": "Potato, brown skin, big (Solanum tuberosum)",
+          "ifct_per_100g": {
+            "calories": 69.8,
+            "protein": 1.54,
+            "carbs": 14.89,
+            "fat": 0.23
+          },
+          "contribution": {
+            "calories": 27.92,
+            "protein": 0.62,
+            "carbs": 5.96,
+            "fat": 0.09
+          }
+        },
+        {
+          "name": "curry leaves",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": "G010",
+          "ifct_name": "Curry leaves (Murraya koenigii)",
+          "ifct_per_100g": {
+            "calories": 63.6,
+            "protein": 7.41,
+            "carbs": 4.51,
+            "fat": 1.06
+          },
+          "contribution": {
+            "calories": 1.91,
+            "protein": 0.22,
+            "carbs": 0.14,
+            "fat": 0.03
+          }
+        },
+        {
+          "name": "green chilies",
+          "estimated_quantity_g": 5.0,
+          "typical_quantity": "5 g (estimated)",
+          "ifct_code": "G008",
+          "ifct_name": "Chillies, green - all varieties (Capsicum annum)",
+          "ifct_per_100g": {
+            "calories": 42.3,
+            "protein": 2.36,
+            "carbs": 5.86,
+            "fat": 0.72
+          },
+          "contribution": {
+            "calories": 2.11,
+            "protein": 0.12,
+            "carbs": 0.29,
+            "fat": 0.04
+          }
+        },
+        {
+          "name": "lemon juice",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": "E033",
+          "ifct_name": "Lemon, juice (Citrus limon)",
+          "ifct_per_100g": {
+            "calories": 36.6,
+            "protein": 0.41,
+            "carbs": 6.97,
+            "fat": 0.75
+          },
+          "contribution": {
+            "calories": 2.93,
+            "protein": 0.03,
+            "carbs": 0.56,
+            "fat": 0.06
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "A011",
+        "F006",
+        "G010",
+        "G008",
+        "E033"
+      ],
+      "matched_mass_g": 136.0,
+      "unmatched_mass_g": 0.0,
+      "total_estimated_mass_g": 136.0,
+      "match_coverage_pct": 100.0,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 233.7,
+        "protein": 5.1,
+        "carbs": 50.25,
+        "fat": 0.83
+      },
+      "fully_matched": true,
+      "unmatched_ingredients": [],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 317.83,
+          "protein": 6.94,
+          "carbs": 68.34,
+          "fat": 1.13
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 467.4,
+        "protein": 10.2,
+        "carbs": 100.5,
+        "fat": 1.66
+      },
+      "atwater_check": {
+        "reported_calories": 233.7,
+        "atwater_4p_4c_9f": 228.9,
+        "delta_kcal": 4.8,
+        "relative_error_pct": 2.1,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 100.0,
+      "matched_ingredient_count": 5,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [],
+      "quality_flags": []
+    }
+  ],
+  "dishes": [
+    {
+      "class_name": "biryani",
+      "display_name": "Biryani",
+      "ingredients": [
+        {
+          "name": "Chicken thighs",
+          "estimated_quantity_g": 150.0,
+          "typical_quantity": "150 g (estimated)",
+          "ifct_code": "N002",
+          "ifct_name": "Chicken, poultry, thigh, skinless",
+          "ifct_per_100g": {
+            "calories": 199.8,
+            "protein": 18.18,
+            "carbs": 0.0,
+            "fat": 14.23
+          },
+          "contribution": {
+            "calories": 299.7,
+            "protein": 27.27,
+            "carbs": 0.0,
+            "fat": 21.34
+          }
+        },
+        {
+          "name": "basmati rice",
+          "estimated_quantity_g": 100.0,
+          "typical_quantity": "100 g (estimated)",
+          "ifct_code": "A015",
+          "ifct_name": "Rice, raw, milled (Oryza sativa )",
+          "ifct_per_100g": {
+            "calories": 356.4,
+            "protein": 7.94,
+            "carbs": 78.24,
+            "fat": 0.52
+          },
+          "contribution": {
+            "calories": 356.4,
+            "protein": 7.94,
+            "carbs": 78.24,
+            "fat": 0.52
+          }
+        },
+        {
+          "name": "star anise",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "sweet",
+          "estimated_quantity_g": 0.0,
+          "typical_quantity": "0 g (excluded)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "green chillies",
+          "estimated_quantity_g": 10.0,
+          "typical_quantity": "10 g (estimated)",
+          "ifct_code": "G008",
+          "ifct_name": "Chillies, green - all varieties (Capsicum annum)",
+          "ifct_per_100g": {
+            "calories": 42.3,
+            "protein": 2.36,
+            "carbs": 5.86,
+            "fat": 0.72
+          },
+          "contribution": {
+            "calories": 4.23,
+            "protein": 0.24,
+            "carbs": 0.59,
+            "fat": 0.07
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "N002",
+        "A015",
+        "G008"
+      ],
+      "matched_mass_g": 260.0,
+      "unmatched_mass_g": 2.0,
+      "total_estimated_mass_g": 262.0,
+      "match_coverage_pct": 99.2,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 254.0,
+        "protein": 13.63,
+        "carbs": 30.32,
+        "fat": 8.44
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "star anise"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 660.33,
+          "protein": 35.45,
+          "carbs": 78.83,
+          "fat": 21.94
+        }
+      },
+      "default_serving_g": 300,
+      "nutrition_per_default_serving": {
+        "calories": 762.0,
+        "protein": 40.89,
+        "carbs": 90.96,
+        "fat": 25.32
+      },
+      "atwater_check": {
+        "reported_calories": 254.0,
+        "atwater_4p_4c_9f": 251.8,
+        "delta_kcal": 2.2,
+        "relative_error_pct": 0.9,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 75.0,
+      "matched_ingredient_count": 3,
+      "active_ingredient_count": 4,
+      "unmatched_blockers": [
+        {
+          "ingredient": "star anise",
+          "estimated_quantity_g": 2.0,
+          "share_of_total_mass_pct": 0.8,
+          "reason": "no_ifct_entry (Illicium not listed)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "paneer_butter_masala",
+      "display_name": "Paneer butter masala",
+      "ingredients": [
+        {
+          "name": "Paneer",
+          "estimated_quantity_g": 100.0,
+          "typical_quantity": "100 g (estimated)",
+          "ifct_code": "L003",
+          "ifct_name": "Paneer",
+          "ifct_per_100g": {
+            "calories": 305.4,
+            "protein": 18.86,
+            "carbs": 2.41,
+            "fat": 24.78
+          },
+          "contribution": {
+            "calories": 305.4,
+            "protein": 18.86,
+            "carbs": 2.41,
+            "fat": 24.78
+          }
+        },
+        {
+          "name": "whipping cream",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "cashew nuts",
+          "estimated_quantity_g": 15.0,
+          "typical_quantity": "15 g (estimated)",
+          "ifct_code": "H005",
+          "ifct_name": "Cashew nut (Anacardium occidentale)",
+          "ifct_per_100g": {
+            "calories": 582.7,
+            "protein": 18.78,
+            "carbs": 25.46,
+            "fat": 45.2
+          },
+          "contribution": {
+            "calories": 87.41,
+            "protein": 2.82,
+            "carbs": 3.82,
+            "fat": 6.78
+          }
+        },
+        {
+          "name": "butter",
+          "estimated_quantity_g": 15.0,
+          "typical_quantity": "15 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "L003",
+        "H005"
+      ],
+      "matched_mass_g": 115.0,
+      "unmatched_mass_g": 58.0,
+      "total_estimated_mass_g": 173.0,
+      "match_coverage_pct": 66.5,
+      "nutrition_confidence": "low",
+      "nutrition_per_100g": {
+        "calories": 341.6,
+        "protein": 18.85,
+        "carbs": 5.42,
+        "fat": 27.44
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "whipping cream",
+        "garam masala",
+        "butter"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 392.8,
+          "protein": 21.68,
+          "carbs": 6.23,
+          "fat": 31.56
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 683.2,
+        "protein": 37.7,
+        "carbs": 10.84,
+        "fat": 54.88
+      },
+      "atwater_check": {
+        "reported_calories": 341.6,
+        "atwater_4p_4c_9f": 344.0,
+        "delta_kcal": -2.4,
+        "relative_error_pct": 0.7,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 40.0,
+      "matched_ingredient_count": 2,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "whipping cream",
+          "estimated_quantity_g": 40.0,
+          "share_of_total_mass_pct": 23.1,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "butter",
+          "estimated_quantity_g": 15.0,
+          "share_of_total_mass_pct": 8.7,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 1.7,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "coverage_below_threshold"
+      ]
+    },
+    {
+      "class_name": "dal_tadka",
+      "display_name": "Dal tadka",
+      "ingredients": [
+        {
+          "name": "Pigeon peas",
+          "estimated_quantity_g": 70.0,
+          "typical_quantity": "70 g (estimated)",
+          "ifct_code": "B021",
+          "ifct_name": "Red gram, dal (Cajanus cajan)",
+          "ifct_per_100g": {
+            "calories": 330.8,
+            "protein": 21.7,
+            "carbs": 55.23,
+            "fat": 1.56
+          },
+          "contribution": {
+            "calories": 231.56,
+            "protein": 15.19,
+            "carbs": 38.66,
+            "fat": 1.09
+          }
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "ginger",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": "G014",
+          "ifct_name": "Ginger, fresh (Zingiber officinale)",
+          "ifct_per_100g": {
+            "calories": 55.0,
+            "protein": 2.22,
+            "carbs": 8.97,
+            "fat": 0.85
+          },
+          "contribution": {
+            "calories": 4.4,
+            "protein": 0.18,
+            "carbs": 0.72,
+            "fat": 0.07
+          }
+        },
+        {
+          "name": "red onion",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "G017",
+          "ifct_name": "Onion, big (Allium cepa)",
+          "ifct_per_100g": {
+            "calories": 48.0,
+            "protein": 1.5,
+            "carbs": 9.56,
+            "fat": 0.24
+          },
+          "contribution": {
+            "calories": 19.2,
+            "protein": 0.6,
+            "carbs": 3.82,
+            "fat": 0.1
+          }
+        },
+        {
+          "name": "kasuri methi",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": "C020",
+          "ifct_name": "Fenugreek leaves (Trigonella foenum graecum)",
+          "ifct_per_100g": {
+            "calories": 34.4,
+            "protein": 3.68,
+            "carbs": 2.17,
+            "fat": 0.83
+          },
+          "contribution": {
+            "calories": 0.69,
+            "protein": 0.07,
+            "carbs": 0.04,
+            "fat": 0.02
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "B021",
+        "G014",
+        "G017",
+        "C020"
+      ],
+      "matched_mass_g": 120.0,
+      "unmatched_mass_g": 3.0,
+      "total_estimated_mass_g": 123.0,
+      "match_coverage_pct": 97.6,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 213.2,
+        "protein": 13.37,
+        "carbs": 36.04,
+        "fat": 1.06
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "garam masala"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 255.85,
+          "protein": 16.04,
+          "carbs": 43.25,
+          "fat": 1.27
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 426.4,
+        "protein": 26.74,
+        "carbs": 72.08,
+        "fat": 2.12
+      },
+      "atwater_check": {
+        "reported_calories": 213.2,
+        "atwater_4p_4c_9f": 207.2,
+        "delta_kcal": 6.0,
+        "relative_error_pct": 2.8,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 80.0,
+      "matched_ingredient_count": 4,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 2.4,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "palak_paneer",
+      "display_name": "Palak paneer",
+      "ingredients": [
+        {
+          "name": "Cottage cheese",
+          "estimated_quantity_g": 80.0,
+          "typical_quantity": "80 g (estimated)",
+          "ifct_code": "L003",
+          "ifct_name": "Paneer",
+          "ifct_per_100g": {
+            "calories": 305.4,
+            "protein": 18.86,
+            "carbs": 2.41,
+            "fat": 24.78
+          },
+          "contribution": {
+            "calories": 244.32,
+            "protein": 15.09,
+            "carbs": 1.93,
+            "fat": 19.82
+          }
+        },
+        {
+          "name": "palak",
+          "estimated_quantity_g": 120.0,
+          "typical_quantity": "120 g (estimated)",
+          "ifct_code": "C033",
+          "ifct_name": "Spinach (Spinacia oleracea)",
+          "ifct_per_100g": {
+            "calories": 24.4,
+            "protein": 2.14,
+            "carbs": 2.05,
+            "fat": 0.64
+          },
+          "contribution": {
+            "calories": 29.28,
+            "protein": 2.57,
+            "carbs": 2.46,
+            "fat": 0.77
+          }
+        },
+        {
+          "name": "cream",
+          "estimated_quantity_g": 20.0,
+          "typical_quantity": "20 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "butter",
+          "estimated_quantity_g": 10.0,
+          "typical_quantity": "10 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "L003",
+        "C033"
+      ],
+      "matched_mass_g": 200.0,
+      "unmatched_mass_g": 33.0,
+      "total_estimated_mass_g": 233.0,
+      "match_coverage_pct": 85.8,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 136.8,
+        "protein": 8.83,
+        "carbs": 2.19,
+        "fat": 10.3
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "cream",
+        "garam masala",
+        "butter"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 273.6,
+          "protein": 17.66,
+          "carbs": 4.39,
+          "fat": 20.59
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 273.6,
+        "protein": 17.66,
+        "carbs": 4.38,
+        "fat": 20.6
+      },
+      "atwater_check": {
+        "reported_calories": 136.8,
+        "atwater_4p_4c_9f": 136.8,
+        "delta_kcal": 0.0,
+        "relative_error_pct": 0.0,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 40.0,
+      "matched_ingredient_count": 2,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "cream",
+          "estimated_quantity_g": 20.0,
+          "share_of_total_mass_pct": 8.6,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "butter",
+          "estimated_quantity_g": 10.0,
+          "share_of_total_mass_pct": 4.3,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 1.3,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": []
+    },
+    {
+      "class_name": "butter_chicken",
+      "display_name": "Butter chicken",
+      "ingredients": [
+        {
+          "name": "Chicken",
+          "estimated_quantity_g": 150.0,
+          "typical_quantity": "150 g (estimated)",
+          "ifct_code": "N002",
+          "ifct_name": "Chicken, poultry, thigh, skinless",
+          "ifct_per_100g": {
+            "calories": 199.8,
+            "protein": 18.18,
+            "carbs": 0.0,
+            "fat": 14.23
+          },
+          "contribution": {
+            "calories": 299.7,
+            "protein": 27.27,
+            "carbs": 0.0,
+            "fat": 21.34
+          }
+        },
+        {
+          "name": "greek yogurt",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "cream",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garam masala powder",
+          "estimated_quantity_g": 4.0,
+          "typical_quantity": "4 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "cashew nuts",
+          "estimated_quantity_g": 15.0,
+          "typical_quantity": "15 g (estimated)",
+          "ifct_code": "H005",
+          "ifct_name": "Cashew nut (Anacardium occidentale)",
+          "ifct_per_100g": {
+            "calories": 582.7,
+            "protein": 18.78,
+            "carbs": 25.46,
+            "fat": 45.2
+          },
+          "contribution": {
+            "calories": 87.41,
+            "protein": 2.82,
+            "carbs": 3.82,
+            "fat": 6.78
+          }
+        },
+        {
+          "name": "butter",
+          "estimated_quantity_g": 20.0,
+          "typical_quantity": "20 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "N002",
+        "H005"
+      ],
+      "matched_mass_g": 165.0,
+      "unmatched_mass_g": 104.0,
+      "total_estimated_mass_g": 269.0,
+      "match_coverage_pct": 61.3,
+      "nutrition_confidence": "low",
+      "nutrition_per_100g": {
+        "calories": 234.6,
+        "protein": 18.23,
+        "carbs": 2.31,
+        "fat": 17.05
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "greek yogurt",
+        "cream",
+        "garam masala powder",
+        "butter"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 387.11,
+          "protein": 30.09,
+          "carbs": 3.82,
+          "fat": 28.12
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 469.2,
+        "protein": 36.46,
+        "carbs": 4.62,
+        "fat": 34.1
+      },
+      "atwater_check": {
+        "reported_calories": 234.6,
+        "atwater_4p_4c_9f": 235.6,
+        "delta_kcal": -1.0,
+        "relative_error_pct": 0.4,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 33.3,
+      "matched_ingredient_count": 2,
+      "active_ingredient_count": 6,
+      "unmatched_blockers": [
+        {
+          "ingredient": "greek yogurt",
+          "estimated_quantity_g": 40.0,
+          "share_of_total_mass_pct": 14.9,
+          "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "cream",
+          "estimated_quantity_g": 40.0,
+          "share_of_total_mass_pct": 14.9,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "butter",
+          "estimated_quantity_g": 20.0,
+          "share_of_total_mass_pct": 7.4,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "garam masala powder",
+          "estimated_quantity_g": 4.0,
+          "share_of_total_mass_pct": 1.5,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "coverage_below_threshold"
+      ]
+    },
+    {
+      "class_name": "chana_masala",
+      "display_name": "Chana masala",
+      "ingredients": [
+        {
+          "name": "Chickpeas",
+          "estimated_quantity_g": 80.0,
+          "typical_quantity": "80 g (estimated)",
+          "ifct_code": "B002",
+          "ifct_name": "Bengal gram, whole (Cicer arietinum)",
+          "ifct_per_100g": {
+            "calories": 287.0,
+            "protein": 18.77,
+            "carbs": 39.56,
+            "fat": 5.11
+          },
+          "contribution": {
+            "calories": 229.6,
+            "protein": 15.02,
+            "carbs": 31.65,
+            "fat": 4.09
+          }
+        },
+        {
+          "name": "tomato paste",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "D076",
+          "ifct_name": "Tomato, ripe, local (Lycopersicon esculentum)",
+          "ifct_per_100g": {
+            "calories": 19.6,
+            "protein": 0.9,
+            "carbs": 2.71,
+            "fat": 0.47
+          },
+          "contribution": {
+            "calories": 7.84,
+            "protein": 0.36,
+            "carbs": 1.08,
+            "fat": 0.19
+          }
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 4.0,
+          "typical_quantity": "4 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "ginger",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": "G014",
+          "ifct_name": "Ginger, fresh (Zingiber officinale)",
+          "ifct_per_100g": {
+            "calories": 55.0,
+            "protein": 2.22,
+            "carbs": 8.97,
+            "fat": 0.85
+          },
+          "contribution": {
+            "calories": 4.4,
+            "protein": 0.18,
+            "carbs": 0.72,
+            "fat": 0.07
+          }
+        },
+        {
+          "name": "red onion",
+          "estimated_quantity_g": 50.0,
+          "typical_quantity": "50 g (estimated)",
+          "ifct_code": "G017",
+          "ifct_name": "Onion, big (Allium cepa)",
+          "ifct_per_100g": {
+            "calories": 48.0,
+            "protein": 1.5,
+            "carbs": 9.56,
+            "fat": 0.24
+          },
+          "contribution": {
+            "calories": 24.0,
+            "protein": 0.75,
+            "carbs": 4.78,
+            "fat": 0.12
+          }
+        },
+        {
+          "name": "avocado oil",
+          "estimated_quantity_g": 10.0,
+          "typical_quantity": "10 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "B002",
+        "D076",
+        "G014",
+        "G017"
+      ],
+      "matched_mass_g": 178.0,
+      "unmatched_mass_g": 14.0,
+      "total_estimated_mass_g": 192.0,
+      "match_coverage_pct": 92.7,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 149.3,
+        "protein": 9.16,
+        "carbs": 21.48,
+        "fat": 2.51
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "garam masala",
+        "avocado oil"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 265.84,
+          "protein": 16.3,
+          "carbs": 38.23,
+          "fat": 4.46
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 298.6,
+        "protein": 18.32,
+        "carbs": 42.96,
+        "fat": 5.02
+      },
+      "atwater_check": {
+        "reported_calories": 149.3,
+        "atwater_4p_4c_9f": 145.2,
+        "delta_kcal": 4.1,
+        "relative_error_pct": 2.7,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 66.7,
+      "matched_ingredient_count": 4,
+      "active_ingredient_count": 6,
+      "unmatched_blockers": [
+        {
+          "ingredient": "avocado oil",
+          "estimated_quantity_g": 10.0,
+          "share_of_total_mass_pct": 5.2,
+          "reason": "no_table1_proximate (oils only in fatty-acid Table 12; not mapped to Atwater here)"
+        },
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 4.0,
+          "share_of_total_mass_pct": 2.1,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "dal_makhani",
+      "display_name": "Dal makhani",
+      "ingredients": [
+        {
+          "name": "Red kidney beans",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "B020",
+          "ifct_name": "Rajmah, red (Phaseolus vulgaris)",
+          "ifct_per_100g": {
+            "calories": 299.2,
+            "protein": 19.91,
+            "carbs": 48.61,
+            "fat": 1.77
+          },
+          "contribution": {
+            "calories": 119.68,
+            "protein": 7.96,
+            "carbs": 19.44,
+            "fat": 0.71
+          }
+        },
+        {
+          "name": "urad dal",
+          "estimated_quantity_g": 60.0,
+          "typical_quantity": "60 g (estimated)",
+          "ifct_code": "B003",
+          "ifct_name": "Black gram, dal (Phaseolus mungo)",
+          "ifct_per_100g": {
+            "calories": 324.1,
+            "protein": 23.06,
+            "carbs": 51.0,
+            "fat": 1.69
+          },
+          "contribution": {
+            "calories": 194.46,
+            "protein": 13.84,
+            "carbs": 30.6,
+            "fat": 1.01
+          }
+        },
+        {
+          "name": "cream",
+          "estimated_quantity_g": 30.0,
+          "typical_quantity": "30 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "chili powder",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": "G022",
+          "ifct_name": "Chillies, red (Capsicum annum)",
+          "ifct_per_100g": {
+            "calories": 236.6,
+            "protein": 12.69,
+            "carbs": 29.46,
+            "fat": 6.4
+          },
+          "contribution": {
+            "calories": 4.73,
+            "protein": 0.25,
+            "carbs": 0.59,
+            "fat": 0.13
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "B020",
+        "B003",
+        "G022"
+      ],
+      "matched_mass_g": 102.0,
+      "unmatched_mass_g": 33.0,
+      "total_estimated_mass_g": 135.0,
+      "match_coverage_pct": 75.6,
+      "nutrition_confidence": "medium",
+      "nutrition_per_100g": {
+        "calories": 312.6,
+        "protein": 21.62,
+        "carbs": 49.64,
+        "fat": 1.81
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "cream",
+        "garam masala"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 318.87,
+          "protein": 22.05,
+          "carbs": 50.63,
+          "fat": 1.85
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 625.2,
+        "protein": 43.24,
+        "carbs": 99.28,
+        "fat": 3.62
+      },
+      "atwater_check": {
+        "reported_calories": 312.6,
+        "atwater_4p_4c_9f": 301.3,
+        "delta_kcal": 11.3,
+        "relative_error_pct": 3.6,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 60.0,
+      "matched_ingredient_count": 3,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "cream",
+          "estimated_quantity_g": 30.0,
+          "share_of_total_mass_pct": 22.2,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 2.2,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "chicken_tikka_masala",
+      "display_name": "Chicken tikka masala",
+      "ingredients": [
+        {
+          "name": "Naan bread",
+          "estimated_quantity_g": 0.0,
+          "typical_quantity": "0 g (excluded)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "tomato sauce",
+          "estimated_quantity_g": 80.0,
+          "typical_quantity": "80 g (estimated)",
+          "ifct_code": "D076",
+          "ifct_name": "Tomato, ripe, local (Lycopersicon esculentum)",
+          "ifct_per_100g": {
+            "calories": 19.6,
+            "protein": 0.9,
+            "carbs": 2.71,
+            "fat": 0.47
+          },
+          "contribution": {
+            "calories": 15.68,
+            "protein": 0.72,
+            "carbs": 2.17,
+            "fat": 0.38
+          }
+        },
+        {
+          "name": "skinless chicken breasts",
+          "estimated_quantity_g": 150.0,
+          "typical_quantity": "150 g (estimated)",
+          "ifct_code": "N003",
+          "ifct_name": "Chicken, poultry, breast, skinless",
+          "ifct_per_100g": {
+            "calories": 168.3,
+            "protein": 21.81,
+            "carbs": 0.01,
+            "fat": 9.0
+          },
+          "contribution": {
+            "calories": 252.45,
+            "protein": 32.71,
+            "carbs": 0.01,
+            "fat": 13.5
+          }
+        },
+        {
+          "name": "heavy cream",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 4.0,
+          "typical_quantity": "4 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "D076",
+        "N003"
+      ],
+      "matched_mass_g": 230.0,
+      "unmatched_mass_g": 44.0,
+      "total_estimated_mass_g": 274.0,
+      "match_coverage_pct": 83.9,
+      "nutrition_confidence": "medium",
+      "nutrition_per_100g": {
+        "calories": 116.6,
+        "protein": 14.54,
+        "carbs": 0.95,
+        "fat": 6.03
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "heavy cream",
+        "garam masala"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 268.13,
+          "protein": 33.43,
+          "carbs": 2.18,
+          "fat": 13.88
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 233.2,
+        "protein": 29.08,
+        "carbs": 1.9,
+        "fat": 12.06
+      },
+      "atwater_check": {
+        "reported_calories": 116.6,
+        "atwater_4p_4c_9f": 116.2,
+        "delta_kcal": 0.4,
+        "relative_error_pct": 0.3,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 50.0,
+      "matched_ingredient_count": 2,
+      "active_ingredient_count": 4,
+      "unmatched_blockers": [
+        {
+          "ingredient": "heavy cream",
+          "estimated_quantity_g": 40.0,
+          "share_of_total_mass_pct": 14.6,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 4.0,
+          "share_of_total_mass_pct": 1.5,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": []
+    },
+    {
+      "class_name": "naan",
+      "display_name": "Naan",
+      "ingredients": [
+        {
+          "name": "Whole wheat flour",
+          "estimated_quantity_g": 70.0,
+          "typical_quantity": "70 g (estimated)",
+          "ifct_code": "A019",
+          "ifct_name": "Wheat flour, atta (Triticum aestivum)",
+          "ifct_per_100g": {
+            "calories": 320.3,
+            "protein": 10.57,
+            "carbs": 64.17,
+            "fat": 1.53
+          },
+          "contribution": {
+            "calories": 224.21,
+            "protein": 7.4,
+            "carbs": 44.92,
+            "fat": 1.07
+          }
+        },
+        {
+          "name": "honey",
+          "estimated_quantity_g": 5.0,
+          "typical_quantity": "5 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "butter",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garlic",
+          "estimated_quantity_g": 4.0,
+          "typical_quantity": "4 g (estimated)",
+          "ifct_code": "G011",
+          "ifct_name": "Garlic, big clove (Allium sativum)",
+          "ifct_per_100g": {
+            "calories": 123.8,
+            "protein": 6.92,
+            "carbs": 21.93,
+            "fat": 0.16
+          },
+          "contribution": {
+            "calories": 4.95,
+            "protein": 0.28,
+            "carbs": 0.88,
+            "fat": 0.01
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "A019",
+        "G011"
+      ],
+      "matched_mass_g": 74.0,
+      "unmatched_mass_g": 13.0,
+      "total_estimated_mass_g": 87.0,
+      "match_coverage_pct": 85.1,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 309.7,
+        "protein": 10.37,
+        "carbs": 61.89,
+        "fat": 1.46
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "honey",
+        "butter"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 229.16,
+          "protein": 7.68,
+          "carbs": 45.8,
+          "fat": 1.08
+        }
+      },
+      "default_serving_g": 90,
+      "nutrition_per_default_serving": {
+        "calories": 278.7,
+        "protein": 9.33,
+        "carbs": 55.7,
+        "fat": 1.31
+      },
+      "atwater_check": {
+        "reported_calories": 309.7,
+        "atwater_4p_4c_9f": 302.2,
+        "delta_kcal": 7.5,
+        "relative_error_pct": 2.4,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 50.0,
+      "matched_ingredient_count": 2,
+      "active_ingredient_count": 4,
+      "unmatched_blockers": [
+        {
+          "ingredient": "butter",
+          "estimated_quantity_g": 8.0,
+          "share_of_total_mass_pct": 9.2,
+          "reason": "no_table1_proximate (dairy fat absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "honey",
+          "estimated_quantity_g": 5.0,
+          "share_of_total_mass_pct": 5.7,
+          "reason": "no_table1_proximate (mentioned in narrative only)"
+        }
+      ],
+      "quality_flags": []
+    },
+    {
+      "class_name": "jalebi",
+      "display_name": "Jalebi",
+      "ingredients": [
+        {
+          "name": "Maida",
+          "estimated_quantity_g": 50.0,
+          "typical_quantity": "50 g (estimated)",
+          "ifct_code": "A018",
+          "ifct_name": "Wheat flour, refined (Triticum aestivum)",
+          "ifct_per_100g": {
+            "calories": 351.8,
+            "protein": 10.36,
+            "carbs": 74.27,
+            "fat": 0.76
+          },
+          "contribution": {
+            "calories": 175.9,
+            "protein": 5.18,
+            "carbs": 37.13,
+            "fat": 0.38
+          }
+        },
+        {
+          "name": "corn flour",
+          "estimated_quantity_g": 5.0,
+          "typical_quantity": "5 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "baking soda",
+          "estimated_quantity_g": 1.0,
+          "typical_quantity": "1 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "vinegar",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "curd",
+          "estimated_quantity_g": 20.0,
+          "typical_quantity": "20 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "water",
+          "estimated_quantity_g": 30.0,
+          "typical_quantity": "30 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "turmeric",
+          "estimated_quantity_g": 1.0,
+          "typical_quantity": "1 g (estimated)",
+          "ifct_code": "G033",
+          "ifct_name": "Turmeric powder (Curcuma domestica)",
+          "ifct_per_100g": {
+            "calories": 280.6,
+            "protein": 7.66,
+            "carbs": 49.22,
+            "fat": 5.03
+          },
+          "contribution": {
+            "calories": 2.81,
+            "protein": 0.08,
+            "carbs": 0.49,
+            "fat": 0.05
+          }
+        },
+        {
+          "name": "saffron",
+          "estimated_quantity_g": 0.2,
+          "typical_quantity": "0.2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "cardamom",
+          "estimated_quantity_g": 1.0,
+          "typical_quantity": "1 g (estimated)",
+          "ifct_code": "G020",
+          "ifct_name": "Cardamom, green (Elettaria cardamomum)",
+          "ifct_per_100g": {
+            "calories": 255.0,
+            "protein": 8.1,
+            "carbs": 47.76,
+            "fat": 2.6
+          },
+          "contribution": {
+            "calories": 2.55,
+            "protein": 0.08,
+            "carbs": 0.48,
+            "fat": 0.03
+          }
+        },
+        {
+          "name": "sugar syrup",
+          "estimated_quantity_g": 50.0,
+          "typical_quantity": "50 g (estimated)",
+          "ifct_code": "I001",
+          "ifct_name": "Jaggery, cane (Saccharum officinarum)",
+          "ifct_per_100g": {
+            "calories": 353.7,
+            "protein": 1.85,
+            "carbs": 84.87,
+            "fat": 0.16
+          },
+          "contribution": {
+            "calories": 176.85,
+            "protein": 0.93,
+            "carbs": 42.44,
+            "fat": 0.08
+          }
+        },
+        {
+          "name": "ghee",
+          "estimated_quantity_g": 15.0,
+          "typical_quantity": "15 g (estimated)",
+          "ifct_code": "T012",
+          "ifct_name": "Ghee (IFCT Edible Oils and Fats; Table 12 fatty-acid profile)",
+          "ifct_source_note": "No Table-1 proximate row for T012; IFCT lists ghee under Edible Oils and Fats (fatty-acid table). Values use IFCT Atwater fat factor (9 kcal/g) for a pure lipid food.",
+          "ifct_per_100g": {
+            "calories": 900.0,
+            "protein": 0.0,
+            "carbs": 0.0,
+            "fat": 100.0
+          },
+          "contribution": {
+            "calories": 135.0,
+            "protein": 0.0,
+            "carbs": 0.0,
+            "fat": 15.0
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "A018",
+        "G033",
+        "G020",
+        "I001",
+        "T012"
+      ],
+      "matched_mass_g": 117.0,
+      "unmatched_mass_g": 58.2,
+      "total_estimated_mass_g": 175.2,
+      "match_coverage_pct": 66.8,
+      "nutrition_confidence": "low",
+      "nutrition_per_100g": {
+        "calories": 421.5,
+        "protein": 5.35,
+        "carbs": 68.84,
+        "fat": 13.28
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "corn flour",
+        "baking soda",
+        "vinegar",
+        "curd",
+        "water",
+        "saffron"
+      ],
+      "supplemental_ifct_codes": [
+        "T012"
+      ],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 493.11,
+          "protein": 6.26,
+          "carbs": 80.54,
+          "fat": 15.54
+        }
+      },
+      "default_serving_g": 80,
+      "nutrition_per_default_serving": {
+        "calories": 337.2,
+        "protein": 4.28,
+        "carbs": 55.07,
+        "fat": 10.62
+      },
+      "atwater_check": {
+        "reported_calories": 421.5,
+        "atwater_4p_4c_9f": 416.3,
+        "delta_kcal": 5.2,
+        "relative_error_pct": 1.2,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 45.5,
+      "matched_ingredient_count": 5,
+      "active_ingredient_count": 11,
+      "unmatched_blockers": [
+        {
+          "ingredient": "water",
+          "estimated_quantity_g": 30.0,
+          "share_of_total_mass_pct": 17.1,
+          "reason": "zero_macro_solvent (no IFCT food code; mass only)"
+        },
+        {
+          "ingredient": "curd",
+          "estimated_quantity_g": 20.0,
+          "share_of_total_mass_pct": 11.4,
+          "reason": "no_table1_proximate (yogurt/curd absent from IFCT Table 1)"
+        },
+        {
+          "ingredient": "corn flour",
+          "estimated_quantity_g": 5.0,
+          "share_of_total_mass_pct": 2.9,
+          "reason": "no_close_match (maize starch \u2260 A006 dry maize grain)"
+        },
+        {
+          "ingredient": "vinegar",
+          "estimated_quantity_g": 2.0,
+          "share_of_total_mass_pct": 1.1,
+          "reason": "no_ifct_entry"
+        },
+        {
+          "ingredient": "baking soda",
+          "estimated_quantity_g": 1.0,
+          "share_of_total_mass_pct": 0.6,
+          "reason": "additive (not a food composition entry)"
+        },
+        {
+          "ingredient": "saffron",
+          "estimated_quantity_g": 0.2,
+          "share_of_total_mass_pct": 0.1,
+          "reason": "no_ifct_entry"
+        }
+      ],
+      "quality_flags": [
+        "coverage_below_threshold",
+        "uses_supplemental_oil_fat_values",
+        "sugar_proxied_as_jaggery_i001"
+      ]
+    },
+    {
+      "class_name": "gulab_jamun",
+      "display_name": "Gulab jamun",
+      "ingredients": [
+        {
+          "name": "Milk powder",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "plain flour",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": "A018",
+          "ifct_name": "Wheat flour, refined (Triticum aestivum)",
+          "ifct_per_100g": {
+            "calories": 351.8,
+            "protein": 10.36,
+            "carbs": 74.27,
+            "fat": 0.76
+          },
+          "contribution": {
+            "calories": 28.14,
+            "protein": 0.83,
+            "carbs": 5.94,
+            "fat": 0.06
+          }
+        },
+        {
+          "name": "baking powder",
+          "estimated_quantity_g": 1.0,
+          "typical_quantity": "1 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "ghee",
+          "estimated_quantity_g": 15.0,
+          "typical_quantity": "15 g (estimated)",
+          "ifct_code": "T012",
+          "ifct_name": "Ghee (IFCT Edible Oils and Fats; Table 12 fatty-acid profile)",
+          "ifct_source_note": "No Table-1 proximate row for T012; IFCT lists ghee under Edible Oils and Fats (fatty-acid table). Values use IFCT Atwater fat factor (9 kcal/g) for a pure lipid food.",
+          "ifct_per_100g": {
+            "calories": 900.0,
+            "protein": 0.0,
+            "carbs": 0.0,
+            "fat": 100.0
+          },
+          "contribution": {
+            "calories": 135.0,
+            "protein": 0.0,
+            "carbs": 0.0,
+            "fat": 15.0
+          }
+        },
+        {
+          "name": "milk",
+          "estimated_quantity_g": 20.0,
+          "typical_quantity": "20 g (estimated)",
+          "ifct_code": "L002",
+          "ifct_name": "Milk, whole, Cow",
+          "ifct_per_100g": {
+            "calories": 72.9,
+            "protein": 3.26,
+            "carbs": 4.94,
+            "fat": 4.48
+          },
+          "contribution": {
+            "calories": 14.58,
+            "protein": 0.65,
+            "carbs": 0.99,
+            "fat": 0.9
+          }
+        },
+        {
+          "name": "sugar",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "I001",
+          "ifct_name": "Jaggery, cane (Saccharum officinarum)",
+          "ifct_per_100g": {
+            "calories": 353.7,
+            "protein": 1.85,
+            "carbs": 84.87,
+            "fat": 0.16
+          },
+          "contribution": {
+            "calories": 141.48,
+            "protein": 0.74,
+            "carbs": 33.95,
+            "fat": 0.06
+          }
+        },
+        {
+          "name": "water",
+          "estimated_quantity_g": 30.0,
+          "typical_quantity": "30 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "rose water",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "A018",
+        "T012",
+        "L002",
+        "I001"
+      ],
+      "matched_mass_g": 83.0,
+      "unmatched_mass_g": 73.0,
+      "total_estimated_mass_g": 156.0,
+      "match_coverage_pct": 53.2,
+      "nutrition_confidence": "low",
+      "nutrition_per_100g": {
+        "calories": 384.6,
+        "protein": 2.68,
+        "carbs": 49.25,
+        "fat": 19.3
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "Milk powder",
+        "baking powder",
+        "water",
+        "rose water"
+      ],
+      "supplemental_ifct_codes": [
+        "T012"
+      ],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 319.2,
+          "protein": 2.22,
+          "carbs": 40.88,
+          "fat": 16.02
+        }
+      },
+      "default_serving_g": 50,
+      "nutrition_per_default_serving": {
+        "calories": 192.3,
+        "protein": 1.34,
+        "carbs": 24.62,
+        "fat": 9.65
+      },
+      "atwater_check": {
+        "reported_calories": 384.6,
+        "atwater_4p_4c_9f": 381.4,
+        "delta_kcal": 3.2,
+        "relative_error_pct": 0.8,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 50.0,
+      "matched_ingredient_count": 4,
+      "active_ingredient_count": 8,
+      "unmatched_blockers": [
+        {
+          "ingredient": "Milk powder",
+          "estimated_quantity_g": 40.0,
+          "share_of_total_mass_pct": 25.6,
+          "reason": "no_close_match (not forced to L004 Khoa)"
+        },
+        {
+          "ingredient": "water",
+          "estimated_quantity_g": 30.0,
+          "share_of_total_mass_pct": 19.2,
+          "reason": "zero_macro_solvent (no IFCT food code; mass only)"
+        },
+        {
+          "ingredient": "rose water",
+          "estimated_quantity_g": 2.0,
+          "share_of_total_mass_pct": 1.3,
+          "reason": "no_ifct_entry"
+        },
+        {
+          "ingredient": "baking powder",
+          "estimated_quantity_g": 1.0,
+          "share_of_total_mass_pct": 0.6,
+          "reason": "additive (not a food composition entry)"
+        }
+      ],
+      "quality_flags": [
+        "coverage_below_threshold",
+        "uses_supplemental_oil_fat_values",
+        "sugar_proxied_as_jaggery_i001"
+      ]
+    },
+    {
+      "class_name": "poha",
+      "display_name": "Poha",
+      "ingredients": [
+        {
+          "name": "Beaten rice flakes",
+          "estimated_quantity_g": 80.0,
+          "typical_quantity": "80 g (estimated)",
+          "ifct_code": "A011",
+          "ifct_name": "Rice flakes (Oryza sativa )",
+          "ifct_per_100g": {
+            "calories": 353.7,
+            "protein": 7.44,
+            "carbs": 76.75,
+            "fat": 1.14
+          },
+          "contribution": {
+            "calories": 282.96,
+            "protein": 5.95,
+            "carbs": 61.4,
+            "fat": 0.91
+          }
+        },
+        {
+          "name": "potato",
+          "estimated_quantity_g": 40.0,
+          "typical_quantity": "40 g (estimated)",
+          "ifct_code": "F006",
+          "ifct_name": "Potato, brown skin, big (Solanum tuberosum)",
+          "ifct_per_100g": {
+            "calories": 69.8,
+            "protein": 1.54,
+            "carbs": 14.89,
+            "fat": 0.23
+          },
+          "contribution": {
+            "calories": 27.92,
+            "protein": 0.62,
+            "carbs": 5.96,
+            "fat": 0.09
+          }
+        },
+        {
+          "name": "curry leaves",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": "G010",
+          "ifct_name": "Curry leaves (Murraya koenigii)",
+          "ifct_per_100g": {
+            "calories": 63.6,
+            "protein": 7.41,
+            "carbs": 4.51,
+            "fat": 1.06
+          },
+          "contribution": {
+            "calories": 1.91,
+            "protein": 0.22,
+            "carbs": 0.14,
+            "fat": 0.03
+          }
+        },
+        {
+          "name": "green chilies",
+          "estimated_quantity_g": 5.0,
+          "typical_quantity": "5 g (estimated)",
+          "ifct_code": "G008",
+          "ifct_name": "Chillies, green - all varieties (Capsicum annum)",
+          "ifct_per_100g": {
+            "calories": 42.3,
+            "protein": 2.36,
+            "carbs": 5.86,
+            "fat": 0.72
+          },
+          "contribution": {
+            "calories": 2.11,
+            "protein": 0.12,
+            "carbs": 0.29,
+            "fat": 0.04
+          }
+        },
+        {
+          "name": "lemon juice",
+          "estimated_quantity_g": 8.0,
+          "typical_quantity": "8 g (estimated)",
+          "ifct_code": "E033",
+          "ifct_name": "Lemon, juice (Citrus limon)",
+          "ifct_per_100g": {
+            "calories": 36.6,
+            "protein": 0.41,
+            "carbs": 6.97,
+            "fat": 0.75
+          },
+          "contribution": {
+            "calories": 2.93,
+            "protein": 0.03,
+            "carbs": 0.56,
+            "fat": 0.06
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "A011",
+        "F006",
+        "G010",
+        "G008",
+        "E033"
+      ],
+      "matched_mass_g": 136.0,
+      "unmatched_mass_g": 0.0,
+      "total_estimated_mass_g": 136.0,
+      "match_coverage_pct": 100.0,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 233.7,
+        "protein": 5.1,
+        "carbs": 50.25,
+        "fat": 0.83
+      },
+      "fully_matched": true,
+      "unmatched_ingredients": [],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 317.83,
+          "protein": 6.94,
+          "carbs": 68.34,
+          "fat": 1.13
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 467.4,
+        "protein": 10.2,
+        "carbs": 100.5,
+        "fat": 1.66
+      },
+      "atwater_check": {
+        "reported_calories": 233.7,
+        "atwater_4p_4c_9f": 228.9,
+        "delta_kcal": 4.8,
+        "relative_error_pct": 2.1,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 100.0,
+      "matched_ingredient_count": 5,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [],
+      "quality_flags": []
+    },
+    {
+      "class_name": "kachori",
+      "display_name": "Kachori",
+      "ingredients": [
+        {
+          "name": "Moong dal",
+          "estimated_quantity_g": 25.0,
+          "typical_quantity": "25 g (estimated)",
+          "ifct_code": "B010",
+          "ifct_name": "Green gram, dal ( a) Vigna radiat",
+          "ifct_per_100g": {
+            "calories": 325.8,
+            "protein": 23.88,
+            "carbs": 52.59,
+            "fat": 1.35
+          },
+          "contribution": {
+            "calories": 81.45,
+            "protein": 5.97,
+            "carbs": 13.15,
+            "fat": 0.34
+          }
+        },
+        {
+          "name": "rava",
+          "estimated_quantity_g": 10.0,
+          "typical_quantity": "10 g (estimated)",
+          "ifct_code": "A022",
+          "ifct_name": "Wheat, semolina (Triticum aestivum)",
+          "ifct_per_100g": {
+            "calories": 333.7,
+            "protein": 11.38,
+            "carbs": 68.43,
+            "fat": 0.74
+          },
+          "contribution": {
+            "calories": 33.37,
+            "protein": 1.14,
+            "carbs": 6.84,
+            "fat": 0.07
+          }
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "dough",
+          "estimated_quantity_g": 50.0,
+          "typical_quantity": "50 g (estimated)",
+          "ifct_code": "A018",
+          "ifct_name": "Wheat flour, refined (Triticum aestivum)",
+          "ifct_per_100g": {
+            "calories": 351.8,
+            "protein": 10.36,
+            "carbs": 74.27,
+            "fat": 0.76
+          },
+          "contribution": {
+            "calories": 175.9,
+            "protein": 5.18,
+            "carbs": 37.13,
+            "fat": 0.38
+          }
+        },
+        {
+          "name": "fennel seeds",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "ifct_food_codes": [
+        "B010",
+        "A022",
+        "A018"
+      ],
+      "matched_mass_g": 85.0,
+      "unmatched_mass_g": 4.0,
+      "total_estimated_mass_g": 89.0,
+      "match_coverage_pct": 95.5,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 342.0,
+        "protein": 14.46,
+        "carbs": 67.21,
+        "fat": 0.93
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "garam masala",
+        "fennel seeds"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 290.72,
+          "protein": 12.29,
+          "carbs": 57.13,
+          "fat": 0.79
+        }
+      },
+      "default_serving_g": 80,
+      "nutrition_per_default_serving": {
+        "calories": 273.6,
+        "protein": 11.57,
+        "carbs": 53.77,
+        "fat": 0.74
+      },
+      "atwater_check": {
+        "reported_calories": 342.0,
+        "atwater_4p_4c_9f": 335.0,
+        "delta_kcal": 7.0,
+        "relative_error_pct": 2.0,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 60.0,
+      "matched_ingredient_count": 3,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 2.0,
+          "share_of_total_mass_pct": 2.2,
+          "reason": "blend (no single IFCT food code)"
+        },
+        {
+          "ingredient": "fennel seeds",
+          "estimated_quantity_g": 2.0,
+          "share_of_total_mass_pct": 2.2,
+          "reason": "no_ifct_entry (Foeniculum not listed)"
+        }
+      ],
+      "quality_flags": [
+        "raw_staple_basis_may_overstate_cooked_density"
+      ]
+    },
+    {
+      "class_name": "aloo_gobi",
+      "display_name": "Aloo gobi",
+      "ingredients": [
+        {
+          "name": "Cauliflower",
+          "estimated_quantity_g": 150.0,
+          "typical_quantity": "150 g (estimated)",
+          "ifct_code": "D036",
+          "ifct_name": "Cauliflower (Brassica oleracea var. botrytis)",
+          "ifct_per_100g": {
+            "calories": 22.9,
+            "protein": 2.15,
+            "carbs": 2.03,
+            "fat": 0.44
+          },
+          "contribution": {
+            "calories": 34.35,
+            "protein": 3.22,
+            "carbs": 3.04,
+            "fat": 0.66
+          }
+        },
+        {
+          "name": "potato",
+          "estimated_quantity_g": 100.0,
+          "typical_quantity": "100 g (estimated)",
+          "ifct_code": "F006",
+          "ifct_name": "Potato, brown skin, big (Solanum tuberosum)",
+          "ifct_per_100g": {
+            "calories": 69.8,
+            "protein": 1.54,
+            "carbs": 14.89,
+            "fat": 0.23
+          },
+          "contribution": {
+            "calories": 69.8,
+            "protein": 1.54,
+            "carbs": 14.89,
+            "fat": 0.23
+          }
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "turmeric",
+          "estimated_quantity_g": 2.0,
+          "typical_quantity": "2 g (estimated)",
+          "ifct_code": "G033",
+          "ifct_name": "Turmeric powder (Curcuma domestica)",
+          "ifct_per_100g": {
+            "calories": 280.6,
+            "protein": 7.66,
+            "carbs": 49.22,
+            "fat": 5.03
+          },
+          "contribution": {
+            "calories": 5.61,
+            "protein": 0.15,
+            "carbs": 0.98,
+            "fat": 0.1
+          }
+        },
+        {
+          "name": "curry leaves",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": "G010",
+          "ifct_name": "Curry leaves (Murraya koenigii)",
+          "ifct_per_100g": {
+            "calories": 63.6,
+            "protein": 7.41,
+            "carbs": 4.51,
+            "fat": 1.06
+          },
+          "contribution": {
+            "calories": 1.91,
+            "protein": 0.22,
+            "carbs": 0.14,
+            "fat": 0.03
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "D036",
+        "F006",
+        "G033",
+        "G010"
+      ],
+      "matched_mass_g": 255.0,
+      "unmatched_mass_g": 3.0,
+      "total_estimated_mass_g": 258.0,
+      "match_coverage_pct": 98.8,
+      "nutrition_confidence": "high",
+      "nutrition_per_100g": {
+        "calories": 43.8,
+        "protein": 2.02,
+        "carbs": 7.47,
+        "fat": 0.4
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "garam masala"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 111.67,
+          "protein": 5.14,
+          "carbs": 19.05,
+          "fat": 1.02
+        }
+      },
+      "default_serving_g": 180,
+      "nutrition_per_default_serving": {
+        "calories": 78.8,
+        "protein": 3.64,
+        "carbs": 13.45,
+        "fat": 0.72
+      },
+      "atwater_check": {
+        "reported_calories": 43.8,
+        "atwater_4p_4c_9f": 41.6,
+        "delta_kcal": 2.2,
+        "relative_error_pct": 5.0,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 80.0,
+      "matched_ingredient_count": 4,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 1.2,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": []
+    },
+    {
+      "class_name": "kadai_paneer",
+      "display_name": "Kadai paneer",
+      "ingredients": [
+        {
+          "name": "Cottage cheese",
+          "estimated_quantity_g": 100.0,
+          "typical_quantity": "100 g (estimated)",
+          "ifct_code": "L003",
+          "ifct_name": "Paneer",
+          "ifct_per_100g": {
+            "calories": 305.4,
+            "protein": 18.86,
+            "carbs": 2.41,
+            "fat": 24.78
+          },
+          "contribution": {
+            "calories": 305.4,
+            "protein": 18.86,
+            "carbs": 2.41,
+            "fat": 24.78
+          }
+        },
+        {
+          "name": "bell peppers",
+          "estimated_quantity_g": 50.0,
+          "typical_quantity": "50 g (estimated)",
+          "ifct_code": "D033",
+          "ifct_name": "Capsicum, green (Capsicum annuum)",
+          "ifct_per_100g": {
+            "calories": 16.3,
+            "protein": 1.11,
+            "carbs": 1.84,
+            "fat": 0.34
+          },
+          "contribution": {
+            "calories": 8.15,
+            "protein": 0.56,
+            "carbs": 0.92,
+            "fat": 0.17
+          }
+        },
+        {
+          "name": "gravy",
+          "estimated_quantity_g": 80.0,
+          "typical_quantity": "80 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "typical_quantity": "3 g (estimated)",
+          "ifct_code": null,
+          "ifct_match": "none"
+        },
+        {
+          "name": "cashew nuts",
+          "estimated_quantity_g": 10.0,
+          "typical_quantity": "10 g (estimated)",
+          "ifct_code": "H005",
+          "ifct_name": "Cashew nut (Anacardium occidentale)",
+          "ifct_per_100g": {
+            "calories": 582.7,
+            "protein": 18.78,
+            "carbs": 25.46,
+            "fat": 45.2
+          },
+          "contribution": {
+            "calories": 58.27,
+            "protein": 1.88,
+            "carbs": 2.55,
+            "fat": 4.52
+          }
+        }
+      ],
+      "ifct_food_codes": [
+        "L003",
+        "D033",
+        "H005"
+      ],
+      "matched_mass_g": 160.0,
+      "unmatched_mass_g": 83.0,
+      "total_estimated_mass_g": 243.0,
+      "match_coverage_pct": 65.8,
+      "nutrition_confidence": "low",
+      "nutrition_per_100g": {
+        "calories": 232.4,
+        "protein": 13.31,
+        "carbs": 3.67,
+        "fat": 18.42
+      },
+      "fully_matched": false,
+      "unmatched_ingredients": [
+        "gravy",
+        "garam masala"
+      ],
+      "supplemental_ifct_codes": [],
+      "computation": {
+        "formula": "per_100g = sum(IFCT_per_100g * qty_g / 100) / matched_mass_g * 100",
+        "coverage_formula": "match_coverage_pct = matched_mass_g / total_estimated_mass_g * 100",
+        "coverage_threshold_pct": 70.0,
+        "confidence_tiers": {
+          "high": ">= 85%",
+          "medium": "70-<85%",
+          "low": "<70%"
+        },
+        "totals_before_normalize": {
+          "calories": 371.82,
+          "protein": 21.29,
+          "carbs": 5.88,
+          "fat": 29.47
+        }
+      },
+      "default_serving_g": 200,
+      "nutrition_per_default_serving": {
+        "calories": 464.8,
+        "protein": 26.62,
+        "carbs": 7.34,
+        "fat": 36.84
+      },
+      "atwater_check": {
+        "reported_calories": 232.4,
+        "atwater_4p_4c_9f": 233.7,
+        "delta_kcal": -1.3,
+        "relative_error_pct": 0.6,
+        "ok": true
+      },
+      "ingredient_count_coverage_pct": 60.0,
+      "matched_ingredient_count": 3,
+      "active_ingredient_count": 5,
+      "unmatched_blockers": [
+        {
+          "ingredient": "gravy",
+          "estimated_quantity_g": 80.0,
+          "share_of_total_mass_pct": 32.9,
+          "reason": "prepared_composite (not a raw IFCT food)"
+        },
+        {
+          "ingredient": "garam masala",
+          "estimated_quantity_g": 3.0,
+          "share_of_total_mass_pct": 1.2,
+          "reason": "blend (no single IFCT food code)"
+        }
+      ],
+      "quality_flags": [
+        "coverage_below_threshold"
+      ]
+    }
+  ]
+}

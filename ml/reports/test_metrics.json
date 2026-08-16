@@ -1,0 +1,42 @@
+{
+  "device": "cuda",
+  "n_classes": 27,
+  "split": {
+    "train": 8925,
+    "val": 1905,
+    "test": 1920
+  },
+  "held_out_top1": 0.8661458333333333,
+  "held_out_top3": 0.9604166666666667,
+  "per_class_top1": {
+    "aloo_gobi": 1.0,
+    "biryani": 0.75,
+    "butter_chicken": 0.75,
+    "caesar_salad": 0.96,
+    "chana_masala": 0.75,
+    "chicken_tikka_masala": 0.75,
+    "dal_makhani": 1.0,
+    "dal_tadka": 1.0,
+    "fried_rice": 0.9266666666666666,
+    "grilled_salmon": 0.8266666666666667,
+    "gulab_jamun": 1.0,
+    "hamburger": 0.86,
+    "jalebi": 1.0,
+    "kachori": 0.75,
+    "kadai_paneer": 1.0,
+    "naan": 1.0,
+    "omelette": 0.8333333333333334,
+    "palak_paneer": 0.875,
+    "pancakes": 0.8333333333333334,
+    "paneer_butter_masala": 0.25,
+    "pizza": 0.92,
+    "poha": 1.0,
+    "ramen": 0.9533333333333334,
+    "samosa": 0.8466666666666667,
+    "spaghetti_bolognese": 0.88,
+    "sushi": 0.92,
+    "tacos": 0.64
+  },
+  "checkpoint": "C:\\Users\\austi\\OneDrive\\Desktop\\innerarc\\ml\\checkpoints\\best.pt",
+  "note": "Held-out metrics from best.pt (best validation checkpoint during training)."
+}
