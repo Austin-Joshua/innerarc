@@ -17,6 +17,29 @@ be rescaled proportionally; the milestone order should stay the same,
 since later milestones depend on earlier ones (the AI Coach needs logged
 data to reason over, so it is sequenced after logging is working).
 
+**1.1 Actual Core build status (post-implementation)**
+
+As of the completed Core implementation, the following are **built and
+demoable**. Phase 2 remains optional enhancement, not required for the
+Core pitch.
+
+| **Core module** | **Status** | **Notes vs original week plan** |
+|-----------------|------------|----------------------------------|
+| Scaffold + full schema + auth/onboarding | Done | Corresponds to weeks 1 + 7 (schema early, dashboard with food). |
+| Food and Nutrition (classifier, USDA/IFCT, dashboard) | Done | Weeks 2–4; 27-class EfficientNet-B0; confidence tiers on IFCT coverage. |
+| Workout Engine (library, recommend, session, logs) | Done | Week 5; equipment filter is a tier **superset**, not exact match. |
+| Progress Intelligence (pose, ratios, compare) | Done | Week 6; auth-scoped photo fetch; no body-fat claims. |
+| AI Coach (on-demand, snapshot-grounded Gemini) | Done | Week 8; proactive/scheduled coaching deferred to Phase 2. |
+| Gamification (streaks, badges, points on logging events) | Done | Week 9 gamification only; **basic reminders not implemented** (table exists). |
+
+**Not in Core (Phase 2 / later):** multi-item plate segmentation, Health
+Connect / HealthKit ingestion, proactive AI coaching, reminder-firing
+engine, custom hardware.
+
+The planned week table in Section 3 remains the original schedule. Use
+Section 1.1 when writing the report’s Implementation “what was actually
+delivered” narrative so module counts and demo claims match the repo.
+
 **2. Phased Roadmap**
 
 | **Tier**     | **Scope**                                                                                                                                                                                       |
@@ -41,18 +64,22 @@ data to reason over, so it is sequenced after logging is working).
 | 11       | Testing and polish         | Bug fixes, UI polish, accuracy validation pass.                                            |
 | 12       | Report and demo            | Final report, recorded or live demo, presentation.                                         |
 
+*Actual delivery:* Core modules through gamification are complete (see
+Section 1.1). Week 9 **reminders** and weeks 10+ Phase 2 items were not
+required for Core and remain optional.
+
 **4. Environment and Tooling Setup**
 
 - ML: Python, TensorFlow or PyTorch, a GPU-enabled environment (local
   GPU or a free-tier cloud notebook) for training the classifier.
 
-- Backend: FastAPI or Node.js/Express, PostgreSQL, an S3-compatible
-  bucket (or local equivalent) for photo storage.
+- Backend: FastAPI, PostgreSQL, local object-storage path for photos
+  (authenticated progress-photo fetch; not a public static mount).
 
-- Frontend: React Native (or React for a web-only demo).
+- Frontend: React Native (Expo).
 
-- AI coach: an API key for the chosen LLM provider, plus a lightweight
-  retrieval step over the PostgreSQL logs.
+- AI coach: Gemini API key, plus a snapshot retrieval step over the
+  PostgreSQL logs (on-demand chat in Core).
 
 - Version control: a single Git repository with the ML pipeline,
   backend, and frontend as separate top-level folders.
@@ -89,7 +116,8 @@ becomes an issue.
 This phased structure is deliberately designed to match a typical
 project report outline: Introduction and Problem Statement draw from the
 PRD (Sections 1–3); System Design draws from the TRD and Backend Schema;
-Implementation draws from this document; and a Future Scope section
-draws directly from the Future-scope row in Section 2, so the full
-ambition of the idea is documented even though only the Core and, time
-permitting, Phase 2 tiers are actually built and demonstrated.
+Implementation draws from this document (use **Section 1.1** for what
+was actually delivered versus the planned week table); and a Future Scope
+section draws directly from the Future-scope / Phase 2 rows in Section 2,
+so the full ambition of the idea is documented even though only the Core
+tier is required for the demo. Phase 2 remains optional enhancement.

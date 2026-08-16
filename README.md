@@ -1,27 +1,39 @@
 # Innerarc
 
-Closed-loop AI health companion: food recognition, structured workouts, pose-based progress tracking, and a retrieval-grounded AI coach.
+Closed-loop AI health companion: food recognition, structured workouts, pose-based progress tracking, a retrieval-grounded AI coach, and consistency-based gamification.
 
-This repository currently contains **Module 1** (repo scaffold + full PostgreSQL schema). Core feature modules are not implemented yet.
+**Core tier is implemented** (Modules 1–6). Phase 2 items (multi-item plate segmentation, Health Connect, proactive coaching) are intentionally not built.
 
 ## Stack
 
 | Layer | Choice |
 | --- | --- |
-| Backend + ML inference | Python, FastAPI |
+| Backend + ML inference | Python, FastAPI, PyTorch (EfficientNet-B0), MediaPipe Pose Landmarker |
 | Frontend | React Native (Expo, TypeScript) |
 | Database | PostgreSQL 16 |
-| CV/ML (later) | PyTorch, MediaPipe Pose |
-| AI coach (later) | Claude API |
+| AI coach | Gemini API (`google-genai`), snapshot retrieval over user logs |
+| Nutrition | USDA FoodData Central + IFCT 2017 (seeded) |
 
 ## Repository layout
 
 ```
-backend/     FastAPI app, SQLAlchemy models, Alembic migrations
-frontend/    Expo React Native app shell
-ml/          Classifier and pose-estimation stubs
-requirements/  Product and technical specs
+backend/        FastAPI app, SQLAlchemy models, Alembic, seeds, smoke scripts
+frontend/       Expo React Native app
+ml/             Classifier training/eval, IFCT tooling, checkpoints (gitignored)
+requirements/   PRD, TRD, schema, app flow, UI/UX, implementation plan
+data/photos/    Local object storage for meal/progress images (created at runtime)
 ```
+
+## What Core includes
+
+| Module | Capability |
+| --- | --- |
+| 1 | Repo scaffold, full schema migrations, auth/onboarding shell |
+| 2 | 27-class dish classifier → recipe ingredients → nutrition dashboard |
+| 3 | Tagged workouts/programs, equipment-superset recommend, session logs |
+| 4 | Server-side pose → waist-to-hip & shoulder-to-waist; auth-scoped photo fetch |
+| 5 | On-demand Gemini coach with log snapshot + safety constraints |
+| 6 | Streaks/badges/points from logging events only (not body-change metrics) |
 
 ## Local setup
 
@@ -37,15 +49,12 @@ requirements/  Product and technical specs
 cp .env.example .env
 ```
 
+Set at least `GEMINI_API_KEY` for the coach. Optionally set `CLASSIFIER_STUB_MODE=false` after you have `ml/checkpoints/best.pt` and checked `ml/reports/test_metrics.json`.
+
 ### 2. Database
 
 ```bash
 docker compose up -d
-```
-
-Wait until Postgres is healthy, then apply the schema:
-
-```bash
 cd backend
 python -m venv .venv
 
@@ -59,17 +68,36 @@ pip install -r requirements.txt
 alembic upgrade head
 ```
 
-### 3. Backend
+### 3. Seed data
 
-From `backend/` with the venv active:
+From `backend/` with the venv active and `PYTHONPATH=.` (Windows: `$env:PYTHONPATH='.'`):
 
 ```bash
+python -u scripts/seed_food.py
+python -u scripts/seed_workouts.py
+```
+
+### 4. Pose model (Module 4)
+
+Download the MediaPipe Tasks pose landmarker once (path matches `.env.example`):
+
+```bash
+# from repo root, create ml/checkpoints if needed
+# URL: https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
+```
+
+Save as `ml/checkpoints/pose_landmarker_lite.task` (directory is gitignored).
+
+### 5. Backend
+
+```bash
+cd backend
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Health check: [http://localhost:8000/health](http://localhost:8000/health)
+Health: [http://localhost:8000/health](http://localhost:8000/health) · Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### 4. Frontend
+### 6. Frontend
 
 ```bash
 cd frontend
@@ -77,22 +105,38 @@ npm install
 npx expo start
 ```
 
-### 5. ML (stubs only)
+Point `EXPO_PUBLIC_API_URL` at your machine if not using the default `http://127.0.0.1:8000`.
 
-See [ml/data/README.md](ml/data/README.md). Do not download Food-101 or train a classifier in this module.
+### 7. Optional smoke scripts
 
-## Schema
+From `backend/` with `PYTHONPATH=.`:
 
-Migrations implement [requirements/Innerarc_Backend_Schema.md](requirements/Innerarc_Backend_Schema.md), plus three extensions needed by the session player and nutrition dashboard:
+```bash
+python -u scripts/smoke_coach.py
+python -u scripts/smoke_gamification.py
+python -u scripts/smoke_progress_pose.py
+```
 
-- `exercises` / `workout_exercises` — ordered sets, reps or duration, and rest for each workout
-- `calorie_targets` — one daily calorie/macro target per user (`calculated` or `ai_adjusted`)
+## Schema notes
 
-`wearable_data` and `reminders` tables exist because the schema includes them. There is no Health Connect / HealthKit ingestion or reminder-firing code yet (Phase 2 / later).
+Migrations follow [requirements/Innerarc_Backend_Schema.md](requirements/Innerarc_Backend_Schema.md), plus:
+
+- `exercises` / `workout_exercises` — session player structure
+- `calorie_targets` — daily calorie/macro targets
+- `dishes.nutrition_confidence` / `match_coverage_pct` — IFCT coverage tiers
+
+`wearable_data` and `reminders` tables exist; there is no Health Connect/HealthKit ingestion or reminder scheduler (Phase 2 / later).
+
+Progress photos are **not** served via public StaticFiles. Use authenticated `GET /progress/photos/{id}/image` (404 if not owner).
 
 ## Core constraints (do not regress)
 
 - Ingredient inference is dish-classification then recipe lookup — never pixel-level ingredient detection.
-- Progress tracking outputs ratios and silhouette comparison from pose landmarks — never body-fat percentage or clinical claims.
-- No custom hardware or sensor code. Wearable data is Health Connect / Apple HealthKit only (not in this module).
-- The AI coach must never recommend an extreme calorie deficit or excessive training volume (Module 5).
+- Progress tracking outputs ratios (and side-by-side compare) from pose landmarks — never body-fat %, BMI, or clinical claims.
+- Equipment matching is a **superset** (`none` ⊂ `home_gym` ⊂ `full_gym`), not exact-match only.
+- The AI coach must never recommend a deficit beyond the 20% / 1200-kcal floor policy, or training through injury.
+- Gamification rewards logging/consistency only — never progress-photo ratio change.
+
+## Specs
+
+Start with [requirements/](requirements/) — PRD, TRD, Backend Schema, App Flow, UI/UX Brief, Implementation Plan (includes actual-vs-planned Core status).

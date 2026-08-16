@@ -27,7 +27,7 @@ The TRD leaves backend framework and mobile framework as either/or choices. Defa
 - Frontend: React Native
 - Database: PostgreSQL
 - CV/ML: PyTorch, MediaPipe Pose
-- AI coach: Claude API, with a retrieval step over the user's own logged data
+- AI coach: Gemini API, with a retrieval step over the user's own logged data
 
 If you'd pick differently given the requirements docs, tell me why before scaffolding — don't just proceed silently on a different stack.
 

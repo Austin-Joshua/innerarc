@@ -15,25 +15,32 @@ Innerarc is organised around a closed loop: four input streams (food
 photos, progress photos, workout logs, and wearable data) feed a central
 AI health engine, which produces two outputs (a personalized daily plan
 and a progress dashboard) that in turn shape the next day's inputs. The
-five functional modules below implement that loop.
+functional modules below implement that loop.
+
+**Core (implemented in this repository)**
 
 - Food and Nutrition Module — dish classification, ingredient inference,
   calorie and macro tracking.
 
-- Progress Intelligence Module — pose-estimation-based photo analysis
-  for ratio and silhouette tracking.
-
 - Workout Engine — tagged content database and rule-based
   program/individual-workout recommender.
 
-- AI Coach — LLM-based assistant with retrieval over the user's own
-  logged data, reasoning across all modules.
+- Progress Intelligence Module — pose-estimation-based photo analysis
+  for ratio and side-by-side tracking (not body-fat %).
+
+- AI Coach — on-demand LLM assistant with retrieval over the user's own
+  logged data (Gemini), with hard safety constraints on deficit and
+  training volume.
+
+- Gamification Layer — streaks, badges, and points, event-driven off
+  logging/completion events only (not visual body-change metrics).
+
+**Phase 2 / not in Core demo**
 
 - Wearable Integration — Health Connect (Android) and Apple HealthKit
-  (iOS) data ingestion.
+  (iOS) data ingestion (schema present; ingestion not built).
 
-- Gamification Layer — streaks, badges, and milestone logic,
-  event-driven off the other four modules.
+- Proactive (scheduled) AI coaching; multi-item plate segmentation.
 
 **2. Technology Stack**
 
@@ -44,9 +51,9 @@ five functional modules below implement that loop.
 | Backend                 | FastAPI (Python) or Node.js/Express                                            |
 | Frontend                | React Native (mobile) or React (web demo)                                      |
 | Database                | PostgreSQL (relational data) with object storage (S3-compatible) for photos    |
-| AI coach                | Claude or GPT API, with a retrieval step over the user's own logged data (RAG) |
-| Wearable data           | Android Health Connect; Apple HealthKit                                        |
-| Nutrition data          | USDA FoodData Central API; IFCT 2017 for Indian dishes                         |
+| AI coach                | Gemini API (`google-genai`), with a retrieval step over the user's own logged data |
+| Wearable data           | Android Health Connect; Apple HealthKit (Phase 2)                                  |
+| Nutrition data          | USDA FoodData Central API; IFCT 2017 for Indian dishes                             |
 
 **3. Module-by-Module Technical Breakdown**
 
@@ -87,9 +94,11 @@ database, not a machine-learning model.
 
 The coach is a retrieval-augmented LLM assistant: each query is
 augmented with a snapshot of the user's recent logs (meals, workouts,
-progress metrics, wearable data) before being sent to the model, so
-responses are grounded in the user's actual data rather than generic
-advice. In the Phase 2 tier, the coach also runs on a schedule to
+progress metrics, and — when available — wearable data) before being
+sent to the model, so responses are grounded in the user's actual data
+rather than generic advice. **Core** ships on-demand chat (Gemini) with
+hard constraints on calorie deficit and training volume. In the Phase 2
+tier, the coach also runs on a schedule to
 proactively surface patterns (adherence drop plus falling protein
 intake, for example) rather than only responding to direct questions.
 
