@@ -1,0 +1,370 @@
+{
+  "exercises": [
+    {"slug": "push_up", "name": "Push-up", "description": "Hands under shoulders, lower chest to floor, press up.", "media_url": ""},
+    {"slug": "squat", "name": "Bodyweight squat", "description": "Feet shoulder-width, sit back, stand tall.", "media_url": ""},
+    {"slug": "plank", "name": "Plank", "description": "Forearms and toes, body in a straight line.", "media_url": ""},
+    {"slug": "lunges", "name": "Alternating lunges", "description": "Step forward, both knees bend, push back to start.", "media_url": ""},
+    {"slug": "glute_bridge", "name": "Glute bridge", "description": "Lie on back, drive hips up, squeeze glutes.", "media_url": ""},
+    {"slug": "mountain_climber", "name": "Mountain climbers", "description": "High plank, drive knees toward chest alternately.", "media_url": ""},
+    {"slug": "burpee", "name": "Burpee", "description": "Squat, kick back to plank, jump feet in, jump up.", "media_url": ""},
+    {"slug": "jumping_jack", "name": "Jumping jacks", "description": "Jump feet out while raising arms overhead.", "media_url": ""},
+    {"slug": "high_knees", "name": "High knees", "description": "Run in place driving knees up.", "media_url": ""},
+    {"slug": "bike_crunch", "name": "Bicycle crunch", "description": "Alternate elbow to opposite knee.", "media_url": ""},
+    {"slug": "dumbbell_row", "name": "Dumbbell row", "description": "Hinge at hips, pull dumbbell to hip.", "media_url": ""},
+    {"slug": "goblet_squat", "name": "Goblet squat", "description": "Hold weight at chest, squat deep.", "media_url": ""},
+    {"slug": "dumbbell_press", "name": "Dumbbell shoulder press", "description": "Press dumbbells overhead from shoulder height.", "media_url": ""},
+    {"slug": "romanian_deadlift", "name": "Romanian deadlift", "description": "Soft knees, hinge, lower weights along thighs.", "media_url": ""},
+    {"slug": "kettlebell_swing", "name": "Kettlebell swing", "description": "Hinge and snap hips to swing kettlebell to chest height.", "media_url": ""},
+    {"slug": "resistance_band_row", "name": "Band row", "description": "Pull band toward torso with elbows tight.", "media_url": ""},
+    {"slug": "barbell_squat", "name": "Barbell back squat", "description": "Bar on upper back, squat to parallel.", "media_url": ""},
+    {"slug": "bench_press", "name": "Barbell bench press", "description": "Lower bar to mid-chest, press up.", "media_url": ""},
+    {"slug": "deadlift", "name": "Conventional deadlift", "description": "Hinge, grip bar, stand tall with flat back.", "media_url": ""},
+    {"slug": "pull_up", "name": "Pull-up", "description": "Hang from bar, pull chin above bar.", "media_url": ""},
+    {"slug": "lat_pulldown", "name": "Lat pulldown", "description": "Pull bar to upper chest, control the return.", "media_url": ""},
+    {"slug": "leg_press", "name": "Leg press", "description": "Feet mid-platform, press without locking knees.", "media_url": ""},
+    {"slug": "cable_fly", "name": "Cable chest fly", "description": "Arms slightly bent, bring handles together.", "media_url": ""},
+    {"slug": "cat_cow", "name": "Cat-cow", "description": "On all fours, alternate arch and round spine.", "media_url": ""},
+    {"slug": "downward_dog", "name": "Downward dog", "description": "Hands and feet planted, hips high, long spine.", "media_url": ""},
+    {"slug": "warrior_ii", "name": "Warrior II", "description": "Front knee bent, arms extended, gaze over front hand.", "media_url": ""},
+    {"slug": "child_pose", "name": "Child's pose", "description": "Sit back on heels, arms forward, breathe.", "media_url": ""},
+    {"slug": "sun_salutation", "name": "Sun salutation flow", "description": "Flow through mountain, fold, plank, and upward dog.", "media_url": ""},
+    {"slug": "march_in_place", "name": "March in place", "description": "Light march to elevate heart rate.", "media_url": ""},
+    {"slug": "side_steps", "name": "Side steps", "description": "Step laterally with soft knees.", "media_url": ""}
+  ],
+  "workouts": [
+    {
+      "slug": "bw_beginner_full_body",
+      "name": "Beginner bodyweight full body",
+      "modality": "bodyweight",
+      "level": "beginner",
+      "goal_tags": ["general_fitness", "fat_loss"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "squat", "order_index": 0, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 45},
+        {"slug": "push_up", "order_index": 1, "sets": 3, "reps": 8, "duration_seconds": null, "rest_seconds": 45},
+        {"slug": "glute_bridge", "order_index": 2, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 40},
+        {"slug": "plank", "order_index": 3, "sets": 3, "reps": null, "duration_seconds": 30, "rest_seconds": 40}
+      ]
+    },
+    {
+      "slug": "bw_fat_loss_circuit",
+      "name": "No-equipment fat-loss circuit",
+      "modality": "bodyweight",
+      "level": "intermediate",
+      "goal_tags": ["fat_loss", "endurance"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "jumping_jack", "order_index": 0, "sets": 3, "reps": null, "duration_seconds": 40, "rest_seconds": 20},
+        {"slug": "squat", "order_index": 1, "sets": 3, "reps": 15, "duration_seconds": null, "rest_seconds": 30},
+        {"slug": "mountain_climber", "order_index": 2, "sets": 3, "reps": null, "duration_seconds": 40, "rest_seconds": 20},
+        {"slug": "burpee", "order_index": 3, "sets": 3, "reps": 8, "duration_seconds": null, "rest_seconds": 40}
+      ]
+    },
+    {
+      "slug": "bw_advanced_burn",
+      "name": "Advanced bodyweight burn",
+      "modality": "bodyweight",
+      "level": "advanced",
+      "goal_tags": ["fat_loss", "endurance", "recomposition"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "burpee", "order_index": 0, "sets": 4, "reps": 12, "duration_seconds": null, "rest_seconds": 30},
+        {"slug": "mountain_climber", "order_index": 1, "sets": 4, "reps": null, "duration_seconds": 45, "rest_seconds": 20},
+        {"slug": "lunges", "order_index": 2, "sets": 4, "reps": 16, "duration_seconds": null, "rest_seconds": 30},
+        {"slug": "bike_crunch", "order_index": 3, "sets": 4, "reps": 20, "duration_seconds": null, "rest_seconds": 30}
+      ]
+    },
+    {
+      "slug": "bw_core_reset",
+      "name": "Core reset",
+      "modality": "bodyweight",
+      "level": "beginner",
+      "goal_tags": ["general_fitness", "recomposition"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "plank", "order_index": 0, "sets": 3, "reps": null, "duration_seconds": 25, "rest_seconds": 35},
+        {"slug": "glute_bridge", "order_index": 1, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 35},
+        {"slug": "bike_crunch", "order_index": 2, "sets": 3, "reps": 16, "duration_seconds": null, "rest_seconds": 35}
+      ]
+    },
+    {
+      "slug": "home_beginner_strength",
+      "name": "Home gym beginner strength",
+      "modality": "home_gym",
+      "level": "beginner",
+      "goal_tags": ["muscle_gain", "general_fitness"],
+      "equipment_needed": ["home_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "goblet_squat", "order_index": 0, "sets": 3, "reps": 10, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "dumbbell_row", "order_index": 1, "sets": 3, "reps": 10, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "dumbbell_press", "order_index": 2, "sets": 3, "reps": 10, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "resistance_band_row", "order_index": 3, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 45}
+      ]
+    },
+    {
+      "slug": "home_hypertrophy",
+      "name": "Dumbbell hypertrophy builder",
+      "modality": "home_gym",
+      "level": "intermediate",
+      "goal_tags": ["muscle_gain", "recomposition"],
+      "equipment_needed": ["home_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "goblet_squat", "order_index": 0, "sets": 4, "reps": 10, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "romanian_deadlift", "order_index": 1, "sets": 4, "reps": 10, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "dumbbell_press", "order_index": 2, "sets": 4, "reps": 10, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "dumbbell_row", "order_index": 3, "sets": 4, "reps": 10, "duration_seconds": null, "rest_seconds": 60}
+      ]
+    },
+    {
+      "slug": "home_conditioning",
+      "name": "Kettlebell conditioning",
+      "modality": "home_gym",
+      "level": "intermediate",
+      "goal_tags": ["fat_loss", "endurance"],
+      "equipment_needed": ["home_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "kettlebell_swing", "order_index": 0, "sets": 5, "reps": 15, "duration_seconds": null, "rest_seconds": 40},
+        {"slug": "goblet_squat", "order_index": 1, "sets": 4, "reps": 12, "duration_seconds": null, "rest_seconds": 40},
+        {"slug": "mountain_climber", "order_index": 2, "sets": 4, "reps": null, "duration_seconds": 40, "rest_seconds": 30}
+      ]
+    },
+    {
+      "slug": "home_recomp",
+      "name": "Home recomposition session",
+      "modality": "home_gym",
+      "level": "advanced",
+      "goal_tags": ["recomposition", "muscle_gain"],
+      "equipment_needed": ["home_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "romanian_deadlift", "order_index": 0, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 90},
+        {"slug": "dumbbell_press", "order_index": 1, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "dumbbell_row", "order_index": 2, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "kettlebell_swing", "order_index": 3, "sets": 3, "reps": 20, "duration_seconds": null, "rest_seconds": 45}
+      ]
+    },
+    {
+      "slug": "gym_beginner_machine",
+      "name": "Full gym beginner intro",
+      "modality": "weighted",
+      "level": "beginner",
+      "goal_tags": ["general_fitness", "muscle_gain"],
+      "equipment_needed": ["full_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "leg_press", "order_index": 0, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "lat_pulldown", "order_index": 1, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "cable_fly", "order_index": 2, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "plank", "order_index": 3, "sets": 3, "reps": null, "duration_seconds": 30, "rest_seconds": 45}
+      ]
+    },
+    {
+      "slug": "gym_strength_foundation",
+      "name": "Barbell strength foundation",
+      "modality": "weighted",
+      "level": "intermediate",
+      "goal_tags": ["muscle_gain", "recomposition"],
+      "equipment_needed": ["full_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "barbell_squat", "order_index": 0, "sets": 4, "reps": 6, "duration_seconds": null, "rest_seconds": 120},
+        {"slug": "bench_press", "order_index": 1, "sets": 4, "reps": 6, "duration_seconds": null, "rest_seconds": 120},
+        {"slug": "deadlift", "order_index": 2, "sets": 3, "reps": 5, "duration_seconds": null, "rest_seconds": 150},
+        {"slug": "pull_up", "order_index": 3, "sets": 3, "reps": 6, "duration_seconds": null, "rest_seconds": 90}
+      ]
+    },
+    {
+      "slug": "gym_hypertrophy_split",
+      "name": "Upper hypertrophy day",
+      "modality": "weighted",
+      "level": "advanced",
+      "goal_tags": ["muscle_gain"],
+      "equipment_needed": ["full_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "bench_press", "order_index": 0, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 90},
+        {"slug": "pull_up", "order_index": 1, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 90},
+        {"slug": "dumbbell_press", "order_index": 2, "sets": 3, "reps": 10, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "cable_fly", "order_index": 3, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "lat_pulldown", "order_index": 4, "sets": 3, "reps": 10, "duration_seconds": null, "rest_seconds": 75}
+      ]
+    },
+    {
+      "slug": "gym_power_endurance",
+      "name": "Gym power endurance",
+      "modality": "weighted",
+      "level": "advanced",
+      "goal_tags": ["endurance", "fat_loss"],
+      "equipment_needed": ["full_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "deadlift", "order_index": 0, "sets": 3, "reps": 5, "duration_seconds": null, "rest_seconds": 90},
+        {"slug": "barbell_squat", "order_index": 1, "sets": 3, "reps": 8, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "kettlebell_swing", "order_index": 2, "sets": 4, "reps": 15, "duration_seconds": null, "rest_seconds": 45},
+        {"slug": "high_knees", "order_index": 3, "sets": 3, "reps": null, "duration_seconds": 40, "rest_seconds": 30}
+      ]
+    },
+    {
+      "slug": "yoga_beginner_flow",
+      "name": "Beginner yoga flow",
+      "modality": "yoga",
+      "level": "beginner",
+      "goal_tags": ["general_fitness", "endurance"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "cat_cow", "order_index": 0, "sets": 1, "reps": null, "duration_seconds": 60, "rest_seconds": 10},
+        {"slug": "downward_dog", "order_index": 1, "sets": 1, "reps": null, "duration_seconds": 45, "rest_seconds": 10},
+        {"slug": "warrior_ii", "order_index": 2, "sets": 2, "reps": null, "duration_seconds": 40, "rest_seconds": 15},
+        {"slug": "child_pose", "order_index": 3, "sets": 1, "reps": null, "duration_seconds": 60, "rest_seconds": 0}
+      ]
+    },
+    {
+      "slug": "yoga_strength_flow",
+      "name": "Strength yoga flow",
+      "modality": "yoga",
+      "level": "intermediate",
+      "goal_tags": ["recomposition", "general_fitness"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "sun_salutation", "order_index": 0, "sets": 3, "reps": null, "duration_seconds": 90, "rest_seconds": 20},
+        {"slug": "warrior_ii", "order_index": 1, "sets": 2, "reps": null, "duration_seconds": 45, "rest_seconds": 15},
+        {"slug": "plank", "order_index": 2, "sets": 3, "reps": null, "duration_seconds": 35, "rest_seconds": 20},
+        {"slug": "child_pose", "order_index": 3, "sets": 1, "reps": null, "duration_seconds": 60, "rest_seconds": 0}
+      ]
+    },
+    {
+      "slug": "yoga_advanced_balance",
+      "name": "Advanced balance yoga",
+      "modality": "yoga",
+      "level": "advanced",
+      "goal_tags": ["endurance", "general_fitness"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "sun_salutation", "order_index": 0, "sets": 4, "reps": null, "duration_seconds": 75, "rest_seconds": 15},
+        {"slug": "warrior_ii", "order_index": 1, "sets": 3, "reps": null, "duration_seconds": 50, "rest_seconds": 15},
+        {"slug": "downward_dog", "order_index": 2, "sets": 3, "reps": null, "duration_seconds": 40, "rest_seconds": 10},
+        {"slug": "plank", "order_index": 3, "sets": 3, "reps": null, "duration_seconds": 45, "rest_seconds": 20}
+      ]
+    },
+    {
+      "slug": "aerobics_easy_cardio",
+      "name": "Easy cardio aerobics",
+      "modality": "aerobics",
+      "level": "beginner",
+      "goal_tags": ["fat_loss", "endurance", "general_fitness"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "march_in_place", "order_index": 0, "sets": 3, "reps": null, "duration_seconds": 60, "rest_seconds": 20},
+        {"slug": "side_steps", "order_index": 1, "sets": 3, "reps": null, "duration_seconds": 45, "rest_seconds": 20},
+        {"slug": "jumping_jack", "order_index": 2, "sets": 3, "reps": null, "duration_seconds": 30, "rest_seconds": 30}
+      ]
+    },
+    {
+      "slug": "aerobics_hiit",
+      "name": "Aerobics HIIT",
+      "modality": "aerobics",
+      "level": "intermediate",
+      "goal_tags": ["fat_loss", "endurance"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "high_knees", "order_index": 0, "sets": 4, "reps": null, "duration_seconds": 40, "rest_seconds": 20},
+        {"slug": "jumping_jack", "order_index": 1, "sets": 4, "reps": null, "duration_seconds": 40, "rest_seconds": 20},
+        {"slug": "burpee", "order_index": 2, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 30},
+        {"slug": "mountain_climber", "order_index": 3, "sets": 4, "reps": null, "duration_seconds": 40, "rest_seconds": 20}
+      ]
+    },
+    {
+      "slug": "aerobics_advanced_intervals",
+      "name": "Advanced interval aerobics",
+      "modality": "aerobics",
+      "level": "advanced",
+      "goal_tags": ["endurance", "fat_loss"],
+      "equipment_needed": ["none"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "burpee", "order_index": 0, "sets": 5, "reps": 10, "duration_seconds": null, "rest_seconds": 25},
+        {"slug": "high_knees", "order_index": 1, "sets": 5, "reps": null, "duration_seconds": 45, "rest_seconds": 20},
+        {"slug": "mountain_climber", "order_index": 2, "sets": 5, "reps": null, "duration_seconds": 45, "rest_seconds": 20},
+        {"slug": "jumping_jack", "order_index": 3, "sets": 4, "reps": null, "duration_seconds": 50, "rest_seconds": 25}
+      ]
+    },
+    {
+      "slug": "weighted_home_pull_push",
+      "name": "Home pull-push weighted",
+      "modality": "weighted",
+      "level": "beginner",
+      "goal_tags": ["muscle_gain", "general_fitness"],
+      "equipment_needed": ["home_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "dumbbell_row", "order_index": 0, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "dumbbell_press", "order_index": 1, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 60},
+        {"slug": "resistance_band_row", "order_index": 2, "sets": 3, "reps": 15, "duration_seconds": null, "rest_seconds": 45}
+      ]
+    },
+    {
+      "slug": "gym_lower_focus",
+      "name": "Full gym lower focus",
+      "modality": "weighted",
+      "level": "intermediate",
+      "goal_tags": ["muscle_gain", "recomposition"],
+      "equipment_needed": ["full_gym"],
+      "media_url": "",
+      "exercises": [
+        {"slug": "barbell_squat", "order_index": 0, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 120},
+        {"slug": "romanian_deadlift", "order_index": 1, "sets": 4, "reps": 8, "duration_seconds": null, "rest_seconds": 90},
+        {"slug": "leg_press", "order_index": 2, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 75},
+        {"slug": "lunges", "order_index": 3, "sets": 3, "reps": 12, "duration_seconds": null, "rest_seconds": 60}
+      ]
+    }
+  ],
+  "programs": [
+    {
+      "slug": "foundation_4_week",
+      "name": "Foundation 4-Week",
+      "duration_weeks": 4,
+      "schedule": [
+        {"week_number": 1, "day_number": 1, "workout_slug": "bw_beginner_full_body"},
+        {"week_number": 1, "day_number": 3, "workout_slug": "yoga_beginner_flow"},
+        {"week_number": 1, "day_number": 5, "workout_slug": "aerobics_easy_cardio"},
+        {"week_number": 2, "day_number": 1, "workout_slug": "bw_beginner_full_body"},
+        {"week_number": 2, "day_number": 3, "workout_slug": "bw_core_reset"},
+        {"week_number": 2, "day_number": 5, "workout_slug": "aerobics_easy_cardio"},
+        {"week_number": 3, "day_number": 1, "workout_slug": "bw_fat_loss_circuit"},
+        {"week_number": 3, "day_number": 3, "workout_slug": "yoga_strength_flow"},
+        {"week_number": 3, "day_number": 5, "workout_slug": "aerobics_hiit"},
+        {"week_number": 4, "day_number": 1, "workout_slug": "bw_fat_loss_circuit"},
+        {"week_number": 4, "day_number": 3, "workout_slug": "bw_core_reset"},
+        {"week_number": 4, "day_number": 5, "workout_slug": "aerobics_hiit"}
+      ]
+    },
+    {
+      "slug": "strength_builder_3_week",
+      "name": "Strength Builder 3-Week",
+      "duration_weeks": 3,
+      "schedule": [
+        {"week_number": 1, "day_number": 1, "workout_slug": "home_beginner_strength"},
+        {"week_number": 1, "day_number": 3, "workout_slug": "weighted_home_pull_push"},
+        {"week_number": 1, "day_number": 5, "workout_slug": "gym_beginner_machine"},
+        {"week_number": 2, "day_number": 1, "workout_slug": "home_hypertrophy"},
+        {"week_number": 2, "day_number": 3, "workout_slug": "gym_strength_foundation"},
+        {"week_number": 2, "day_number": 5, "workout_slug": "gym_lower_focus"},
+        {"week_number": 3, "day_number": 1, "workout_slug": "home_recomp"},
+        {"week_number": 3, "day_number": 3, "workout_slug": "gym_hypertrophy_split"},
+        {"week_number": 3, "day_number": 5, "workout_slug": "gym_power_endurance"}
+      ]
+    }
+  ]
+}
