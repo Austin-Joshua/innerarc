@@ -3,7 +3,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { api, Dashboard } from "../api";
+import { api, Dashboard, GamificationState } from "../api";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
 
@@ -37,15 +37,17 @@ function MacroRow({
 export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [data, setData] = useState<Dashboard | null>(null);
+  const [game, setGame] = useState<GamificationState | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       let active = true;
-      api
-        .dashboardToday()
-        .then((value) => {
-          if (active) setData(value);
+      Promise.all([api.dashboardToday(), api.gamificationStatus().catch(() => null)])
+        .then(([dash, g]) => {
+          if (!active) return;
+          setData(dash);
+          setGame(g);
         })
         .catch((err) => setError(err instanceof Error ? err.message : "Could not load dashboard"));
       return () => {
@@ -60,6 +62,11 @@ export default function HomeScreen() {
       <Text style={styles.muted}>
         Logged vs your calculated target{data ? ` (${data.target.source})` : ""}.
       </Text>
+      {game ? (
+        <Text style={styles.streakLine}>
+          {game.streak_count} day streak · {game.points} pts
+        </Text>
+      ) : null}
       {error ? <Text style={styles.muted}>{error}</Text> : null}
       <View style={styles.card}>
         <Text style={styles.numeral}>{data ? Math.round(data.logged.calories) : "—"}</Text>
@@ -77,9 +84,23 @@ export default function HomeScreen() {
       <Pressable onPress={() => navigation.navigate("FoodCapture")} style={styles.button}>
         <Text style={styles.buttonLabel}>Log meal</Text>
       </Pressable>
-      <Pressable disabled style={styles.disabled}>
+      <Pressable onPress={() => navigation.navigate("WorkoutLibrary")} style={styles.secondary}>
         <Text style={styles.actionLabel}>Workouts</Text>
-        <Text style={styles.muted}>Next module</Text>
+        <Text style={styles.muted}>Library, programs, and session player</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => navigation.navigate("ProgressCapture")}
+        style={[styles.secondary, { marginTop: spacing.sm }]}
+      >
+        <Text style={styles.actionLabel}>Progress</Text>
+        <Text style={styles.muted}>Pose ratios and side-by-side check-in</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => navigation.navigate("CoachChat")}
+        style={[styles.secondary, { marginTop: spacing.sm }]}
+      >
+        <Text style={styles.actionLabel}>Coach</Text>
+        <Text style={styles.muted}>Ask about your logged week</Text>
       </Pressable>
     </ScrollView>
   );
@@ -89,6 +110,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
+  streakLine: { ...typography.muted, marginTop: spacing.xs, marginBottom: spacing.sm },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 16,
@@ -119,7 +141,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  disabled: {
+  secondary: {
     backgroundColor: colors.white,
     borderRadius: 12,
     padding: spacing.md,

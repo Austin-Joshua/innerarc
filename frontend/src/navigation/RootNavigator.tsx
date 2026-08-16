@@ -2,13 +2,20 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import AuthScreen from "../screens/AuthScreen";
+import CoachChatScreen from "../screens/CoachChatScreen";
 import FoodCaptureScreen from "../screens/FoodCaptureScreen";
 import FoodEditScreen from "../screens/FoodEditScreen";
 import FoodNutritionScreen from "../screens/FoodNutritionScreen";
 import FoodResultScreen from "../screens/FoodResultScreen";
 import HomeScreen from "../screens/HomeScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import ProgramDetailScreen from "../screens/ProgramDetailScreen";
+import ProgressCaptureScreen from "../screens/ProgressCaptureScreen";
+import ProgressCompareScreen from "../screens/ProgressCompareScreen";
 import SplashScreen from "../screens/SplashScreen";
+import WorkoutDetailScreen from "../screens/WorkoutDetailScreen";
+import WorkoutLibraryScreen from "../screens/WorkoutLibraryScreen";
+import WorkoutSessionScreen from "../screens/WorkoutSessionScreen";
 import { colors } from "../theme";
 import { RootStackParamList } from "./types";
 
@@ -46,6 +53,13 @@ export default function RootNavigator() {
         <Stack.Screen name="FoodResult" component={FoodResultScreen} options={{ title: "Is this right?" }} />
         <Stack.Screen name="FoodEdit" component={FoodEditScreen} options={{ title: "Edit dish" }} />
         <Stack.Screen name="FoodNutrition" component={FoodNutritionScreen} options={{ title: "Nutrition" }} />
+        <Stack.Screen name="WorkoutLibrary" component={WorkoutLibraryScreen} options={{ title: "Workouts" }} />
+        <Stack.Screen name="WorkoutDetail" component={WorkoutDetailScreen} options={{ title: "Workout" }} />
+        <Stack.Screen name="ProgramDetail" component={ProgramDetailScreen} options={{ title: "Program" }} />
+        <Stack.Screen name="WorkoutSession" component={WorkoutSessionScreen} options={{ title: "Session" }} />
+        <Stack.Screen name="ProgressCapture" component={ProgressCaptureScreen} options={{ title: "Progress" }} />
+        <Stack.Screen name="ProgressCompare" component={ProgressCompareScreen} options={{ title: "Compare" }} />
+        <Stack.Screen name="CoachChat" component={CoachChatScreen} options={{ title: "Coach" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

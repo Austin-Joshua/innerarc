@@ -9,8 +9,12 @@ from app.config import settings
 from app.db import engine
 from app.models import *  # noqa: F403 — register metadata for Alembic and runtime
 from app.routers.auth import router as auth_router
+from app.routers.coach import router as coach_router
 from app.routers.dashboard import router as dashboard_router
 from app.routers.food import dishes_router, router as food_router
+from app.routers.gamification import router as gamification_router
+from app.routers.progress import router as progress_router
+from app.routers.workouts import router as workouts_router
 
 
 @asynccontextmanager
@@ -41,6 +45,10 @@ app.include_router(auth_router)
 app.include_router(food_router)
 app.include_router(dishes_router)
 app.include_router(dashboard_router)
+app.include_router(workouts_router)
+app.include_router(progress_router)
+app.include_router(coach_router)
+app.include_router(gamification_router)
 
 
 @app.get("/health")

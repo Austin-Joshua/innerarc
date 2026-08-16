@@ -7,4 +7,11 @@ export type RootStackParamList = {
   FoodResult: undefined;
   FoodEdit: undefined;
   FoodNutrition: undefined;
+  WorkoutLibrary: undefined;
+  WorkoutDetail: { workoutId: string };
+  ProgramDetail: { programId: string };
+  WorkoutSession: { workoutId: string };
+  ProgressCapture: undefined;
+  ProgressCompare: undefined;
+  CoachChat: undefined;
 };
