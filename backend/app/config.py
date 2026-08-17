@@ -18,7 +18,6 @@ class Settings(BaseSettings):
     classifier_checkpoint: str = "../ml/checkpoints/best.pt"
     classifier_stub_mode: bool = True
     pose_landmarker_model: str = "../ml/checkpoints/pose_landmarker_lite.task"
-    usda_api_key: str = ""
 
     @property
     def cors_origin_list(self) -> list[str]:

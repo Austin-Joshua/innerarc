@@ -1,43 +1,26 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { api } from "../api";
 import { setProgressDraft } from "../progressDraft";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
+import { usePhotoCapture } from "../usePhotoCapture";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "ProgressCapture">;
 
 export default function ProgressCaptureScreen() {
   const navigation = useNavigation<Nav>();
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  async function pick(fromCamera: boolean) {
-    setBusy(true);
-    setError(null);
-    api.logEvent({
-      event_type: "task_started",
-      task: "progress_photo",
-      screen: "ProgressCapture",
-    });
-    try {
-      const permission = fromCamera
-        ? await ImagePicker.requestCameraPermissionsAsync()
-        : await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permission.granted) {
-        setError("Permission is needed to add a progress photo.");
-        return;
-      }
-      const result = fromCamera
-        ? await ImagePicker.launchCameraAsync({ quality: 0.8 })
-        : await ImagePicker.launchImageLibraryAsync({ quality: 0.8 });
-      if (result.canceled || !result.assets[0]) return;
-      const uri = result.assets[0].uri;
-      const uploaded = await api.uploadProgressPhoto(uri);
+  const { pick, busy, error } = usePhotoCapture({
+    task: "progress_photo",
+    screen: "ProgressCapture",
+    quality: 0.8,
+    permissionDeniedMessage: "Permission is needed to add a progress photo.",
+    failureMessage:
+      "Pose could not be estimated. Stand fully in frame with even lighting.",
+    capture: (uri) => api.uploadProgressPhoto(uri),
+    onCaptured: (uploaded, uri) => {
       setProgressDraft({ ...uploaded, local_uri: uri });
       api.logEvent({
         event_type: "task_completed",
@@ -45,16 +28,8 @@ export default function ProgressCaptureScreen() {
         screen: "ProgressCapture",
       });
       navigation.navigate("ProgressCompare");
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Pose could not be estimated. Stand fully in frame with even lighting.",
-      );
-    } finally {
-      setBusy(false);
-    }
-  }
+    },
+  });
 
   return (
     <View style={styles.container}>

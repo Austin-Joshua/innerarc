@@ -6,10 +6,6 @@ export function setToken(value: string | null) {
   token = value;
 }
 
-export function getToken() {
-  return token;
-}
-
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);
   if (!(options.body instanceof FormData)) {
@@ -30,6 +26,25 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     throw new Error(detail);
   }
   return (await response.json()) as T;
+}
+
+async function uploadImage<T>(
+  path: string,
+  uri: string,
+  filename: string,
+): Promise<T> {
+  const form = new FormData();
+  if (uri.startsWith("file:")) {
+    form.append("file", {
+      uri,
+      name: filename,
+      type: "image/jpeg",
+    } as unknown as Blob);
+  } else {
+    const blob = await fetch(uri).then((response) => response.blob());
+    form.append("file", blob, filename);
+  }
+  return request<T>(path, { method: "POST", body: form });
 }
 
 export type Profile = {
@@ -311,40 +326,10 @@ export const api = {
       body: JSON.stringify(profile),
     }),
   dishes: () => request<Dish[]>("/food/dishes"),
-  classify: async (uri: string) => {
-    const form = new FormData();
-    if (uri.startsWith("file:")) {
-      form.append("file", {
-        uri,
-        name: "meal.jpg",
-        type: "image/jpeg",
-      } as unknown as Blob);
-    } else {
-      const blob = await fetch(uri).then((response) => response.blob());
-      form.append("file", blob, "meal.jpg");
-    }
-    return request<ClassifyResult>("/food/classify", {
-      method: "POST",
-      body: form,
-    });
-  },
-  classifyPlate: async (uri: string) => {
-    const form = new FormData();
-    if (uri.startsWith("file:")) {
-      form.append("file", {
-        uri,
-        name: "plate.jpg",
-        type: "image/jpeg",
-      } as unknown as Blob);
-    } else {
-      const blob = await fetch(uri).then((response) => response.blob());
-      form.append("file", blob, "plate.jpg");
-    }
-    return request<PlateClassifyResult>("/food/classify-plate", {
-      method: "POST",
-      body: form,
-    });
-  },
+  classify: (uri: string) =>
+    uploadImage<ClassifyResult>("/food/classify", uri, "meal.jpg"),
+  classifyPlate: (uri: string) =>
+    uploadImage<PlateClassifyResult>("/food/classify-plate", uri, "plate.jpg"),
   logMeal: (body: {
     dish_id: string;
     confidence_score: number;
@@ -380,23 +365,8 @@ export const api = {
       method: "POST",
       body: JSON.stringify(body),
     }),
-  uploadProgressPhoto: async (uri: string) => {
-    const form = new FormData();
-    if (uri.startsWith("file:")) {
-      form.append("file", {
-        uri,
-        name: "progress.jpg",
-        type: "image/jpeg",
-      } as unknown as Blob);
-    } else {
-      const blob = await fetch(uri).then((response) => response.blob());
-      form.append("file", blob, "progress.jpg");
-    }
-    return request<ProgressUploadResult>("/progress/photos", {
-      method: "POST",
-      body: form,
-    });
-  },
+  uploadProgressPhoto: (uri: string) =>
+    uploadImage<ProgressUploadResult>("/progress/photos", uri, "progress.jpg"),
   progressPhotos: () => request<ProgressPhoto[]>("/progress/photos"),
   progressTimeline: () => request<ProgressTimeline>("/progress/timeline"),
   progressPhotoImageUri: async (photoId: string) => {

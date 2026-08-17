@@ -1,51 +1,29 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { api } from "../api";
 import { setFoodDraft, singleFromClassify } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
+import { usePhotoCapture } from "../usePhotoCapture";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "FoodCapture">;
 
 export default function FoodCaptureScreen() {
   const navigation = useNavigation<Nav>();
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  async function pick(fromCamera: boolean) {
-    setBusy(true);
-    setError(null);
-    api.logEvent({
-      event_type: "task_started",
-      task: "food_log",
-      screen: "FoodCapture",
-    });
-    try {
-      const permission = fromCamera
-        ? await ImagePicker.requestCameraPermissionsAsync()
-        : await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permission.granted) {
-        setError("Permission is needed to add a meal photo.");
-        return;
-      }
-      const result = fromCamera
-        ? await ImagePicker.launchCameraAsync({ quality: 0.7 })
-        : await ImagePicker.launchImageLibraryAsync({ quality: 0.7 });
-      if (result.canceled || !result.assets[0]) return;
-      const uri = result.assets[0].uri;
-      const classified = await api.classify(uri);
+  const { pick, busy, error } = usePhotoCapture({
+    task: "food_log",
+    screen: "FoodCapture",
+    quality: 0.7,
+    permissionDeniedMessage: "Permission is needed to add a meal photo.",
+    failureMessage: "Classification failed",
+    capture: (uri) => api.classify(uri),
+    onCaptured: (classified, uri) => {
       setFoodDraft(singleFromClassify(classified, uri));
       navigation.navigate("FoodResult");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Classification failed");
-    } finally {
-      setBusy(false);
-    }
-  }
+    },
+  });
 
   return (
     <View style={styles.container}>

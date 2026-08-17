@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { api, setToken } from "../api";
@@ -13,7 +13,6 @@ type SplashNav = NativeStackNavigationProp<RootStackParamList, "Splash">;
 
 export default function SplashScreen() {
   const navigation = useNavigation<SplashNav>();
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -55,7 +54,6 @@ export default function SplashScreen() {
         color={colors.accent}
         style={{ marginTop: spacing.lg }}
       />
-      {error ? <Text style={styles.tagline}>{error}</Text> : null}
     </View>
   );
 }
