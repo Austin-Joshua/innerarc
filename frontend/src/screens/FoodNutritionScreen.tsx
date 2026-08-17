@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-
 
 import { api, BadgeEarned } from "../api";
 import BadgeBanner from "../components/BadgeBanner";
+import FeedbackPrompt from "../components/FeedbackPrompt";
 import { getFoodDraft } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
@@ -27,6 +28,7 @@ export default function FoodNutritionScreen() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [badges, setBadges] = useState<BadgeEarned[]>([]);
+  const [done, setDone] = useState(false);
 
   const multiReady =
     draft?.mode === "multi"
@@ -93,13 +95,9 @@ export default function FoodNutritionScreen() {
         serving_size_g: Number(serving),
         image_url: draft.image_url,
       });
-      const earned = logged.gamification?.new_badges ?? [];
-      if (earned.length) {
-        setBadges(earned);
-      } else {
-        navigation.popToTop();
-        navigation.navigate("Home");
-      }
+      setBadges(logged.gamification?.new_badges ?? []);
+      setDone(true);
+      api.logEvent({ event_type: "task_completed", task: "food_log", screen: "FoodNutrition" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log meal");
     } finally {
@@ -125,12 +123,9 @@ export default function FoodNutritionScreen() {
         });
         earned = [...earned, ...(logged.gamification?.new_badges ?? [])];
       }
-      if (earned.length) {
-        setBadges(earned);
-      } else {
-        navigation.popToTop();
-        navigation.navigate("Home");
-      }
+      setBadges(earned);
+      setDone(true);
+      api.logEvent({ event_type: "task_completed", task: "food_log", screen: "FoodNutrition" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log meal");
     } finally {
@@ -160,16 +155,19 @@ export default function FoodNutritionScreen() {
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
         <Text style={styles.title}>Plate nutrition</Text>
         <BadgeBanner badges={badges} />
-        {badges.length ? (
-          <Pressable
-            style={styles.button}
-            onPress={() => {
-              navigation.popToTop();
-              navigation.navigate("Home");
-            }}
-          >
-            <Text style={styles.buttonLabel}>Continue</Text>
-          </Pressable>
+        {done ? (
+          <>
+            <FeedbackPrompt screen="FoodNutrition" />
+            <Pressable
+              style={styles.button}
+              onPress={() => {
+                navigation.popToTop();
+                navigation.navigate("Home");
+              }}
+            >
+              <Text style={styles.buttonLabel}>Continue</Text>
+            </Pressable>
+          </>
         ) : null}
         <Text style={styles.muted}>
           Macros come from each matched dish in the catalog. Unmatched items are not logged.
@@ -205,9 +203,11 @@ export default function FoodNutritionScreen() {
           {multiTotals.carbs.toFixed(1)} · F {multiTotals.fat.toFixed(1)}
         </Text>
         {error ? <Text style={styles.muted}>{error}</Text> : null}
-        <Pressable disabled={busy} onPress={confirmMulti} style={styles.button}>
-          <Text style={styles.buttonLabel}>{busy ? "Saving…" : "Add plate to log"}</Text>
-        </Pressable>
+        {!done ? (
+          <Pressable disabled={busy} onPress={confirmMulti} style={styles.button}>
+            <Text style={styles.buttonLabel}>{busy ? "Saving…" : "Add plate to log"}</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
     );
   }
@@ -224,16 +224,19 @@ export default function FoodNutritionScreen() {
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
       <Text style={styles.title}>{draft.dish.name}</Text>
       <BadgeBanner badges={badges} />
-      {badges.length ? (
-        <Pressable
-          style={styles.button}
-          onPress={() => {
-            navigation.popToTop();
-            navigation.navigate("Home");
-          }}
-        >
-          <Text style={styles.buttonLabel}>Continue</Text>
-        </Pressable>
+      {done ? (
+        <>
+          <FeedbackPrompt screen="FoodNutrition" />
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              navigation.popToTop();
+              navigation.navigate("Home");
+            }}
+          >
+            <Text style={styles.buttonLabel}>Continue</Text>
+          </Pressable>
+        </>
       ) : null}
       <Text style={styles.muted}>
         Source: {draft.dish.nutrition_source}. Ingredients are from the recipe table, not the photo.
@@ -256,9 +259,11 @@ export default function FoodNutritionScreen() {
         {scaledSingle.carbs.toFixed(1)} · F {scaledSingle.fat.toFixed(1)}
       </Text>
       {error ? <Text style={styles.muted}>{error}</Text> : null}
-      <Pressable disabled={busy} onPress={confirmSingle} style={styles.button}>
-        <Text style={styles.buttonLabel}>{busy ? "Saving…" : "Add to log"}</Text>
-      </Pressable>
+      {!done ? (
+        <Pressable disabled={busy} onPress={confirmSingle} style={styles.button}>
+          <Text style={styles.buttonLabel}>{busy ? "Saving…" : "Add to log"}</Text>
+        </Pressable>
+      ) : null}
     </ScrollView>
   );
 }

@@ -65,7 +65,10 @@ export default function WorkoutDetailScreen() {
 
       <Pressable
         style={styles.button}
-        onPress={() => navigation.navigate("WorkoutSession", { workoutId: workout.id })}
+        onPress={() => {
+          api.logEvent({ event_type: "task_started", task: "workout_session", screen: "WorkoutDetail" });
+          navigation.navigate("WorkoutSession", { workoutId: workout.id });
+        }}
       >
         <Text style={styles.buttonLabel}>Start session</Text>
       </Pressable>

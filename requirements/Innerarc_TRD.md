@@ -42,6 +42,14 @@ functional modules below implement that loop.
   steps, heart rate, and sleep into `wearable_data` (no background sync;
   not wired into the AI coach snapshot yet).
 
+- Usability Instrumentation — timestamped UI events (`screen_viewed`,
+  `task_started`, `task_completed`, `task_abandoned`) tagged with an
+  optional task/screen label in `usability_events`, plus a
+  `POST /feedback` endpoint (1–5 rating + optional comment). Fired from
+  existing action handlers at the food-log, workout-session, and
+  progress-photo checkpoints. Data-collection infrastructure only — it
+  does not run or analyze a usability study.
+
 **Phase 2 / remaining**
 
 - Apple HealthKit (iOS) wearable ingestion — **explicitly blocked** in
@@ -60,6 +68,7 @@ functional modules below implement that loop.
 | Wearable data           | Android Health Connect (done); Apple HealthKit (blocked: no macOS/Xcode)       |
 | Proactive AI coaching   | Done — Home `GET /coach/nudge`, not cron; logging-gap + adherence+progress     |
 | Multi-item plate        | Done — Gemini Vision (user toggle); dish-table match; no trained detector      |
+| Usability instrumentation | Done — `usability_events` log + `POST /feedback`; supports a future study, doesn't run one |
 | Nutrition data          | USDA FoodData Central API; IFCT 2017 for Indian dishes                             |
 
 **3. Module-by-Module Technical Breakdown**

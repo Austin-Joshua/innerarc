@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { api, BadgeEarned, WorkoutDetail } from "../api";
 import BadgeBanner from "../components/BadgeBanner";
+import FeedbackPrompt from "../components/FeedbackPrompt";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
 
@@ -67,6 +68,7 @@ export default function WorkoutSessionScreen() {
       });
       setBadges(log.gamification?.new_badges ?? []);
       setDoneMessage(`Logged · ${log.calories_burned_est} kcal est.`);
+      api.logEvent({ event_type: "task_completed", task: "workout_session", screen: "WorkoutSession" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log workout");
       setLogging(false);
@@ -128,6 +130,7 @@ export default function WorkoutSessionScreen() {
         <Text style={styles.heading}>{workout.name}</Text>
         <Text style={styles.muted}>{doneMessage}</Text>
         <BadgeBanner badges={badges} />
+        <FeedbackPrompt screen="WorkoutSession" />
         {error ? <Text style={styles.muted}>{error}</Text> : null}
         <Pressable style={styles.button} onPress={() => navigation.navigate("Home")}>
           <Text style={styles.buttonLabel}>Back to Home</Text>

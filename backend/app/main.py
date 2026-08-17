@@ -14,6 +14,7 @@ from app.routers.dashboard import router as dashboard_router
 from app.routers.food import dishes_router, router as food_router
 from app.routers.gamification import router as gamification_router
 from app.routers.progress import router as progress_router
+from app.routers.usability import router as usability_router
 from app.routers.wearable import router as wearable_router
 from app.routers.workouts import router as workouts_router
 
@@ -51,6 +52,7 @@ app.include_router(progress_router)
 app.include_router(coach_router)
 app.include_router(gamification_router)
 app.include_router(wearable_router)
+app.include_router(usability_router)
 
 
 @app.get("/health")

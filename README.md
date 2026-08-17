@@ -2,7 +2,7 @@
 
 Closed-loop AI health companion: food recognition, structured workouts, pose-based progress tracking, a retrieval-grounded AI coach, and consistency-based gamification.
 
-**Core tier is implemented** (Modules 1–6). **Modules 7, 9, and 10** are also done (Android Health Connect, proactive coaching, multi-item plate via Gemini Vision). **Module 8 (Apple HealthKit)** remains **blocked** — no macOS/Xcode access in this workspace — and is not silently dropped from scope.
+**Core tier is implemented** (Modules 1–6). **Modules 7, 9, 10, and 11** are also done (Android Health Connect, proactive coaching, multi-item plate via Gemini Vision, usability instrumentation). **Module 8 (Apple HealthKit)** remains **blocked** — no macOS/Xcode access in this workspace — and is not silently dropped from scope.
 
 ## Stack
 
@@ -38,6 +38,7 @@ data/photos/    Local object storage for meal/progress images (created at runtim
 | 8 | Apple HealthKit (iOS) — **blocked** (requires macOS/Xcode; out of scope until available) |
 | 9 | Proactive AI coaching — Home-triggered `GET /coach/nudge`, rate-limited logging-gap / adherence patterns |
 | 10 | Multi-item plate recognition — Gemini Vision (`POST /food/classify-plate`); dish-table match; no trained detector |
+| 11 | Usability instrumentation — `usability_events` log (screen/task started/completed/abandoned) + `POST /feedback` (1–5 rating + comment); data collection only, not a completed usability study |
 
 ## Local setup
 
@@ -122,6 +123,7 @@ python -u scripts/smoke_progress_pose.py
 python -u scripts/smoke_wearable.py
 python -u scripts/smoke_proactive.py
 python -u scripts/smoke_plate.py
+python -u scripts/smoke_usability.py
 ```
 
 Health Connect (Module 7) needs a **custom Android development build** (`expo-dev-client`); it is not available in Expo Go. Use `npx expo run:android` or a prebuilt debug APK on an emulator/device with the Play Store (Health Connect preinstalled or installable).
@@ -137,12 +139,15 @@ Migrations follow [requirements/Innerarc_Backend_Schema.md](requirements/Innerar
 - `exercises` / `workout_exercises` — session player structure
 - `calorie_targets` — daily calorie/macro targets
 - `dishes.nutrition_confidence` / `match_coverage_pct` — IFCT coverage tiers
+- `usability_events` / `feedback` — instrumentation for a future usability study (Module 11)
 
 `wearable_data` is ingested from **Android Health Connect** via manual Sync Now (`POST /wearable/sync`, `GET /wearable/recent`; source `health_connect`; dedupe on `user_id` + `metric_type` + `recorded_at`). Apple HealthKit remains planned but **blocked** (no macOS/Xcode). Background sync is not built. The `reminders` table exists with no reminder scheduler yet.
 
 Proactive coaching stores nudges in `ai_conversations` with `message = null`, at most one per user per UTC day, triggered by Home `GET /coach/nudge` (not a cron).
 
 Progress photos are **not** served via public StaticFiles. Use authenticated `GET /progress/photos/{id}/image` (404 if not owner).
+
+Usability instrumentation (`POST /usability/events`, `POST /feedback`) is data-collection infrastructure only — it captures `screen_viewed` / `task_started` / `task_completed` / `task_abandoned` events (tagged with an optional `task` + `screen` label) and 1–5 ratings with optional comment. It does not run or analyze a usability study.
 
 ## Core constraints (do not regress)
 

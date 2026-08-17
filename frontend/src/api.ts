@@ -250,6 +250,8 @@ export type WearableRecent = {
   synced_at: string | null;
 };
 
+export type UsabilityEventType = "screen_viewed" | "task_started" | "task_completed" | "task_abandoned";
+
 function workoutQuery(params?: { modality?: string; level?: string; goal?: string; equipment_access?: string }) {
   const query = new URLSearchParams();
   if (params?.modality) query.set("modality", params.modality);
@@ -371,4 +373,10 @@ export const api = {
       body: JSON.stringify({ readings }),
     }),
   wearableRecent: () => request<WearableRecent>("/wearable/recent"),
+  // Fire-and-forget: instrumentation must never block or fail the flow it's tagging.
+  logEvent: (body: { event_type: UsabilityEventType; task?: string; screen?: string }) => {
+    request("/usability/events", { method: "POST", body: JSON.stringify(body) }).catch(() => {});
+  },
+  submitFeedback: (body: { rating: number; comment?: string; screen?: string }) =>
+    request<{ id: string }>("/feedback", { method: "POST", body: JSON.stringify(body) }),
 };

@@ -19,6 +19,7 @@ export default function ProgressCaptureScreen() {
   async function pick(fromCamera: boolean) {
     setBusy(true);
     setError(null);
+    api.logEvent({ event_type: "task_started", task: "progress_photo", screen: "ProgressCapture" });
     try {
       const permission = fromCamera
         ? await ImagePicker.requestCameraPermissionsAsync()
@@ -34,6 +35,7 @@ export default function ProgressCaptureScreen() {
       const uri = result.assets[0].uri;
       const uploaded = await api.uploadProgressPhoto(uri);
       setProgressDraft({ ...uploaded, local_uri: uri });
+      api.logEvent({ event_type: "task_completed", task: "progress_photo", screen: "ProgressCapture" });
       navigation.navigate("ProgressCompare");
     } catch (err) {
       setError(

@@ -19,6 +19,7 @@ export default function FoodCaptureScreen() {
   async function pick(fromCamera: boolean) {
     setBusy(true);
     setError(null);
+    api.logEvent({ event_type: "task_started", task: "food_log", screen: "FoodCapture" });
     try {
       const permission = fromCamera
         ? await ImagePicker.requestCameraPermissionsAsync()

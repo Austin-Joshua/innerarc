@@ -30,6 +30,8 @@ class User(Base):
     wearable_data: Mapped[list[WearableData]] = relationship(back_populates="user")
     ai_conversations: Mapped[list[AIConversation]] = relationship(back_populates="user")
     reminders: Mapped[list[Reminder]] = relationship(back_populates="user")
+    usability_events: Mapped[list[UsabilityEvent]] = relationship(back_populates="user")
+    feedback_entries: Mapped[list[Feedback]] = relationship(back_populates="user")
 
 
 class UserProfile(Base):
