@@ -20,7 +20,9 @@ export default function ProgramDetailScreen() {
     api
       .program(params.programId)
       .then(setProgram)
-      .catch((err) => setError(err instanceof Error ? err.message : "Could not load program"));
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Could not load program"),
+      );
   }, [params.programId]);
 
   if (error) {
@@ -39,7 +41,10 @@ export default function ProgramDetailScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>{program.name}</Text>
       <Text style={styles.muted}>
         {program.duration_weeks} weeks · {program.workout_count} sessions
@@ -49,7 +54,9 @@ export default function ProgramDetailScreen() {
         <Pressable
           key={`${slot.week_number}-${slot.day_number}-${slot.workout.id}`}
           style={styles.card}
-          onPress={() => navigation.navigate("WorkoutDetail", { workoutId: slot.workout.id })}
+          onPress={() =>
+            navigation.navigate("WorkoutDetail", { workoutId: slot.workout.id })
+          }
         >
           <Text style={styles.meta}>
             Week {slot.week_number} · Day {slot.day_number}
@@ -65,10 +72,18 @@ export default function ProgramDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
-  heading: { ...typography.heading, marginTop: spacing.lg, marginBottom: spacing.sm },
+  heading: {
+    ...typography.heading,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+  },
   card: {
     backgroundColor: colors.white,
     borderWidth: 1,

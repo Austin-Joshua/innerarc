@@ -58,11 +58,19 @@ export type Dish = {
   nutrition_confidence: "high" | "medium" | "low";
   match_coverage_pct: number | null;
   default_serving_g: number;
-  nutrition_per_100g: { calories: number; protein: number; carbs: number; fat: number };
+  nutrition_per_100g: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
   ingredients: Ingredient[];
 };
 
-export type ClassifyResult = Dish & { confidence_score: number; image_url: string };
+export type ClassifyResult = Dish & {
+  confidence_score: number;
+  image_url: string;
+};
 
 export type PlateItem = {
   matched: boolean;
@@ -80,10 +88,26 @@ export type PlateClassifyResult = {
 
 export type Dashboard = {
   date: string;
-  target: { calories: number; protein_g: number; carbs_g: number; fat_g: number; source: string };
-  logged: { calories: number; protein_g: number; carbs_g: number; fat_g: number };
-  remaining: { calories: number; protein_g: number; carbs_g: number; fat_g: number };
-  entries: Array<{
+  target: {
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+    source: string;
+  };
+  logged: {
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  };
+  remaining: {
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  };
+  entries: {
     id: string;
     dish_name: string;
     nutrition_source: string;
@@ -93,7 +117,7 @@ export type Dashboard = {
     protein: number;
     carbs: number;
     fat: number;
-  }>;
+  }[];
 };
 
 export type WorkoutSummary = {
@@ -129,11 +153,11 @@ export type ProgramSummary = {
 };
 
 export type ProgramDetail = ProgramSummary & {
-  schedule: Array<{
+  schedule: {
     week_number: number;
     day_number: number;
     workout: WorkoutSummary;
-  }>;
+  }[];
 };
 
 export type WorkoutLog = {
@@ -250,14 +274,21 @@ export type WearableRecent = {
   synced_at: string | null;
 };
 
-export type UsabilityEventType = "screen_viewed" | "task_started" | "task_completed" | "task_abandoned";
+export type UsabilityEventType =
+  "screen_viewed" | "task_started" | "task_completed" | "task_abandoned";
 
-function workoutQuery(params?: { modality?: string; level?: string; goal?: string; equipment_access?: string }) {
+function workoutQuery(params?: {
+  modality?: string;
+  level?: string;
+  goal?: string;
+  equipment_access?: string;
+}) {
   const query = new URLSearchParams();
   if (params?.modality) query.set("modality", params.modality);
   if (params?.level) query.set("level", params.level);
   if (params?.goal) query.set("goal", params.goal);
-  if (params?.equipment_access) query.set("equipment_access", params.equipment_access);
+  if (params?.equipment_access)
+    query.set("equipment_access", params.equipment_access);
   const suffix = query.toString();
   return suffix ? `?${suffix}` : "";
 }
@@ -275,7 +306,10 @@ export const api = {
     }),
   me: () => request<User>("/auth/me"),
   saveProfile: (profile: Profile) =>
-    request<User>("/auth/me/profile", { method: "PUT", body: JSON.stringify(profile) }),
+    request<User>("/auth/me/profile", {
+      method: "PUT",
+      body: JSON.stringify(profile),
+    }),
   dishes: () => request<Dish[]>("/food/dishes"),
   classify: async (uri: string) => {
     const form = new FormData();
@@ -289,7 +323,10 @@ export const api = {
       const blob = await fetch(uri).then((response) => response.blob());
       form.append("file", blob, "meal.jpg");
     }
-    return request<ClassifyResult>("/food/classify", { method: "POST", body: form });
+    return request<ClassifyResult>("/food/classify", {
+      method: "POST",
+      body: form,
+    });
   },
   classifyPlate: async (uri: string) => {
     const form = new FormData();
@@ -303,7 +340,10 @@ export const api = {
       const blob = await fetch(uri).then((response) => response.blob());
       form.append("file", blob, "plate.jpg");
     }
-    return request<PlateClassifyResult>("/food/classify-plate", { method: "POST", body: form });
+    return request<PlateClassifyResult>("/food/classify-plate", {
+      method: "POST",
+      body: form,
+    });
   },
   logMeal: (body: {
     dish_id: string;
@@ -312,21 +352,34 @@ export const api = {
     image_url: string;
     logged_at?: string;
   }) =>
-    request<{ gamification?: GamificationState | null; logged_at?: string }>("/food/logs", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
+    request<{ gamification?: GamificationState | null; logged_at?: string }>(
+      "/food/logs",
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+      },
+    ),
   dashboardToday: () => request<Dashboard>("/dashboard/today"),
   gamificationStatus: () => request<GamificationState>("/gamification/status"),
-  workouts: (params?: { modality?: string; level?: string; goal?: string; equipment_access?: string }) =>
-    request<WorkoutSummary[]>(`/workouts${workoutQuery(params)}`),
-  recommendWorkouts: (params?: { modality?: string; level?: string; goal?: string }) =>
-    request<WorkoutSummary[]>(`/workouts/recommend${workoutQuery(params)}`),
+  workouts: (params?: {
+    modality?: string;
+    level?: string;
+    goal?: string;
+    equipment_access?: string;
+  }) => request<WorkoutSummary[]>(`/workouts${workoutQuery(params)}`),
+  recommendWorkouts: (params?: {
+    modality?: string;
+    level?: string;
+    goal?: string;
+  }) => request<WorkoutSummary[]>(`/workouts/recommend${workoutQuery(params)}`),
   workout: (id: string) => request<WorkoutDetail>(`/workouts/${id}`),
   programs: () => request<ProgramSummary[]>("/programs"),
   program: (id: string) => request<ProgramDetail>(`/programs/${id}`),
   logWorkout: (body: { workout_id: string; duration_min: number }) =>
-    request<WorkoutLog>("/workout/logs", { method: "POST", body: JSON.stringify(body) }),
+    request<WorkoutLog>("/workout/logs", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
   uploadProgressPhoto: async (uri: string) => {
     const form = new FormData();
     if (uri.startsWith("file:")) {
@@ -339,16 +392,24 @@ export const api = {
       const blob = await fetch(uri).then((response) => response.blob());
       form.append("file", blob, "progress.jpg");
     }
-    return request<ProgressUploadResult>("/progress/photos", { method: "POST", body: form });
+    return request<ProgressUploadResult>("/progress/photos", {
+      method: "POST",
+      body: form,
+    });
   },
   progressPhotos: () => request<ProgressPhoto[]>("/progress/photos"),
   progressTimeline: () => request<ProgressTimeline>("/progress/timeline"),
   progressPhotoImageUri: async (photoId: string) => {
     const headers = new Headers();
     if (token) headers.set("Authorization", `Bearer ${token}`);
-    const response = await fetch(`${API_URL}/progress/photos/${photoId}/image`, { headers });
+    const response = await fetch(
+      `${API_URL}/progress/photos/${photoId}/image`,
+      { headers },
+    );
     if (!response.ok) {
-      throw new Error(response.status === 404 ? "Photo not found" : "Could not load photo");
+      throw new Error(
+        response.status === 404 ? "Photo not found" : "Could not load photo",
+      );
     }
     const buffer = await response.arrayBuffer();
     const bytes = new Uint8Array(buffer);
@@ -367,16 +428,32 @@ export const api = {
     }),
   coachHistory: () => request<CoachMessage[]>("/coach/history"),
   coachNudge: () => request<CoachNudgeResult>("/coach/nudge"),
-  wearableSync: (readings: Array<{ metric_type: string; value: number; recorded_at: string }>) =>
+  wearableSync: (
+    readings: { metric_type: string; value: number; recorded_at: string }[],
+  ) =>
     request<WearableSyncResult>("/wearable/sync", {
       method: "POST",
       body: JSON.stringify({ readings }),
     }),
   wearableRecent: () => request<WearableRecent>("/wearable/recent"),
   // Fire-and-forget: instrumentation must never block or fail the flow it's tagging.
-  logEvent: (body: { event_type: UsabilityEventType; task?: string; screen?: string }) => {
-    request("/usability/events", { method: "POST", body: JSON.stringify(body) }).catch(() => {});
+  logEvent: (body: {
+    event_type: UsabilityEventType;
+    task?: string;
+    screen?: string;
+  }) => {
+    request("/usability/events", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }).catch(() => {});
   },
-  submitFeedback: (body: { rating: number; comment?: string; screen?: string }) =>
-    request<{ id: string }>("/feedback", { method: "POST", body: JSON.stringify(body) }),
+  submitFeedback: (body: {
+    rating: number;
+    comment?: string;
+    screen?: string;
+  }) =>
+    request<{ id: string }>("/feedback", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
 };

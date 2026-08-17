@@ -29,7 +29,10 @@ PATTERN_ADHERENCE_PROGRESS = "adherence_progress"
 # Post-check: refuse model output that violates deficit policy in text.
 _AGGRESSIVE_DEFICIT = [
     re.compile(r"\b([3-9]\d|\d{3,})\s*%\s*(calorie\s+)?deficit\b", re.I),
-    re.compile(r"\b(under|below|only)\s*(than\s+)?(900|800|700|600|500)\s*(kcal|calories)\b", re.I),
+    re.compile(
+        r"\b(under|below|only)\s*(than\s+)?(900|800|700|600|500)\s*(kcal|calories)\b",
+        re.I,
+    ),
     re.compile(r"\b(crash\s*diet|starve|starvation)\b", re.I),
 ]
 
@@ -62,7 +65,9 @@ def _week_start(d: date) -> date:
     return d - timedelta(days=d.weekday())
 
 
-def proactive_nudge_today(db: Session, user_id: UUID, today: date | None = None) -> AIConversation | None:
+def proactive_nudge_today(
+    db: Session, user_id: UUID, today: date | None = None
+) -> AIConversation | None:
     today = today or _utc_today()
     start = datetime(today.year, today.month, today.day, tzinfo=timezone.utc)
     end = start + timedelta(days=1)
@@ -82,24 +87,36 @@ def proactive_nudge_today(db: Session, user_id: UUID, today: date | None = None)
 def _day_has_activity(db: Session, user_id: UUID, day: date) -> bool:
     start = datetime(day.year, day.month, day.day, tzinfo=timezone.utc)
     end = start + timedelta(days=1)
-    food = db.scalar(
-        select(func.count())
-        .select_from(FoodLog)
-        .where(FoodLog.user_id == user_id, FoodLog.logged_at >= start, FoodLog.logged_at < end)
-    ) or 0
-    work = db.scalar(
-        select(func.count())
-        .select_from(WorkoutLog)
-        .where(
-            WorkoutLog.user_id == user_id,
-            WorkoutLog.completed_at >= start,
-            WorkoutLog.completed_at < end,
+    food = (
+        db.scalar(
+            select(func.count())
+            .select_from(FoodLog)
+            .where(
+                FoodLog.user_id == user_id,
+                FoodLog.logged_at >= start,
+                FoodLog.logged_at < end,
+            )
         )
-    ) or 0
+        or 0
+    )
+    work = (
+        db.scalar(
+            select(func.count())
+            .select_from(WorkoutLog)
+            .where(
+                WorkoutLog.user_id == user_id,
+                WorkoutLog.completed_at >= start,
+                WorkoutLog.completed_at < end,
+            )
+        )
+        or 0
+    )
     return (food + work) > 0
 
 
-def detect_logging_gap(db: Session, user_id: UUID, today: date | None = None) -> PatternMatch | None:
+def detect_logging_gap(
+    db: Session, user_id: UUID, today: date | None = None
+) -> PatternMatch | None:
     """3+ consecutive calendar days ending at today with no food and no workout."""
     today = today or _utc_today()
     streak = 0
@@ -129,9 +146,13 @@ def detect_logging_gap(db: Session, user_id: UUID, today: date | None = None) ->
     )
 
 
-def _workouts_in_range(db: Session, user_id: UUID, start: date, end_exclusive: date) -> int:
+def _workouts_in_range(
+    db: Session, user_id: UUID, start: date, end_exclusive: date
+) -> int:
     start_dt = datetime(start.year, start.month, start.day, tzinfo=timezone.utc)
-    end_dt = datetime(end_exclusive.year, end_exclusive.month, end_exclusive.day, tzinfo=timezone.utc)
+    end_dt = datetime(
+        end_exclusive.year, end_exclusive.month, end_exclusive.day, tzinfo=timezone.utc
+    )
     return (
         db.scalar(
             select(func.count())
@@ -175,12 +196,16 @@ def progress_trend_flat_or_declining(db: Session, user_id: UUID) -> bool:
     return wth_not_improving or stw_not_improving
 
 
-def detect_adherence_progress(db: Session, user_id: UUID, today: date | None = None) -> PatternMatch | None:
+def detect_adherence_progress(
+    db: Session, user_id: UUID, today: date | None = None
+) -> PatternMatch | None:
     today = today or _utc_today()
     this_week = _week_start(today)
     prior_2_start = this_week - timedelta(days=14)
 
-    this_week_count = _workouts_in_range(db, user_id, this_week, today + timedelta(days=1))
+    this_week_count = _workouts_in_range(
+        db, user_id, this_week, today + timedelta(days=1)
+    )
     prior_count = _workouts_in_range(db, user_id, prior_2_start, this_week)
     prior_avg = prior_count / 2.0
 
@@ -207,7 +232,9 @@ def detect_adherence_progress(db: Session, user_id: UUID, today: date | None = N
     )
 
 
-def first_matching_pattern(db: Session, user_id: UUID, today: date | None = None) -> PatternMatch | None:
+def first_matching_pattern(
+    db: Session, user_id: UUID, today: date | None = None
+) -> PatternMatch | None:
     """Prefer logging gap, then adherence+progress."""
     gap = detect_logging_gap(db, user_id, today)
     if gap:
@@ -247,7 +274,9 @@ _SAFE_ADHERENCE_FALLBACK = (
 )
 
 
-def maybe_create_nudge(db: Session, user: User, today: date | None = None) -> AIConversation | None:
+def maybe_create_nudge(
+    db: Session, user: User, today: date | None = None
+) -> AIConversation | None:
     """
     Return today's proactive nudge (existing or newly created). Rate limit: one per UTC day.
     """
@@ -290,7 +319,10 @@ def maybe_create_nudge(db: Session, user: User, today: date | None = None) -> AI
             )
             snapshot = {**snapshot, "safety_postcheck": "deficit_policy_replaced"}
 
-        if match.code == PATTERN_ADHERENCE_PROGRESS and response_mentions_appearance_or_ratios(reply):
+        if (
+            match.code == PATTERN_ADHERENCE_PROGRESS
+            and response_mentions_appearance_or_ratios(reply)
+        ):
             reply = _SAFE_ADHERENCE_FALLBACK
             snapshot = {**snapshot, "safety_postcheck": "appearance_language_replaced"}
 
@@ -300,7 +332,11 @@ def maybe_create_nudge(db: Session, user: User, today: date | None = None) -> AI
         response=reply,
         referenced_data_snapshot={
             **snapshot,
-            "safety_precheck": "blocked" if safety_blocked else snapshot.get("safety_precheck", "passed"),
+            "safety_precheck": (
+                "blocked"
+                if safety_blocked
+                else snapshot.get("safety_precheck", "passed")
+            ),
         },
     )
     db.add(row)

@@ -64,16 +64,21 @@ def _photo_out(photo: ProgressPhoto) -> ProgressPhotoOut:
     )
 
 
-def _consistency(db: Session, user_id: UUID, start: datetime, end: datetime) -> ConsistencyMetrics:
-    workouts_logged = db.scalar(
-        select(func.count())
-        .select_from(WorkoutLog)
-        .where(
-            WorkoutLog.user_id == user_id,
-            WorkoutLog.completed_at >= start,
-            WorkoutLog.completed_at <= end,
+def _consistency(
+    db: Session, user_id: UUID, start: datetime, end: datetime
+) -> ConsistencyMetrics:
+    workouts_logged = (
+        db.scalar(
+            select(func.count())
+            .select_from(WorkoutLog)
+            .where(
+                WorkoutLog.user_id == user_id,
+                WorkoutLog.completed_at >= start,
+                WorkoutLog.completed_at <= end,
+            )
         )
-    ) or 0
+        or 0
+    )
 
     food_days = db.scalars(
         select(func.date(FoodLog.logged_at)).where(
@@ -98,12 +103,16 @@ def _consistency(db: Session, user_id: UUID, start: datetime, end: datetime) -> 
     )
 
 
-def _milestone(db: Session, user: User, photo_count: int, newly_earned: list[str] | None = None) -> MilestoneStub:
+def _milestone(
+    db: Session, user: User, photo_count: int, newly_earned: list[str] | None = None
+) -> MilestoneStub:
     # Real streak from gamification row (updated on this upload) — no "else 0" stub.
     state = status_for_user(db, user.id)
     streak = state.streak_count
     new = newly_earned or []
-    if "first_progress_photo" in new or (photo_count == 1 and "first_progress_photo" in state.badges_earned):
+    if "first_progress_photo" in new or (
+        photo_count == 1 and "first_progress_photo" in state.badges_earned
+    ):
         return MilestoneStub(
             code="first_progress_photo",
             message="Baseline saved. Consistency metrics will grow with meals and workouts.",
@@ -207,7 +216,9 @@ def get_progress_photo_image(
 ) -> FileResponse:
     # Ownership check: unknown or other user's id → 404 (not 403) to avoid leaking existence.
     photo = db.scalar(
-        select(ProgressPhoto).where(ProgressPhoto.id == photo_id, ProgressPhoto.user_id == user.id)
+        select(ProgressPhoto).where(
+            ProgressPhoto.id == photo_id, ProgressPhoto.user_id == user.id
+        )
     )
     if photo is None:
         raise HTTPException(status_code=404, detail="Photo not found")

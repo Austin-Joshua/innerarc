@@ -12,7 +12,13 @@ import {
   View,
 } from "react-native";
 
-import { api, CoachNudge, Dashboard, GamificationState, WearableReading } from "../api";
+import {
+  api,
+  CoachNudge,
+  Dashboard,
+  GamificationState,
+  WearableReading,
+} from "../api";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
 import { LAST_SYNC_KEY } from "./WearableConnectScreen";
@@ -20,7 +26,8 @@ import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Home">;
 
-const nudgeDismissKey = (nudgeId: string, day: string) => `coach_nudge_dismissed:${day}:${nudgeId}`;
+const nudgeDismissKey = (nudgeId: string, day: string) =>
+  `coach_nudge_dismissed:${day}:${nudgeId}`;
 
 function MacroRow({
   label,
@@ -47,9 +54,15 @@ function MacroRow({
   );
 }
 
-function formatMetric(reading: WearableReading | undefined, unit: string): string {
+function formatMetric(
+  reading: WearableReading | undefined,
+  unit: string,
+): string {
   if (!reading) return "—";
-  const v = reading.metric_type === "sleep" ? reading.value.toFixed(1) : Math.round(reading.value);
+  const v =
+    reading.metric_type === "sleep"
+      ? reading.value.toFixed(1)
+      : Math.round(reading.value);
   return `${v} ${unit}`;
 }
 
@@ -85,11 +98,17 @@ export default function HomeScreen() {
           setNudge(null);
           return;
         }
-        const dismissed = await AsyncStorage.getItem(nudgeDismissKey(next.id, utcDay));
+        const dismissed = await AsyncStorage.getItem(
+          nudgeDismissKey(next.id, utcDay),
+        );
         if (!active) return;
         setNudge(dismissed ? null : next);
       })
-      .catch((err) => setError(err instanceof Error ? err.message : "Could not load dashboard"));
+      .catch((err) =>
+        setError(
+          err instanceof Error ? err.message : "Could not load dashboard",
+        ),
+      );
     return () => {
       active = false;
     };
@@ -146,7 +165,9 @@ export default function HomeScreen() {
       const iso = new Date().toISOString();
       await AsyncStorage.setItem(LAST_SYNC_KEY, iso);
       setLastSynced(iso);
-      setSyncMsg(`Synced ${result.total} · ${result.inserted} new, ${result.updated} updated`);
+      setSyncMsg(
+        `Synced ${result.total} · ${result.inserted} new, ${result.updated} updated`,
+      );
       const recent = await api.wearableRecent();
       setWearable(recent.readings);
     } catch (err) {
@@ -157,10 +178,14 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>Today</Text>
       <Text style={styles.muted}>
-        Logged vs your calculated target{data ? ` (${data.target.source})` : ""}.
+        Logged vs your calculated target{data ? ` (${data.target.source})` : ""}
+        .
       </Text>
       {game ? (
         <Text style={styles.streakLine}>
@@ -173,7 +198,11 @@ export default function HomeScreen() {
         <View style={styles.nudgeCard}>
           <View style={styles.nudgeHeader}>
             <Text style={styles.nudgeLabel}>Coach note</Text>
-            <Pressable onPress={onDismissNudge} hitSlop={12} accessibilityRole="button">
+            <Pressable
+              onPress={onDismissNudge}
+              hitSlop={12}
+              accessibilityRole="button"
+            >
               <Text style={styles.nudgeDismiss}>Dismiss</Text>
             </Pressable>
           </View>
@@ -182,28 +211,52 @@ export default function HomeScreen() {
       ) : null}
 
       <View style={styles.card}>
-        <Text style={styles.numeral}>{data ? Math.round(data.logged.calories) : "—"}</Text>
+        <Text style={styles.numeral}>
+          {data ? Math.round(data.logged.calories) : "—"}
+        </Text>
         <Text style={styles.muted}>
           of {data ? data.target.calories : "—"} kcal
         </Text>
       </View>
       {data ? (
         <>
-          <MacroRow label="Protein (g)" logged={data.logged.protein_g} target={data.target.protein_g} />
-          <MacroRow label="Carbs (g)" logged={data.logged.carbs_g} target={data.target.carbs_g} />
-          <MacroRow label="Fat (g)" logged={data.logged.fat_g} target={data.target.fat_g} />
+          <MacroRow
+            label="Protein (g)"
+            logged={data.logged.protein_g}
+            target={data.target.protein_g}
+          />
+          <MacroRow
+            label="Carbs (g)"
+            logged={data.logged.carbs_g}
+            target={data.target.carbs_g}
+          />
+          <MacroRow
+            label="Fat (g)"
+            logged={data.logged.fat_g}
+            target={data.target.fat_g}
+          />
         </>
       ) : null}
 
-      <Text style={[styles.sectionLabel, { marginTop: spacing.lg }]}>Wearables</Text>
+      <Text style={[styles.sectionLabel, { marginTop: spacing.lg }]}>
+        Wearables
+      </Text>
       <Text style={styles.muted}>
         Steps today · latest heart rate · latest sleep
-        {lastSynced ? ` · last sync ${new Date(lastSynced).toLocaleString()}` : ""}
+        {lastSynced
+          ? ` · last sync ${new Date(lastSynced).toLocaleString()}`
+          : ""}
       </Text>
       <View style={styles.wearableRow}>
-        <Text style={styles.wearableItem}>Steps {formatMetric(byType("steps"), "")}</Text>
-        <Text style={styles.wearableItem}>HR {formatMetric(byType("heart_rate"), "bpm")}</Text>
-        <Text style={styles.wearableItem}>Sleep {formatMetric(byType("sleep"), "h")}</Text>
+        <Text style={styles.wearableItem}>
+          Steps {formatMetric(byType("steps"), "")}
+        </Text>
+        <Text style={styles.wearableItem}>
+          HR {formatMetric(byType("heart_rate"), "bpm")}
+        </Text>
+        <Text style={styles.wearableItem}>
+          Sleep {formatMetric(byType("sleep"), "h")}
+        </Text>
       </View>
       {syncMsg ? <Text style={styles.muted}>{syncMsg}</Text> : null}
       <Pressable
@@ -228,10 +281,16 @@ export default function HomeScreen() {
         <Text style={styles.muted}>Explain permissions before first grant</Text>
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate("FoodCapture")} style={styles.button}>
+      <Pressable
+        onPress={() => navigation.navigate("FoodCapture")}
+        style={styles.button}
+      >
         <Text style={styles.buttonLabel}>Log meal</Text>
       </Pressable>
-      <Pressable onPress={() => navigation.navigate("WorkoutLibrary")} style={styles.secondary}>
+      <Pressable
+        onPress={() => navigation.navigate("WorkoutLibrary")}
+        style={styles.secondary}
+      >
         <Text style={styles.actionLabel}>Workouts</Text>
         <Text style={styles.muted}>Library, programs, and session player</Text>
       </Pressable>
@@ -254,11 +313,23 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
-  streakLine: { ...typography.muted, marginTop: spacing.xs, marginBottom: spacing.sm },
-  sectionLabel: { ...typography.heading, fontSize: 16, marginBottom: spacing.xs },
+  streakLine: {
+    ...typography.muted,
+    marginTop: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  sectionLabel: {
+    ...typography.heading,
+    fontSize: 16,
+    marginBottom: spacing.xs,
+  },
   wearableRow: { marginTop: spacing.sm, marginBottom: spacing.sm, gap: 4 },
   wearableItem: { ...typography.body },
   nudgeCard: {
@@ -305,7 +376,11 @@ const styles = StyleSheet.create({
   numeral: { ...typography.numeral, marginBottom: spacing.xs },
   numeralSmall: { fontWeight: "700", color: colors.text },
   macro: { marginBottom: spacing.md },
-  macroHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 6 },
+  macroHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
   macroLabel: { ...typography.body },
   track: {
     height: 8,

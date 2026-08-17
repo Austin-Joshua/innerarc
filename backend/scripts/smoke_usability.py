@@ -25,9 +25,13 @@ GOOD_PHOTO = ROOT / "ml" / "data" / "raw" / "progress_samples" / "good_standing.
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
-    reg = client.post("/auth/register", json={"email": email, "password": "password123"})
+    reg = client.post(
+        "/auth/register", json={"email": email, "password": "password123"}
+    )
     if reg.status_code == 409:
-        reg = client.post("/auth/login", json={"email": email, "password": "password123"})
+        reg = client.post(
+            "/auth/login", json={"email": email, "password": "password123"}
+        )
     assert reg.status_code == 200, reg.text
     return {"Authorization": f"Bearer {reg.json()['access_token']}"}
 
@@ -52,7 +56,9 @@ def main() -> None:
     try:
         dish = db.scalars(select(Dish).limit(1)).first()
         workout = db.scalars(select(Workout).limit(1)).first()
-        assert dish and workout, "seed data required (run seed_food.py / seed_workouts.py)"
+        assert (
+            dish and workout
+        ), "seed data required (run seed_food.py / seed_workouts.py)"
         dish_id, workout_id = dish.id, workout.id
     finally:
         db.close()
@@ -100,7 +106,11 @@ def main() -> None:
     fb = client.post(
         "/feedback",
         headers=headers,
-        json={"rating": 4, "comment": "Logging felt quick.", "screen": "WorkoutSession"},
+        json={
+            "rating": 4,
+            "comment": "Logging felt quick.",
+            "screen": "WorkoutSession",
+        },
     )
     assert fb.status_code == 200, fb.text
     fb_id = UUID(fb.json()["id"])
@@ -124,7 +134,9 @@ def main() -> None:
         }
         assert expected.issubset(by_task), f"missing events: {expected - by_task}"
         assert all(e.created_at is not None for e in events)
-        print(f"{len(events)} usability_events rows found, all {len(expected)} expected pairs present")
+        print(
+            f"{len(events)} usability_events rows found, all {len(expected)} expected pairs present"
+        )
 
         row = db.get(Feedback, fb_id)
         assert row is not None

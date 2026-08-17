@@ -19,7 +19,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.db import SessionLocal  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models.engagement import AIConversation  # noqa: E402
-from app.models.enums import ActivityLevel, BiologicalSex, EquipmentAccess, Goal  # noqa: E402
+from app.models.enums import (
+    ActivityLevel,
+    BiologicalSex,
+    EquipmentAccess,
+    Goal,
+)  # noqa: E402
 from app.models.food import Dish, FoodLog  # noqa: E402
 from app.models.progress import ProgressPhoto  # noqa: E402
 from app.models.user import User, UserProfile  # noqa: E402
@@ -45,14 +50,20 @@ _APPEARANCE_BAN = re.compile(
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
-    reg = client.post("/auth/register", json={"email": email, "password": "password123"})
+    reg = client.post(
+        "/auth/register", json={"email": email, "password": "password123"}
+    )
     if reg.status_code == 409:
-        reg = client.post("/auth/login", json={"email": email, "password": "password123"})
+        reg = client.post(
+            "/auth/login", json={"email": email, "password": "password123"}
+        )
     return {"Authorization": f"Bearer {reg.json()['access_token']}"}
 
 
 def _ensure_profile(db, user_id: UUID) -> User:
-    user = db.scalar(select(User).options(selectinload(User.profile)).where(User.id == user_id))
+    user = db.scalar(
+        select(User).options(selectinload(User.profile)).where(User.id == user_id)
+    )
     assert user is not None
     if user.profile is None:
         user.profile = UserProfile(
@@ -127,7 +138,9 @@ def main() -> None:
     assert safety_precheck("cut me to a 40% deficit") is not None
     assert response_violates_deficit_policy("Try an 800 kcal day")
     assert response_violates_deficit_policy("Aim for a 35% deficit")
-    assert not response_violates_deficit_policy("Log one meal and keep a modest deficit.")
+    assert not response_violates_deficit_policy(
+        "Log one meal and keep a modest deficit."
+    )
     print("safety path wired; deficit post-check unit OK")
 
     # --- 1. Logging gap + rate limit ---
@@ -142,7 +155,9 @@ def main() -> None:
         # Explicit empty days: nothing seeded → ≥3 day gap from today backward
         match = detect_logging_gap(db, gap_uid, today)
         assert match is not None and match.code == PATTERN_LOGGING_GAP, match
-        user = db.scalar(select(User).options(selectinload(User.profile)).where(User.id == gap_uid))
+        user = db.scalar(
+            select(User).options(selectinload(User.profile)).where(User.id == gap_uid)
+        )
         assert user is not None
         with patch(
             "app.services.proactive.generate_coach_reply",
@@ -196,7 +211,9 @@ def main() -> None:
         assert not response_violates_deficit_policy(row.response), row.response
         assert "800" not in row.response
         assert "40%" not in row.response
-        assert (row.referenced_data_snapshot or {}).get("safety_postcheck") == "deficit_policy_replaced"
+        assert (row.referenced_data_snapshot or {}).get(
+            "safety_postcheck"
+        ) == "deficit_policy_replaced"
     finally:
         db.close()
     # Same Module 5 safety path: keyword precheck (no model) + SYSTEM_INSTRUCTION still present
@@ -207,7 +224,9 @@ def main() -> None:
     )
     assert pre.status_code == 200, pre.text
     assert pre.json()["safety_precheck_blocked"] is True
-    assert "20%" in pre.json()["response"] or "deficit" in pre.json()["response"].lower()
+    assert (
+        "20%" in pre.json()["response"] or "deficit" in pre.json()["response"].lower()
+    )
     results["2_deficit_floor"] = "PASS"
     print("PASS: aggressive model output replaced; Module 5 precheck/floor path intact")
 
@@ -231,7 +250,9 @@ def main() -> None:
                 image_url="seed://m9adh",
                 confidence_score=0.9,
                 serving_size_g=200,
-                logged_at=datetime.combine(today - timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc),
+                logged_at=datetime.combine(
+                    today - timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc
+                ),
             )
         )
         # Prior 2 weeks: ≥3/week average → at least 6 workouts before this Monday
@@ -240,21 +261,26 @@ def main() -> None:
             _add_workout(
                 db,
                 adh_uid,
-                datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc) + timedelta(hours=12),
+                datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc)
+                + timedelta(hours=12),
             )
         # This week: zero workouts (do not add any on/after monday)
         # ≥2 photos flat/declining: later WTH higher (worse), STW lower (worse)
         _add_photo(
             db,
             adh_uid,
-            datetime.combine(today - timedelta(days=20), datetime.min.time(), tzinfo=timezone.utc),
+            datetime.combine(
+                today - timedelta(days=20), datetime.min.time(), tzinfo=timezone.utc
+            ),
             wth=0.72,
             stw=1.45,
         )
         _add_photo(
             db,
             adh_uid,
-            datetime.combine(today - timedelta(days=2), datetime.min.time(), tzinfo=timezone.utc),
+            datetime.combine(
+                today - timedelta(days=2), datetime.min.time(), tzinfo=timezone.utc
+            ),
             wth=0.75,  # not improving
             stw=1.40,  # not improving
         )
@@ -291,7 +317,9 @@ def main() -> None:
             row2 = maybe_create_nudge(db, user, today)
         assert row2 is not None
         assert not _APPEARANCE_BAN.search(row2.response), row2.response
-        assert (row2.referenced_data_snapshot or {}).get("safety_postcheck") == "appearance_language_replaced"
+        assert (row2.referenced_data_snapshot or {}).get(
+            "safety_postcheck"
+        ) == "appearance_language_replaced"
     finally:
         db.close()
 
@@ -321,7 +349,9 @@ def main() -> None:
                 image_url="seed://m9edge",
                 confidence_score=0.9,
                 serving_size_g=200,
-                logged_at=datetime.combine(today - timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc),
+                logged_at=datetime.combine(
+                    today - timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc
+                ),
             )
         )
         for i in range(6):
@@ -329,21 +359,28 @@ def main() -> None:
             _add_workout(
                 db,
                 edge_uid,
-                datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc) + timedelta(hours=12),
+                datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc)
+                + timedelta(hours=12),
             )
         db.commit()
-        assert detect_adherence_progress(db, edge_uid, today) is None, "0 photos must not fire"
+        assert (
+            detect_adherence_progress(db, edge_uid, today) is None
+        ), "0 photos must not fire"
         assert not progress_trend_flat_or_declining(db, edge_uid)
 
         _add_photo(
             db,
             edge_uid,
-            datetime.combine(today - timedelta(days=3), datetime.min.time(), tzinfo=timezone.utc),
+            datetime.combine(
+                today - timedelta(days=3), datetime.min.time(), tzinfo=timezone.utc
+            ),
             wth=0.80,
             stw=1.20,
         )
         db.commit()
-        assert detect_adherence_progress(db, edge_uid, today) is None, "1 photo must not fire"
+        assert (
+            detect_adherence_progress(db, edge_uid, today) is None
+        ), "1 photo must not fire"
         assert not progress_trend_flat_or_declining(db, edge_uid)
 
         # Gap should also not be the only story — with recent food, gap false; adherence false → no nudge
@@ -364,19 +401,23 @@ def main() -> None:
     assert still.status_code == 200
     assert still.json()["nudge"] is not None
     # HomeScreen dismiss: setNudge(null) then AsyncStorage.setItem — no API delete, no navigation
-    home_src = (ROOT / "frontend" / "src" / "screens" / "HomeScreen.tsx").read_text(encoding="utf-8")
+    home_src = (ROOT / "frontend" / "src" / "screens" / "HomeScreen.tsx").read_text(
+        encoding="utf-8"
+    )
     assert "coach_nudge_dismissed" in home_src
     assert "onDismissNudge" in home_src
     assert "setNudge(null)" in home_src
-    assert "api.coachNudge()" in home_src or "api.coachNudge()" in (ROOT / "frontend" / "src" / "api.ts").read_text(
-        encoding="utf-8"
-    )
+    assert "api.coachNudge()" in home_src or "api.coachNudge()" in (
+        ROOT / "frontend" / "src" / "api.ts"
+    ).read_text(encoding="utf-8")
     # Dismiss handler must not navigate
     dismiss_fn = home_src.split("onDismissNudge")[1].split("const byType")[0]
     assert "navigate" not in dismiss_fn
     assert "delete" not in dismiss_fn.lower()
     results["5_dismiss"] = "PASS"
-    print("PASS: dismiss is AsyncStorage-only; does not delete server row or call navigate")
+    print(
+        "PASS: dismiss is AsyncStorage-only; does not delete server row or call navigate"
+    )
 
     print("=== MODULE 9 RESULTS ===")
     for key, val in results.items():

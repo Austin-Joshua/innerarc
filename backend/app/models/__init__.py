@@ -16,7 +16,14 @@ from app.models.food import CalorieTarget, Dish, DishIngredient, FoodLog, Ingred
 from app.models.progress import ProgressPhoto, WearableData
 from app.models.usability import Feedback, UsabilityEvent
 from app.models.user import User, UserProfile
-from app.models.workout import Exercise, Program, ProgramWorkout, Workout, WorkoutExercise, WorkoutLog
+from app.models.workout import (
+    Exercise,
+    Program,
+    ProgramWorkout,
+    Workout,
+    WorkoutExercise,
+    WorkoutLog,
+)
 
 __all__ = [
     "AIConversation",

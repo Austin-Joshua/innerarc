@@ -9,7 +9,13 @@ from sqlalchemy.orm import Session, selectinload
 from app.db import get_db
 from app.models.enums import EquipmentAccess, WorkoutLevel, WorkoutModality
 from app.models.user import User
-from app.models.workout import Program, ProgramWorkout, Workout, WorkoutExercise, WorkoutLog
+from app.models.workout import (
+    Program,
+    ProgramWorkout,
+    Workout,
+    WorkoutExercise,
+    WorkoutLog,
+)
 from app.schemas.workouts import (
     ProgramDetailOut,
     ProgramSlotOut,
@@ -43,7 +49,9 @@ MET_BY_MODALITY = {
 
 
 def _required_equipment_rank(equipment_needed: list[str]) -> int:
-    ranks = [EQUIPMENT_RANK[item] for item in equipment_needed if item in EQUIPMENT_RANK]
+    ranks = [
+        EQUIPMENT_RANK[item] for item in equipment_needed if item in EQUIPMENT_RANK
+    ]
     return max(ranks) if ranks else 0
 
 
@@ -88,7 +96,11 @@ def _load_workouts(db: Session) -> list[Workout]:
     return list(
         db.scalars(
             select(Workout)
-            .options(selectinload(Workout.workout_exercises).selectinload(WorkoutExercise.exercise))
+            .options(
+                selectinload(Workout.workout_exercises).selectinload(
+                    WorkoutExercise.exercise
+                )
+            )
             .order_by(Workout.name)
         ).all()
     )
@@ -110,7 +122,11 @@ def _filter_workouts(
     if goal:
         results = [w for w in results if goal in (w.goal_tags or [])]
     if equipment_access is not None:
-        results = [w for w in results if _accessible_under(equipment_access, w.equipment_needed or [])]
+        results = [
+            w
+            for w in results
+            if _accessible_under(equipment_access, w.equipment_needed or [])
+        ]
     return results
 
 
@@ -152,7 +168,9 @@ def recommend_workouts(
     (e.g. full_gym also sees none and home_gym workouts).
     """
     if user.profile is None:
-        raise HTTPException(status_code=400, detail="Complete onboarding before recommendations")
+        raise HTTPException(
+            status_code=400, detail="Complete onboarding before recommendations"
+        )
     if modality and modality not in WorkoutModality._value2member_map_:
         raise HTTPException(status_code=400, detail="Invalid modality")
     if level and level not in WorkoutLevel._value2member_map_:
@@ -184,7 +202,11 @@ def get_workout(workout_id: UUID, db: Session = Depends(get_db)) -> WorkoutDetai
     workout = db.scalar(
         select(Workout)
         .where(Workout.id == workout_id)
-        .options(selectinload(Workout.workout_exercises).selectinload(WorkoutExercise.exercise))
+        .options(
+            selectinload(Workout.workout_exercises).selectinload(
+                WorkoutExercise.exercise
+            )
+        )
     )
     if workout is None:
         raise HTTPException(status_code=404, detail="Workout not found")
@@ -194,7 +216,9 @@ def get_workout(workout_id: UUID, db: Session = Depends(get_db)) -> WorkoutDetai
 @router.get("/programs", response_model=list[ProgramSummaryOut])
 def list_programs(db: Session = Depends(get_db)) -> list[ProgramSummaryOut]:
     programs = db.scalars(
-        select(Program).options(selectinload(Program.program_workouts)).order_by(Program.name)
+        select(Program)
+        .options(selectinload(Program.program_workouts))
+        .order_by(Program.name)
     ).all()
     return [
         ProgramSummaryOut(

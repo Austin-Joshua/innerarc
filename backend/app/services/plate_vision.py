@@ -150,7 +150,9 @@ def identify_plate_items(image_path: str, catalog_names: list[str]) -> list[Visi
             response = client.models.generate_content(
                 model=settings.gemini_model,
                 contents=[
-                    types.Part.from_bytes(data=path.read_bytes(), mime_type=_mime_for_path(path)),
+                    types.Part.from_bytes(
+                        data=path.read_bytes(), mime_type=_mime_for_path(path)
+                    ),
                     prompt,
                 ],
                 config=types.GenerateContentConfig(
@@ -167,12 +169,16 @@ def identify_plate_items(image_path: str, catalog_names: list[str]) -> list[Visi
             try:
                 payload = json.loads(text)
             except json.JSONDecodeError as exc:
-                raise RuntimeError(f"Gemini plate response was not valid JSON: {text[:200]}") from exc
+                raise RuntimeError(
+                    f"Gemini plate response was not valid JSON: {text[:200]}"
+                ) from exc
             return parse_vision_payload(payload)
         except Exception as exc:  # noqa: BLE001
             last_error = exc
             msg = str(exc).lower()
-            if attempt < 2 and ("503" in msg or "unavailable" in msg or "high demand" in msg):
+            if attempt < 2 and (
+                "503" in msg or "unavailable" in msg or "high demand" in msg
+            ):
                 time.sleep(2 * (attempt + 1))
                 continue
             raise

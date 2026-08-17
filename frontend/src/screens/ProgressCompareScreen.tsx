@@ -1,7 +1,14 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { api, ProgressPhoto } from "../api";
 import BadgeBanner from "../components/BadgeBanner";
@@ -13,7 +20,11 @@ type Nav = NativeStackNavigationProp<RootStackParamList, "ProgressCompare">;
 
 function RatioTrend({ photos }: { photos: ProgressPhoto[] }) {
   if (!photos.length) {
-    return <Text style={styles.muted}>Trend appears after your first successful check-in.</Text>;
+    return (
+      <Text style={styles.muted}>
+        Trend appears after your first successful check-in.
+      </Text>
+    );
   }
   const wh = photos.map((p) => p.ratios.waist_to_hip);
   const sw = photos.map((p) => p.ratios.shoulder_to_waist);
@@ -39,7 +50,9 @@ function RatioTrend({ photos }: { photos: ProgressPhoto[] }) {
           );
         })}
       </View>
-      <Text style={styles.muted}>Teal: waist-to-hip · Dark: shoulder-to-waist</Text>
+      <Text style={styles.muted}>
+        Teal: waist-to-hip · Dark: shoulder-to-waist
+      </Text>
     </View>
   );
 }
@@ -48,7 +61,9 @@ export default function ProgressCompareScreen() {
   const navigation = useNavigation<Nav>();
   const draft = getProgressDraft();
   const [prevUri, setPrevUri] = useState<string | null>(null);
-  const [currUri, setCurrUri] = useState<string | null>(draft?.local_uri ?? null);
+  const [currUri, setCurrUri] = useState<string | null>(
+    draft?.local_uri ?? null,
+  );
 
   useEffect(() => {
     let active = true;
@@ -80,8 +95,13 @@ export default function ProgressCompareScreen() {
   if (!draft) {
     return (
       <View style={styles.container}>
-        <Text style={styles.muted}>No progress result yet. Capture a photo first.</Text>
-        <Pressable style={styles.button} onPress={() => navigation.navigate("ProgressCapture")}>
+        <Text style={styles.muted}>
+          No progress result yet. Capture a photo first.
+        </Text>
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.navigate("ProgressCapture")}
+        >
           <Text style={styles.buttonLabel}>Capture</Text>
         </Pressable>
       </View>
@@ -91,25 +111,39 @@ export default function ProgressCompareScreen() {
   const { current, previous, consistency, milestone, trend } = draft;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>{previous ? "Compare" : "Baseline"}</Text>
       <BadgeBanner badges={draft.gamification?.new_badges ?? []} />
       <Text style={styles.muted}>
-        Relative pose ratios only — not body-fat percentage or a clinical measure.
+        Relative pose ratios only — not body-fat percentage or a clinical
+        measure.
       </Text>
       {milestone.streak_count > 0 ? (
-        <Text style={styles.muted}>Current streak: {milestone.streak_count} days</Text>
+        <Text style={styles.muted}>
+          Current streak: {milestone.streak_count} days
+        </Text>
       ) : null}
 
       <View style={styles.row}>
         <View style={styles.half}>
-          <Text style={styles.sectionLabel}>{previous ? "Previous" : "Previous"}</Text>
+          <Text style={styles.sectionLabel}>
+            {previous ? "Previous" : "Previous"}
+          </Text>
           {previous && prevUri ? (
-            <Image source={{ uri: prevUri }} style={styles.photo} accessibilityLabel="Previous progress photo" />
+            <Image
+              source={{ uri: prevUri }}
+              style={styles.photo}
+              accessibilityLabel="Previous progress photo"
+            />
           ) : (
             <View style={[styles.photo, styles.placeholder]}>
               <Text style={styles.muted}>
-                {previous ? "Loading…" : "Baseline — next photo unlocks compare"}
+                {previous
+                  ? "Loading…"
+                  : "Baseline — next photo unlocks compare"}
               </Text>
             </View>
           )}
@@ -117,7 +151,11 @@ export default function ProgressCompareScreen() {
         <View style={styles.half}>
           <Text style={styles.sectionLabel}>Current</Text>
           {currUri ? (
-            <Image source={{ uri: currUri }} style={styles.photo} accessibilityLabel="Current progress photo" />
+            <Image
+              source={{ uri: currUri }}
+              style={styles.photo}
+              accessibilityLabel="Current progress photo"
+            />
           ) : (
             <View style={[styles.photo, styles.placeholder]}>
               <Text style={styles.muted}>Loading…</Text>
@@ -130,14 +168,20 @@ export default function ProgressCompareScreen() {
         <Text style={styles.sectionLabel}>Current ratios</Text>
         <Text style={styles.ratioLine}>
           Waist-to-hip{" "}
-          <Text style={styles.numeral}>{current.ratios.waist_to_hip.toFixed(3)}</Text>
+          <Text style={styles.numeral}>
+            {current.ratios.waist_to_hip.toFixed(3)}
+          </Text>
         </Text>
         <Text style={styles.ratioLine}>
           Shoulder-to-waist{" "}
-          <Text style={styles.numeral}>{current.ratios.shoulder_to_waist.toFixed(3)}</Text>
+          <Text style={styles.numeral}>
+            {current.ratios.shoulder_to_waist.toFixed(3)}
+          </Text>
         </Text>
         {current.mean_visibility != null ? (
-          <Text style={styles.muted}>Landmark confidence {Math.round(current.mean_visibility * 100)}%</Text>
+          <Text style={styles.muted}>
+            Landmark confidence {Math.round(current.mean_visibility * 100)}%
+          </Text>
         ) : null}
       </View>
 
@@ -146,10 +190,12 @@ export default function ProgressCompareScreen() {
       <View style={styles.card}>
         <Text style={styles.sectionLabel}>Consistency (same period)</Text>
         <Text style={styles.ratioLine}>
-          Workouts logged <Text style={styles.numeral}>{consistency.workouts_logged}</Text>
+          Workouts logged{" "}
+          <Text style={styles.numeral}>{consistency.workouts_logged}</Text>
         </Text>
         <Text style={styles.ratioLine}>
-          Days active <Text style={styles.numeral}>{consistency.days_active}</Text>
+          Days active{" "}
+          <Text style={styles.numeral}>{consistency.days_active}</Text>
         </Text>
         <Text style={styles.muted}>
           Visual change is never the only signal — meals and sessions count too.
@@ -160,14 +206,22 @@ export default function ProgressCompareScreen() {
         <View style={styles.milestone}>
           <Text style={styles.sectionLabel}>Milestone</Text>
           <Text style={styles.body}>{milestone.message}</Text>
-          <Text style={styles.muted}>Streak data (when available): {milestone.streak_count}</Text>
+          <Text style={styles.muted}>
+            Streak data (when available): {milestone.streak_count}
+          </Text>
         </View>
       ) : null}
 
-      <Pressable style={styles.button} onPress={() => navigation.navigate("Home")}>
+      <Pressable
+        style={styles.button}
+        onPress={() => navigation.navigate("Home")}
+      >
         <Text style={styles.buttonLabel}>Back to Home</Text>
       </Pressable>
-      <Pressable style={styles.secondary} onPress={() => navigation.navigate("ProgressCapture")}>
+      <Pressable
+        style={styles.secondary}
+        onPress={() => navigation.navigate("ProgressCapture")}
+      >
         <Text style={styles.secondaryLabel}>New check-in</Text>
       </Pressable>
     </ScrollView>
@@ -175,11 +229,19 @@ export default function ProgressCompareScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
   body: { ...typography.body, marginTop: spacing.xs },
-  sectionLabel: { ...typography.muted, marginBottom: spacing.xs, marginTop: spacing.sm },
+  sectionLabel: {
+    ...typography.muted,
+    marginBottom: spacing.xs,
+    marginTop: spacing.sm,
+  },
   row: { flexDirection: "row", gap: spacing.sm, marginTop: spacing.md },
   half: { flex: 1 },
   photo: {
@@ -190,7 +252,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  placeholder: { alignItems: "center", justifyContent: "center", padding: spacing.sm },
+  placeholder: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: spacing.sm,
+  },
   card: {
     marginTop: spacing.lg,
     padding: spacing.md,

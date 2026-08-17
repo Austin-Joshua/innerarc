@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Enum, Float, ForeignKey, String, func
+from sqlalchemy import DateTime, Enum, Float, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -14,9 +14,14 @@ from app.models.enums import MetricType, WearableSource
 class ProgressPhoto(Base):
     __tablename__ = "progress_photos"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     image_url: Mapped[str] = mapped_column(String, nullable=False)
     taken_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
@@ -29,7 +34,9 @@ class ProgressPhoto(Base):
 class WearableData(Base):
     __tablename__ = "wearable_data"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -40,6 +47,8 @@ class WearableData(Base):
         Enum(MetricType, name="metric_type", native_enum=True), nullable=False
     )
     value: Mapped[float] = mapped_column(Float, nullable=False)
-    recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    recorded_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
 
     user: Mapped[User] = relationship(back_populates="wearable_data")

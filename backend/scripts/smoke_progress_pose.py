@@ -24,9 +24,13 @@ BAD = SAMPLES / "bad_dark.jpg"
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
-    reg = client.post("/auth/register", json={"email": email, "password": "password123"})
+    reg = client.post(
+        "/auth/register", json={"email": email, "password": "password123"}
+    )
     if reg.status_code == 409:
-        reg = client.post("/auth/login", json={"email": email, "password": "password123"})
+        reg = client.post(
+            "/auth/login", json={"email": email, "password": "password123"}
+        )
     token = reg.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
@@ -108,7 +112,10 @@ def main() -> None:
     assert first.status_code == 200, first.text
     body1 = first.json()
     assert body1["previous"] is None
-    assert body1["current"]["image_url"] == f"/progress/photos/{body1['current']['id']}/image"
+    assert (
+        body1["current"]["image_url"]
+        == f"/progress/photos/{body1['current']['id']}/image"
+    )
     assert "waist_to_hip" in body1["current"]["ratios"]
     print("baseline ratios", body1["current"]["ratios"])
     print("baseline consistency", body1["consistency"])
@@ -170,7 +177,9 @@ def main() -> None:
         me = client.get("/auth/me", headers=headers_a).json()
         from uuid import UUID
 
-        photos = db.scalars(select(ProgressPhoto).where(ProgressPhoto.user_id == UUID(me["id"]))).all()
+        photos = db.scalars(
+            select(ProgressPhoto).where(ProgressPhoto.user_id == UUID(me["id"]))
+        ).all()
         print("stored photos for A", len(photos))
         assert len(photos) == 2
     finally:

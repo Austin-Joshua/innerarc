@@ -86,7 +86,9 @@ def eligible_badges(
 
 
 def _active_dates(db: Session, user_id: UUID) -> set[date]:
-    food_days = db.scalars(select(func.date(FoodLog.logged_at)).where(FoodLog.user_id == user_id)).all()
+    food_days = db.scalars(
+        select(func.date(FoodLog.logged_at)).where(FoodLog.user_id == user_id)
+    ).all()
     workout_days = db.scalars(
         select(func.date(WorkoutLog.completed_at)).where(WorkoutLog.user_id == user_id)
     ).all()
@@ -94,12 +96,26 @@ def _active_dates(db: Session, user_id: UUID) -> set[date]:
 
 
 def _counts(db: Session, user_id: UUID) -> tuple[int, int, int]:
-    meals = db.scalar(select(func.count()).select_from(FoodLog).where(FoodLog.user_id == user_id)) or 0
+    meals = (
+        db.scalar(
+            select(func.count()).select_from(FoodLog).where(FoodLog.user_id == user_id)
+        )
+        or 0
+    )
     workouts = (
-        db.scalar(select(func.count()).select_from(WorkoutLog).where(WorkoutLog.user_id == user_id)) or 0
+        db.scalar(
+            select(func.count())
+            .select_from(WorkoutLog)
+            .where(WorkoutLog.user_id == user_id)
+        )
+        or 0
     )
     photos = (
-        db.scalar(select(func.count()).select_from(ProgressPhoto).where(ProgressPhoto.user_id == user_id))
+        db.scalar(
+            select(func.count())
+            .select_from(ProgressPhoto)
+            .where(ProgressPhoto.user_id == user_id)
+        )
         or 0
     )
     return int(meals), int(workouts), int(photos)
@@ -187,8 +203,11 @@ def state_dict(state: GamificationState) -> dict:
         "streak_count": state.streak_count,
         "points": state.points,
         "badges_earned": state.badges_earned,
-        "last_activity_date": state.last_activity_date.isoformat() if state.last_activity_date else None,
+        "last_activity_date": (
+            state.last_activity_date.isoformat() if state.last_activity_date else None
+        ),
         "new_badges": [
-            {"id": badge, "label": BADGE_LABELS.get(badge, badge)} for badge in state.new_badges
+            {"id": badge, "label": BADGE_LABELS.get(badge, badge)}
+            for badge in state.new_badges
         ],
     }

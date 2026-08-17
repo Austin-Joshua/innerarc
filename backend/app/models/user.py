@@ -14,15 +14,21 @@ from app.models.enums import ActivityLevel, BiologicalSex, EquipmentAccess, Goal
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 
-    profile: Mapped[UserProfile | None] = relationship(back_populates="user", uselist=False)
-    gamification: Mapped[Gamification | None] = relationship(back_populates="user", uselist=False)
+    profile: Mapped[UserProfile | None] = relationship(
+        back_populates="user", uselist=False
+    )
+    gamification: Mapped[Gamification | None] = relationship(
+        back_populates="user", uselist=False
+    )
     food_logs: Mapped[list[FoodLog]] = relationship(back_populates="user")
     calorie_targets: Mapped[list[CalorieTarget]] = relationship(back_populates="user")
     workout_logs: Mapped[list[WorkoutLog]] = relationship(back_populates="user")
@@ -45,7 +51,9 @@ class UserProfile(Base):
     biological_sex: Mapped[BiologicalSex] = mapped_column(
         Enum(BiologicalSex, name="biological_sex", native_enum=True), nullable=False
     )
-    goal: Mapped[Goal] = mapped_column(Enum(Goal, name="goal", native_enum=True), nullable=False)
+    goal: Mapped[Goal] = mapped_column(
+        Enum(Goal, name="goal", native_enum=True), nullable=False
+    )
     activity_level: Mapped[ActivityLevel] = mapped_column(
         Enum(ActivityLevel, name="activity_level", native_enum=True), nullable=False
     )

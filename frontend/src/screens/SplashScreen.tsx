@@ -51,7 +51,10 @@ export default function SplashScreen() {
           ? "Module 7 Health Connect verification…"
           : "Nutrition, training, and progress — one loop."}
       </Text>
-      <ActivityIndicator color={colors.accent} style={{ marginTop: spacing.lg }} />
+      <ActivityIndicator
+        color={colors.accent}
+        style={{ marginTop: spacing.lg }}
+      />
       {error ? <Text style={styles.tagline}>{error}</Text> : null}
     </View>
   );

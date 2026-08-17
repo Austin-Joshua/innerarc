@@ -1,7 +1,14 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 import { api, Dish } from "../api";
 import { getFoodDraft, setFoodDraft } from "../foodDraft";
@@ -17,10 +24,15 @@ export default function FoodEditScreen() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    api.dishes().then(setDishes).catch(() => setDishes([]));
+    api
+      .dishes()
+      .then(setDishes)
+      .catch(() => setDishes([]));
   }, []);
 
-  const filtered = dishes.filter((dish) => dish.name.toLowerCase().includes(query.toLowerCase()));
+  const filtered = dishes.filter((dish) =>
+    dish.name.toLowerCase().includes(query.toLowerCase()),
+  );
 
   function select(dish: Dish) {
     if (!draft) return;
@@ -54,7 +66,11 @@ export default function FoodEditScreen() {
         onChangeText={setQuery}
       />
       {filtered.map((dish) => (
-        <Pressable key={dish.id} onPress={() => select(dish)} style={styles.row}>
+        <Pressable
+          key={dish.id}
+          onPress={() => select(dish)}
+          style={styles.row}
+        >
           <Text style={styles.name}>{dish.name}</Text>
           <Text style={styles.muted}>{dish.nutrition_source}</Text>
         </Pressable>
@@ -64,7 +80,11 @@ export default function FoodEditScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.md },
   input: {
     borderWidth: 1,

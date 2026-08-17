@@ -144,7 +144,9 @@ def build_user_snapshot(db: Session, user: User) -> dict[str, Any]:
         progress_ratios = {
             "taken_at": progress.taken_at.isoformat(),
             "ratios": progress.computed_ratios_json,
-            "mean_visibility": (progress.pose_landmarks_json or {}).get("mean_visibility"),
+            "mean_visibility": (progress.pose_landmarks_json or {}).get(
+                "mean_visibility"
+            ),
         }
 
     profile = None

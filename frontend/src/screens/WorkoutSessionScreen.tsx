@@ -36,13 +36,18 @@ export default function WorkoutSessionScreen() {
         const first = value.exercises[0];
         setSecondsLeft(first?.duration_seconds ?? 45);
       })
-      .catch((err) => setError(err instanceof Error ? err.message : "Could not load session"));
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Could not load session"),
+      );
   }, [params.workoutId]);
 
   useEffect(() => {
     if (!workout || doneMessage) return;
     if (secondsLeft > 0) {
-      const timer = setTimeout(() => setSecondsLeft((value) => value - 1), 1000);
+      const timer = setTimeout(
+        () => setSecondsLeft((value) => value - 1),
+        1000,
+      );
       return () => clearTimeout(timer);
     }
     if (phase === "rest") {
@@ -68,7 +73,11 @@ export default function WorkoutSessionScreen() {
       });
       setBadges(log.gamification?.new_badges ?? []);
       setDoneMessage(`Logged · ${log.calories_burned_est} kcal est.`);
-      api.logEvent({ event_type: "task_completed", task: "workout_session", screen: "WorkoutSession" });
+      api.logEvent({
+        event_type: "task_completed",
+        task: "workout_session",
+        screen: "WorkoutSession",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log workout");
       setLogging(false);
@@ -96,7 +105,11 @@ export default function WorkoutSessionScreen() {
 
   function markSetComplete() {
     if (!current) return;
-    if (current.rest_seconds > 0 && (setIndex + 1 < current.sets || exerciseIndex + 1 < (workout?.exercises.length ?? 0))) {
+    if (
+      current.rest_seconds > 0 &&
+      (setIndex + 1 < current.sets ||
+        exerciseIndex + 1 < (workout?.exercises.length ?? 0))
+    ) {
       setPhase("rest");
       setSecondsLeft(current.rest_seconds);
       return;
@@ -132,7 +145,10 @@ export default function WorkoutSessionScreen() {
         <BadgeBanner badges={badges} />
         <FeedbackPrompt screen="WorkoutSession" />
         {error ? <Text style={styles.muted}>{error}</Text> : null}
-        <Pressable style={styles.button} onPress={() => navigation.navigate("Home")}>
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.navigate("Home")}
+        >
           <Text style={styles.buttonLabel}>Back to Home</Text>
         </Pressable>
       </View>
@@ -145,7 +161,9 @@ export default function WorkoutSessionScreen() {
       <Text style={styles.title}>{current.name}</Text>
       <Text style={styles.body}>{current.description}</Text>
       <Text style={styles.meta}>
-        {current.reps != null ? `${current.reps} reps` : `${current.duration_seconds ?? 45}s hold`}
+        {current.reps != null
+          ? `${current.reps} reps`
+          : `${current.duration_seconds ?? 45}s hold`}
       </Text>
 
       <View style={styles.timerBlock}>
@@ -174,8 +192,16 @@ export default function WorkoutSessionScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
-  title: { ...typography.title, marginTop: spacing.sm, marginBottom: spacing.sm },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
+  title: {
+    ...typography.title,
+    marginTop: spacing.sm,
+    marginBottom: spacing.sm,
+  },
   heading: { ...typography.heading, marginBottom: spacing.sm },
   body: { ...typography.body, marginBottom: spacing.sm },
   muted: { ...typography.muted },
@@ -189,7 +215,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  phase: { ...typography.muted, marginBottom: spacing.xs, textTransform: "uppercase" },
+  phase: {
+    ...typography.muted,
+    marginBottom: spacing.xs,
+    textTransform: "uppercase",
+  },
   timer: { fontSize: 56, fontWeight: "700", color: colors.text },
   button: {
     backgroundColor: colors.accent,

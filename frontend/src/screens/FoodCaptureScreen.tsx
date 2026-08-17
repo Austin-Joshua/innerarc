@@ -19,7 +19,11 @@ export default function FoodCaptureScreen() {
   async function pick(fromCamera: boolean) {
     setBusy(true);
     setError(null);
-    api.logEvent({ event_type: "task_started", task: "food_log", screen: "FoodCapture" });
+    api.logEvent({
+      event_type: "task_started",
+      task: "food_log",
+      screen: "FoodCapture",
+    });
     try {
       const permission = fromCamera
         ? await ImagePicker.requestCameraPermissionsAsync()
@@ -46,12 +50,25 @@ export default function FoodCaptureScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Log a meal</Text>
-      <Text style={styles.muted}>Photograph a dish or choose an existing photo. The model names the dish; ingredients come from the recipe table, not from pixels.</Text>
+      <Text style={styles.muted}>
+        Photograph a dish or choose an existing photo. The model names the dish;
+        ingredients come from the recipe table, not from pixels.
+      </Text>
       {error ? <Text style={styles.muted}>{error}</Text> : null}
-      <Pressable disabled={busy} onPress={() => pick(true)} style={styles.button}>
-        <Text style={styles.buttonLabel}>{busy ? "Working…" : "Take photo"}</Text>
+      <Pressable
+        disabled={busy}
+        onPress={() => pick(true)}
+        style={styles.button}
+      >
+        <Text style={styles.buttonLabel}>
+          {busy ? "Working…" : "Take photo"}
+        </Text>
       </Pressable>
-      <Pressable disabled={busy} onPress={() => pick(false)} style={styles.secondary}>
+      <Pressable
+        disabled={busy}
+        onPress={() => pick(false)}
+        style={styles.secondary}
+      >
         <Text style={styles.secondaryLabel}>Choose from library</Text>
       </Pressable>
     </View>
@@ -59,7 +76,12 @@ export default function FoodCaptureScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl, justifyContent: "center" },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+    justifyContent: "center",
+  },
   title: { ...typography.title, marginBottom: spacing.sm },
   muted: { ...typography.muted, marginBottom: spacing.lg },
   button: {

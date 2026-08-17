@@ -58,7 +58,9 @@ def seed(db: Session) -> None:
         ingredients = dish_row.get("ingredients")
         if dish_row["nutrition_source"] == "ifct_2017":
             # Prefer seed rows that already carry estimated_quantity_g + IFCT codes.
-            if ingredients and any("estimated_quantity_g" in item for item in ingredients):
+            if ingredients and any(
+                "estimated_quantity_g" in item for item in ingredients
+            ):
                 ingredients = [
                     {
                         "name": item["name"],
@@ -74,8 +76,12 @@ def seed(db: Session) -> None:
                 csv_key_alt = _norm(class_name.replace("_", " "))
                 names = csv_ingredients.get(csv_key) or csv_ingredients.get(csv_key_alt)
                 if not names:
-                    raise KeyError(f"No indian_food.csv ingredients for {display_name!r} / {class_name!r}")
-                ingredients = [{"name": n, "typical_quantity": "as prepared"} for n in names]
+                    raise KeyError(
+                        f"No indian_food.csv ingredients for {display_name!r} / {class_name!r}"
+                    )
+                ingredients = [
+                    {"name": n, "typical_quantity": "as prepared"} for n in names
+                ]
         if not ingredients:
             raise ValueError(f"No ingredients for {class_name}")
 

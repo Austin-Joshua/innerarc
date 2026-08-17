@@ -1,7 +1,14 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 import { api } from "../api";
 import { RootStackParamList } from "../navigation/types";
@@ -10,7 +17,13 @@ import { colors, spacing, typography } from "../theme";
 type Nav = NativeStackNavigationProp<RootStackParamList, "Onboarding">;
 
 const SEX = ["male", "female"] as const;
-const GOALS = ["fat_loss", "muscle_gain", "recomposition", "endurance", "general_fitness"] as const;
+const GOALS = [
+  "fat_loss",
+  "muscle_gain",
+  "recomposition",
+  "endurance",
+  "general_fitness",
+] as const;
 const ACTIVITY = [
   "sedentary",
   "lightly_active",
@@ -37,7 +50,9 @@ function Chips<T extends string>({
           onPress={() => onChange(option)}
           style={[styles.chip, value === option && styles.chipOn]}
         >
-          <Text style={[styles.chipLabel, value === option && styles.chipLabelOn]}>
+          <Text
+            style={[styles.chipLabel, value === option && styles.chipLabelOn]}
+          >
             {option.replaceAll("_", " ")}
           </Text>
         </Pressable>
@@ -52,8 +67,10 @@ export default function OnboardingScreen() {
   const [weight, setWeight] = useState("70");
   const [sex, setSex] = useState<(typeof SEX)[number]>("male");
   const [goal, setGoal] = useState<(typeof GOALS)[number]>("general_fitness");
-  const [activity, setActivity] = useState<(typeof ACTIVITY)[number]>("moderately_active");
-  const [equipment, setEquipment] = useState<(typeof EQUIPMENT)[number]>("none");
+  const [activity, setActivity] =
+    useState<(typeof ACTIVITY)[number]>("moderately_active");
+  const [equipment, setEquipment] =
+    useState<(typeof EQUIPMENT)[number]>("none");
   const [error, setError] = useState<string | null>(null);
 
   async function save() {
@@ -74,13 +91,28 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>Your starting point</Text>
-      <Text style={styles.muted}>Used only to set calorie targets — not to gate workouts.</Text>
+      <Text style={styles.muted}>
+        Used only to set calorie targets — not to gate workouts.
+      </Text>
       <Text style={styles.label}>Height (cm)</Text>
-      <TextInput keyboardType="numeric" style={styles.input} value={height} onChangeText={setHeight} />
+      <TextInput
+        keyboardType="numeric"
+        style={styles.input}
+        value={height}
+        onChangeText={setHeight}
+      />
       <Text style={styles.label}>Weight (kg)</Text>
-      <TextInput keyboardType="numeric" style={styles.input} value={weight} onChangeText={setWeight} />
+      <TextInput
+        keyboardType="numeric"
+        style={styles.input}
+        value={weight}
+        onChangeText={setWeight}
+      />
       <Text style={styles.label}>Biological sex</Text>
       <Chips options={SEX} value={sex} onChange={setSex} />
       <Text style={styles.label}>Goal</Text>
@@ -98,10 +130,19 @@ export default function OnboardingScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted, marginBottom: spacing.lg },
-  label: { ...typography.heading, fontSize: 14, marginTop: spacing.sm, marginBottom: spacing.xs },
+  label: {
+    ...typography.heading,
+    fontSize: 14,
+    marginTop: spacing.sm,
+    marginBottom: spacing.xs,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,

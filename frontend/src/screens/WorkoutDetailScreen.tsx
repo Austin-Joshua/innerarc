@@ -20,7 +20,9 @@ export default function WorkoutDetailScreen() {
     api
       .workout(params.workoutId)
       .then(setWorkout)
-      .catch((err) => setError(err instanceof Error ? err.message : "Could not load workout"));
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Could not load workout"),
+      );
   }, [params.workoutId]);
 
   if (error) {
@@ -39,17 +41,25 @@ export default function WorkoutDetailScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>{workout.name}</Text>
       <Text style={styles.muted}>
         {workout.modality.replace(/_/g, " ")} · {workout.level} · needs{" "}
         {workout.equipment_needed.join(", ").replace(/_/g, " ")}
       </Text>
-      <Text style={styles.goals}>{workout.goal_tags.map((g) => g.replace(/_/g, " ")).join(" · ")}</Text>
+      <Text style={styles.goals}>
+        {workout.goal_tags.map((g) => g.replace(/_/g, " ")).join(" · ")}
+      </Text>
 
       <Text style={styles.heading}>Exercises</Text>
       {workout.exercises.map((item) => (
-        <View key={`${item.exercise_id}-${item.order_index}`} style={styles.card}>
+        <View
+          key={`${item.exercise_id}-${item.order_index}`}
+          style={styles.card}
+        >
           <Text style={styles.cardTitle}>
             {item.order_index + 1}. {item.name}
           </Text>
@@ -57,7 +67,9 @@ export default function WorkoutDetailScreen() {
           <Text style={styles.meta}>
             {item.sets} sets
             {item.reps != null ? ` · ${item.reps} reps` : ""}
-            {item.duration_seconds != null ? ` · ${item.duration_seconds}s` : ""}
+            {item.duration_seconds != null
+              ? ` · ${item.duration_seconds}s`
+              : ""}
             {` · ${item.rest_seconds}s rest`}
           </Text>
         </View>
@@ -66,7 +78,11 @@ export default function WorkoutDetailScreen() {
       <Pressable
         style={styles.button}
         onPress={() => {
-          api.logEvent({ event_type: "task_started", task: "workout_session", screen: "WorkoutDetail" });
+          api.logEvent({
+            event_type: "task_started",
+            task: "workout_session",
+            screen: "WorkoutDetail",
+          });
           navigation.navigate("WorkoutSession", { workoutId: workout.id });
         }}
       >
@@ -77,10 +93,18 @@ export default function WorkoutDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
-  goals: { ...typography.body, marginTop: spacing.sm, marginBottom: spacing.lg },
+  goals: {
+    ...typography.body,
+    marginTop: spacing.sm,
+    marginBottom: spacing.lg,
+  },
   heading: { ...typography.heading, marginBottom: spacing.sm },
   card: {
     backgroundColor: colors.white,

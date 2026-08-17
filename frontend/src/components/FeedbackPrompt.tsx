@@ -19,7 +19,11 @@ export default function FeedbackPrompt({ screen }: { screen: string }) {
   async function rate(value: number) {
     setStatus("sent");
     try {
-      await api.submitFeedback({ rating: value, comment: comment.trim() || undefined, screen });
+      await api.submitFeedback({
+        rating: value,
+        comment: comment.trim() || undefined,
+        screen,
+      });
     } catch {
       /* best-effort, non-blocking */
     }
@@ -37,7 +41,11 @@ export default function FeedbackPrompt({ screen }: { screen: string }) {
       />
       <View style={styles.row}>
         {[1, 2, 3, 4, 5].map((value) => (
-          <Pressable key={value} onPress={() => rate(value)} style={styles.star}>
+          <Pressable
+            key={value}
+            onPress={() => rate(value)}
+            style={styles.star}
+          >
             <Text style={styles.starLabel}>{value}</Text>
           </Pressable>
         ))}

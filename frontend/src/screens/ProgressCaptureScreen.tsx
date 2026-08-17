@@ -19,7 +19,11 @@ export default function ProgressCaptureScreen() {
   async function pick(fromCamera: boolean) {
     setBusy(true);
     setError(null);
-    api.logEvent({ event_type: "task_started", task: "progress_photo", screen: "ProgressCapture" });
+    api.logEvent({
+      event_type: "task_started",
+      task: "progress_photo",
+      screen: "ProgressCapture",
+    });
     try {
       const permission = fromCamera
         ? await ImagePicker.requestCameraPermissionsAsync()
@@ -35,7 +39,11 @@ export default function ProgressCaptureScreen() {
       const uri = result.assets[0].uri;
       const uploaded = await api.uploadProgressPhoto(uri);
       setProgressDraft({ ...uploaded, local_uri: uri });
-      api.logEvent({ event_type: "task_completed", task: "progress_photo", screen: "ProgressCapture" });
+      api.logEvent({
+        event_type: "task_completed",
+        task: "progress_photo",
+        screen: "ProgressCapture",
+      });
       navigation.navigate("ProgressCompare");
     } catch (err) {
       setError(
@@ -52,15 +60,25 @@ export default function ProgressCaptureScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Progress photo</Text>
       <Text style={styles.muted}>
-        Capture a full-body standing photo. We estimate pose landmarks and two relative ratios —
-        not body composition or clinical measures.
+        Capture a full-body standing photo. We estimate pose landmarks and two
+        relative ratios — not body composition or clinical measures.
       </Text>
       {busy ? <Text style={styles.heading}>Estimating pose…</Text> : null}
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Pressable disabled={busy} onPress={() => pick(true)} style={styles.button}>
-        <Text style={styles.buttonLabel}>{busy ? "Working…" : "Take photo"}</Text>
+      <Pressable
+        disabled={busy}
+        onPress={() => pick(true)}
+        style={styles.button}
+      >
+        <Text style={styles.buttonLabel}>
+          {busy ? "Working…" : "Take photo"}
+        </Text>
       </Pressable>
-      <Pressable disabled={busy} onPress={() => pick(false)} style={styles.secondary}>
+      <Pressable
+        disabled={busy}
+        onPress={() => pick(false)}
+        style={styles.secondary}
+      >
         <Text style={styles.secondaryLabel}>Choose from library</Text>
       </Pressable>
     </View>
@@ -68,7 +86,11 @@ export default function ProgressCaptureScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   heading: { ...typography.heading, marginVertical: spacing.md },
   muted: { ...typography.muted, marginBottom: spacing.lg },

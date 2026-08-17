@@ -20,9 +20,13 @@ from app.models.progress import WearableData  # noqa: E402
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
-    reg = client.post("/auth/register", json={"email": email, "password": "password123"})
+    reg = client.post(
+        "/auth/register", json={"email": email, "password": "password123"}
+    )
     if reg.status_code == 409:
-        reg = client.post("/auth/login", json={"email": email, "password": "password123"})
+        reg = client.post(
+            "/auth/login", json={"email": email, "password": "password123"}
+        )
     return {"Authorization": f"Bearer {reg.json()['access_token']}"}
 
 
@@ -36,8 +40,16 @@ def main() -> None:
     recorded = datetime(2026, 8, 16, 8, 0, 0, tzinfo=timezone.utc)
     payload = {
         "readings": [
-            {"metric_type": "steps", "value": 4200, "recorded_at": recorded.isoformat()},
-            {"metric_type": "heart_rate", "value": 72, "recorded_at": recorded.isoformat()},
+            {
+                "metric_type": "steps",
+                "value": 4200,
+                "recorded_at": recorded.isoformat(),
+            },
+            {
+                "metric_type": "heart_rate",
+                "value": 72,
+                "recorded_at": recorded.isoformat(),
+            },
             {"metric_type": "sleep", "value": 7.5, "recorded_at": recorded.isoformat()},
         ]
     }

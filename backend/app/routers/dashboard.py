@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
-from app.models.food import CalorieTarget, Dish, FoodLog
+from app.models.food import CalorieTarget, FoodLog
 from app.models.user import User
 from app.security import get_current_user
 from app.services.calorie import calculate_targets
@@ -33,11 +33,15 @@ def dashboard_today(
         raise HTTPException(status_code=400, detail="Complete onboarding profile first")
     today = date.today()
     target = db.scalar(
-        select(CalorieTarget).where(CalorieTarget.user_id == user.id, CalorieTarget.date == today)
+        select(CalorieTarget).where(
+            CalorieTarget.user_id == user.id, CalorieTarget.date == today
+        )
     )
     if target is None:
         values = calculate_targets(user.profile)
-        target = CalorieTarget(user_id=user.id, date=today, source="calculated", **values)
+        target = CalorieTarget(
+            user_id=user.id, date=today, source="calculated", **values
+        )
         db.add(target)
         db.commit()
         db.refresh(target)

@@ -15,7 +15,9 @@ from app.models.enums import ReminderRecurrence, ReminderType
 class AIConversation(Base):
     __tablename__ = "ai_conversations"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -36,7 +38,9 @@ class Gamification(Base):
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
     streak_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    badges_earned: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False, default=list)
+    badges_earned: Mapped[list[str]] = mapped_column(
+        ARRAY(String), nullable=False, default=list
+    )
     points: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     last_activity_date: Mapped[date | None] = mapped_column(Date, nullable=True)
 
@@ -46,7 +50,9 @@ class Gamification(Base):
 class Reminder(Base):
     __tablename__ = "reminders"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -55,7 +61,8 @@ class Reminder(Base):
     )
     scheduled_time: Mapped[time] = mapped_column(Time, nullable=False)
     recurrence: Mapped[ReminderRecurrence] = mapped_column(
-        Enum(ReminderRecurrence, name="reminder_recurrence", native_enum=True), nullable=False
+        Enum(ReminderRecurrence, name="reminder_recurrence", native_enum=True),
+        nullable=False,
     )
 
     user: Mapped[User] = relationship(back_populates="reminders")

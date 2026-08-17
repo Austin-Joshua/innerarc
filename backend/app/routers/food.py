@@ -106,7 +106,9 @@ def _match_dish(label: str, dishes: list[Dish]) -> Dish | None:
 def list_dishes(db: Session = Depends(get_db)) -> list[DishOut]:
     dishes = db.scalars(
         select(Dish)
-        .options(selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient))
+        .options(
+            selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient)
+        )
         .order_by(Dish.name)
     ).all()
     return [_dish_out(dish) for dish in dishes]
@@ -117,7 +119,9 @@ def list_dishes(db: Session = Depends(get_db)) -> list[DishOut]:
 def get_dish(dish_id: UUID, db: Session = Depends(get_db)) -> DishOut:
     dish = db.scalar(
         select(Dish)
-        .options(selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient))
+        .options(
+            selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient)
+        )
         .where(Dish.id == dish_id)
     )
     if dish is None:
@@ -139,17 +143,27 @@ def classify(
     try:
         class_name, confidence = classify_image(str(stored))
     except FileNotFoundError as exc:
-        raise HTTPException(status_code=503, detail="Classifier is not trained yet") from exc
+        raise HTTPException(
+            status_code=503, detail="Classifier is not trained yet"
+        ) from exc
     display_name = CLASS_TO_NAME.get(class_name, class_name.replace("_", " ").title())
     dish = db.scalar(
         select(Dish)
-        .options(selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient))
+        .options(
+            selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient)
+        )
         .where(Dish.name == display_name)
     )
     if dish is None:
-        raise HTTPException(status_code=404, detail=f"No seeded dish for class {class_name}")
+        raise HTTPException(
+            status_code=404, detail=f"No seeded dish for class {class_name}"
+        )
     body = _dish_out(dish)
-    return ClassifyResponse(**body.model_dump(), confidence_score=round(confidence, 4), image_url=str(stored))
+    return ClassifyResponse(
+        **body.model_dump(),
+        confidence_score=round(confidence, 4),
+        image_url=str(stored),
+    )
 
 
 @router.post("/classify-plate", response_model=PlateClassifyResponse)
@@ -167,7 +181,11 @@ def classify_plate(
     dishes = list(
         db.scalars(
             select(Dish)
-            .options(selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient))
+            .options(
+                selectinload(Dish.dish_ingredients).selectinload(
+                    DishIngredient.ingredient
+                )
+            )
             .order_by(Dish.name)
         ).all()
     )
@@ -177,7 +195,9 @@ def classify_plate(
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=502, detail=f"Plate vision error: {exc}") from exc
+        raise HTTPException(
+            status_code=502, detail=f"Plate vision error: {exc}"
+        ) from exc
 
     items: list[PlateItemOut] = []
     for vis in vision_items:
@@ -199,7 +219,9 @@ def classify_plate(
                 matched=True,
                 suggested_label=vis.label,
                 portion=vis.portion,
-                serving_size_g=serving_from_portion(dish.default_serving_g, vis.portion),
+                serving_size_g=serving_from_portion(
+                    dish.default_serving_g, vis.portion
+                ),
                 confidence_score=vis.confidence,
                 dish=_dish_out(dish),
             )
@@ -215,7 +237,9 @@ def create_log(
 ) -> FoodLogOut:
     dish = db.scalar(
         select(Dish)
-        .options(selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient))
+        .options(
+            selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient)
+        )
         .where(Dish.id == body.dish_id)
     )
     if dish is None:

@@ -47,7 +47,8 @@ export default function CoachChatScreen() {
         setBubbles(next);
       })
       .catch((err) => {
-        if (active) setError(err instanceof Error ? err.message : "Could not load chat");
+        if (active)
+          setError(err instanceof Error ? err.message : "Could not load chat");
       });
     return () => {
       active = false;
@@ -66,7 +67,10 @@ export default function CoachChatScreen() {
     setBusy(true);
     setError(null);
     setDraft("");
-    setBubbles((prev) => [...prev, { key: `local-${Date.now()}`, role: "user", text: message }]);
+    setBubbles((prev) => [
+      ...prev,
+      { key: `local-${Date.now()}`, role: "user", text: message },
+    ]);
     try {
       const reply = await api.coachChat(message);
       setBubbles((prev) => [
@@ -88,7 +92,8 @@ export default function CoachChatScreen() {
     >
       <Text style={styles.title}>Coach</Text>
       <Text style={styles.muted}>
-        Answers use your last 7 days of logged meals, workouts, and targets — not generic advice.
+        Answers use your last 7 days of logged meals, workouts, and targets —
+        not generic advice.
       </Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <FlatList
@@ -97,12 +102,21 @@ export default function CoachChatScreen() {
         style={styles.list}
         contentContainerStyle={{ paddingVertical: spacing.sm }}
         renderItem={({ item }) => (
-          <View style={[styles.bubble, item.role === "user" ? styles.userBubble : styles.coachBubble]}>
-            <Text style={styles.role}>{item.role === "user" ? "You" : "Coach"}</Text>
+          <View
+            style={[
+              styles.bubble,
+              item.role === "user" ? styles.userBubble : styles.coachBubble,
+            ]}
+          >
+            <Text style={styles.role}>
+              {item.role === "user" ? "You" : "Coach"}
+            </Text>
             <Text style={styles.body}>{item.text}</Text>
           </View>
         )}
-        ListEmptyComponent={<Text style={styles.muted}>Ask about your logged week to start.</Text>}
+        ListEmptyComponent={
+          <Text style={styles.muted}>Ask about your logged week to start.</Text>
+        }
       />
       <View style={styles.composer}>
         <TextInput
@@ -114,11 +128,18 @@ export default function CoachChatScreen() {
           editable={!busy}
           multiline
         />
-        <Pressable onPress={send} disabled={busy || !draft.trim()} style={styles.send}>
+        <Pressable
+          onPress={send}
+          disabled={busy || !draft.trim()}
+          style={styles.send}
+        >
           <Text style={styles.sendLabel}>{busy ? "…" : "Send"}</Text>
         </Pressable>
       </View>
-      <Pressable onPress={() => navigation.navigate("Home")} style={styles.home}>
+      <Pressable
+        onPress={() => navigation.navigate("Home")}
+        style={styles.home}
+      >
         <Text style={styles.homeLabel}>Back to Home</Text>
       </Pressable>
     </KeyboardAvoidingView>
@@ -126,7 +147,11 @@ export default function CoachChatScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted, marginBottom: spacing.sm },
   error: { ...typography.muted, color: "#8B3A3A", marginBottom: spacing.sm },
@@ -137,11 +162,24 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     borderWidth: 1,
   },
-  userBubble: { backgroundColor: colors.accentSoft, borderColor: colors.accent, alignSelf: "flex-end" },
-  coachBubble: { backgroundColor: colors.white, borderColor: colors.border, alignSelf: "flex-start" },
+  userBubble: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accent,
+    alignSelf: "flex-end",
+  },
+  coachBubble: {
+    backgroundColor: colors.white,
+    borderColor: colors.border,
+    alignSelf: "flex-start",
+  },
   role: { ...typography.muted, marginBottom: 4 },
   body: { ...typography.body },
-  composer: { flexDirection: "row", gap: spacing.sm, alignItems: "flex-end", marginTop: spacing.sm },
+  composer: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    alignItems: "flex-end",
+    marginTop: spacing.sm,
+  },
   input: {
     flex: 1,
     minHeight: 44,

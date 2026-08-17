@@ -143,7 +143,13 @@ INGREDIENT_MAP: dict[str, str | None] = {
 }
 
 ESTIMATES: dict[str, dict[str, float]] = {
-    "biryani": {"Chicken thighs": 150, "basmati rice": 100, "star anise": 2, "sweet": 0, "green chillies": 10},
+    "biryani": {
+        "Chicken thighs": 150,
+        "basmati rice": 100,
+        "star anise": 2,
+        "sweet": 0,
+        "green chillies": 10,
+    },
     "butter_chicken": {
         "Chicken": 150,
         "greek yogurt": 40,
@@ -174,7 +180,13 @@ ESTIMATES: dict[str, dict[str, float]] = {
         "garam masala": 3,
         "chili powder": 2,
     },
-    "dal_tadka": {"Pigeon peas": 70, "garam masala": 3, "ginger": 8, "red onion": 40, "kasuri methi": 2},
+    "dal_tadka": {
+        "Pigeon peas": 70,
+        "garam masala": 3,
+        "ginger": 8,
+        "red onion": 40,
+        "kasuri methi": 2,
+    },
     "poha": {
         "Beaten rice flakes": 80,
         "potato": 40,
@@ -182,7 +194,13 @@ ESTIMATES: dict[str, dict[str, float]] = {
         "green chilies": 5,
         "lemon juice": 8,
     },
-    "kachori": {"Moong dal": 25, "rava": 10, "garam masala": 2, "dough": 50, "fennel seeds": 2},
+    "kachori": {
+        "Moong dal": 25,
+        "rava": 10,
+        "garam masala": 2,
+        "dough": 50,
+        "fennel seeds": 2,
+    },
     "kadai_paneer": {
         "Cottage cheese": 100,
         "bell peppers": 50,
@@ -228,7 +246,13 @@ ESTIMATES: dict[str, dict[str, float]] = {
         "sugar syrup": 50,
         "ghee": 15,
     },
-    "aloo_gobi": {"Cauliflower": 150, "potato": 100, "garam masala": 3, "turmeric": 2, "curry leaves": 3},
+    "aloo_gobi": {
+        "Cauliflower": 150,
+        "potato": 100,
+        "garam masala": 3,
+        "turmeric": 2,
+        "curry leaves": 3,
+    },
 }
 
 MANUAL_EXTRA_INGREDIENTS: dict[str, list[str]] = {
@@ -240,7 +264,9 @@ def _norm(name: str) -> str:
     return re.sub(r"\s+", " ", name).strip().lower()
 
 
-def round_macros(calories: float, protein: float, carbs: float, fat: float) -> dict[str, float]:
+def round_macros(
+    calories: float, protein: float, carbs: float, fat: float
+) -> dict[str, float]:
     return {
         "calories": round(calories, 1),
         "protein": round(protein, 2),
@@ -252,7 +278,9 @@ def round_macros(calories: float, protein: float, carbs: float, fat: float) -> d
 def ensure_catalog() -> dict[str, dict]:
     if not CATALOG_PATH.exists():
         if not TXT_PATH.exists():
-            raise FileNotFoundError(f"Missing {TXT_PATH}; download/extract IFCT2017.pdf first")
+            raise FileNotFoundError(
+                f"Missing {TXT_PATH}; download/extract IFCT2017.pdf first"
+            )
         subprocess.check_call([sys.executable, str(PARSE_SCRIPT)], cwd=str(ROOT))
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
     catalog.update(SUPPLEMENTAL_FOODS)
@@ -333,7 +361,11 @@ def compute_dish(class_name: str, ingredient_names: list[str], catalog: dict) ->
             totals["fat"] * 100 / matched_mass,
         )
 
-    coverage_pct = round(100.0 * matched_mass / total_estimated_mass, 1) if total_estimated_mass else 0.0
+    coverage_pct = (
+        round(100.0 * matched_mass / total_estimated_mass, 1)
+        if total_estimated_mass
+        else 0.0
+    )
     return {
         "class_name": class_name,
         "display_name": class_name.replace("_", " ").title(),
@@ -367,7 +399,9 @@ def csv_ingredients() -> dict[str, list[str]]:
     out: dict[str, list[str]] = {}
     with path.open(encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
-            out[_norm(row["name"])] = [p.strip() for p in row["ingredients"].split(",") if p.strip()]
+            out[_norm(row["name"])] = [
+                p.strip() for p in row["ingredients"].split(",") if p.strip()
+            ]
     return out
 
 
@@ -418,23 +452,34 @@ def enrich_dish(result: dict, seed_dish: dict) -> dict:
     blockers = []
     for name in result["unmatched_ingredients"]:
         qty = next(
-            (i["estimated_quantity_g"] for i in result["ingredients"] if i["name"] == name),
+            (
+                i["estimated_quantity_g"]
+                for i in result["ingredients"]
+                if i["name"] == name
+            ),
             0.0,
         )
         blockers.append(
             {
                 "ingredient": name,
                 "estimated_quantity_g": qty,
-                "share_of_total_mass_pct": round(100.0 * qty / result["total_estimated_mass_g"], 1)
-                if result["total_estimated_mass_g"]
-                else 0.0,
+                "share_of_total_mass_pct": (
+                    round(100.0 * qty / result["total_estimated_mass_g"], 1)
+                    if result["total_estimated_mass_g"]
+                    else 0.0
+                ),
                 "reason": unmatched_reason(name),
             }
         )
     blockers.sort(key=lambda b: -b["estimated_quantity_g"])
     result["default_serving_g"] = serving
     result["nutrition_per_default_serving"] = (
-        round_macros(n["calories"] * scale, n["protein"] * scale, n["carbs"] * scale, n["fat"] * scale)
+        round_macros(
+            n["calories"] * scale,
+            n["protein"] * scale,
+            n["carbs"] * scale,
+            n["fat"] * scale,
+        )
         if serving
         else None
     )
@@ -442,7 +487,9 @@ def enrich_dish(result: dict, seed_dish: dict) -> dict:
         "reported_calories": n["calories"],
         "atwater_4p_4c_9f": atwater,
         "delta_kcal": delta,
-        "relative_error_pct": round(100.0 * abs(delta) / n["calories"], 1) if n["calories"] else 0.0,
+        "relative_error_pct": (
+            round(100.0 * abs(delta) / n["calories"], 1) if n["calories"] else 0.0
+        ),
         "ok": abs(delta) <= max(8.0, 0.08 * n["calories"]),
     }
     result["ingredient_count_coverage_pct"] = (
@@ -461,7 +508,10 @@ def enrich_dish(result: dict, seed_dish: dict) -> dict:
     if not result["atwater_check"]["ok"]:
         result["quality_flags"].append("atwater_energy_mismatch")
     # raw dry staples dominate some cooked dishes
-    if any(c in result["ifct_food_codes"] for c in ("A015", "B021", "B002", "B003", "B010", "B020")):
+    if any(
+        c in result["ifct_food_codes"]
+        for c in ("A015", "B021", "B002", "B003", "B010", "B020")
+    ):
         result["quality_flags"].append("raw_staple_basis_may_overstate_cooked_density")
     return result
 
@@ -473,7 +523,9 @@ def build_summary(dishes: list[dict], catalog: dict) -> dict:
     low = [d for d in dishes if d["nutrition_confidence"] == "low"]
     medium = [d for d in dishes if d["nutrition_confidence"] == "medium"]
     high = [d for d in dishes if d["nutrition_confidence"] == "high"]
-    at_or_above_medium = [d for d in dishes if d["nutrition_confidence"] in ("high", "medium")]
+    at_or_above_medium = [
+        d for d in dishes if d["nutrition_confidence"] in ("high", "medium")
+    ]
     unmatched_freq: Counter[str] = Counter()
     unmatched_mass: Counter[str] = Counter()
     code_usage: Counter[str] = Counter()
@@ -540,7 +592,9 @@ def build_summary(dishes: list[dict], catalog: dict) -> dict:
         "coverage_high_threshold_pct": COVERAGE_HIGH_THRESHOLD,
         "coverage_mean_pct": round(sum(coverages) / len(coverages), 1),
         "coverage_median_pct": median,
-        "coverage_mass_weighted_pct": round(100.0 * total_matched / total_mass, 1) if total_mass else 0.0,
+        "coverage_mass_weighted_pct": (
+            round(100.0 * total_matched / total_mass, 1) if total_mass else 0.0
+        ),
         "coverage_min_pct": min(coverages),
         "coverage_max_pct": max(coverages),
         "total_matched_mass_g": round(total_matched, 1),
@@ -826,7 +880,10 @@ def write_markdown(report: dict) -> None:
     lines += [
         "## Methodology",
         "",
-        *[f"- **{k.replace('_', ' ')}**: {v}" for k, v in summary["methodology"].items()],
+        *[
+            f"- **{k.replace('_', ' ')}**: {v}"
+            for k, v in summary["methodology"].items()
+        ],
         "",
         "## Limitations & interpretation",
         "",
@@ -869,7 +926,9 @@ def main() -> None:
 
     for class_name in INDIAN_15:
         dish = by_class[class_name]
-        names = csv_map.get(_norm(dish["name"])) or csv_map.get(class_name.replace("_", " "))
+        names = csv_map.get(_norm(dish["name"])) or csv_map.get(
+            class_name.replace("_", " ")
+        )
         if not names:
             raise KeyError(class_name)
         names = list(names) + MANUAL_EXTRA_INGREDIENTS.get(class_name, [])
@@ -888,7 +947,11 @@ def main() -> None:
                 "ifct_code": row["ifct_code"],
                 **({"ifct_name": row["ifct_name"]} if row.get("ifct_name") else {}),
                 **({"ifct_match": row["ifct_match"]} if row.get("ifct_match") else {}),
-                **({"ifct_source_note": row["ifct_source_note"]} if row.get("ifct_source_note") else {}),
+                **(
+                    {"ifct_source_note": row["ifct_source_note"]}
+                    if row.get("ifct_source_note")
+                    else {}
+                ),
             }
             for row in result["ingredients"]
         ]
@@ -929,7 +992,9 @@ def main() -> None:
         f"low={summary['n_low_confidence']}"
     )
     for row in summary["coverage_leaderboard"]:
-        print(f"  {row['class_name']:24} {row['match_coverage_pct']:6.1f}% {row['nutrition_confidence']}")
+        print(
+            f"  {row['class_name']:24} {row['match_coverage_pct']:6.1f}% {row['nutrition_confidence']}"
+        )
 
 
 if __name__ == "__main__":

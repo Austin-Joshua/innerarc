@@ -18,7 +18,9 @@ def log_event(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> EventOut:
-    event = UsabilityEvent(user_id=user.id, event_type=body.event_type, task=body.task, screen=body.screen)
+    event = UsabilityEvent(
+        user_id=user.id, event_type=body.event_type, task=body.task, screen=body.screen
+    )
     db.add(event)
     db.commit()
     db.refresh(event)
@@ -37,7 +39,9 @@ def submit_feedback(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> FeedbackOut:
-    feedback = Feedback(user_id=user.id, rating=body.rating, comment=body.comment, screen=body.screen)
+    feedback = Feedback(
+        user_id=user.id, rating=body.rating, comment=body.comment, screen=body.screen
+    )
     db.add(feedback)
     db.commit()
     db.refresh(feedback)

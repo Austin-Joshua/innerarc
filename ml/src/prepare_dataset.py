@@ -50,7 +50,9 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG"}
 def count_images(folder: Path) -> int:
     if not folder.is_dir():
         return 0
-    return sum(1 for path in folder.iterdir() if path.is_file() and path.suffix in IMAGE_EXTS)
+    return sum(
+        1 for path in folder.iterdir() if path.is_file() and path.suffix in IMAGE_EXTS
+    )
 
 
 def copy_class(src: Path, dest: Path) -> int:

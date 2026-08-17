@@ -28,7 +28,10 @@ export function getFoodDraft() {
   return draft;
 }
 
-export function singleFromClassify(classified: ClassifyResult, localUri: string): FoodDraftSingle {
+export function singleFromClassify(
+  classified: ClassifyResult,
+  localUri: string,
+): FoodDraftSingle {
   return {
     mode: "single",
     dish: classified,

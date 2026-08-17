@@ -24,9 +24,13 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG"}
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
-    reg = client.post("/auth/register", json={"email": email, "password": "password123"})
+    reg = client.post(
+        "/auth/register", json={"email": email, "password": "password123"}
+    )
     if reg.status_code == 409:
-        reg = client.post("/auth/login", json={"email": email, "password": "password123"})
+        reg = client.post(
+            "/auth/login", json={"email": email, "password": "password123"}
+        )
     return {"Authorization": f"Bearer {reg.json()['access_token']}"}
 
 
@@ -34,7 +38,9 @@ def _genuine_plate_photos() -> list[Path]:
     if not FIXTURES.is_dir():
         return []
     return sorted(
-        p for p in FIXTURES.iterdir() if p.is_file() and p.suffix in IMAGE_EXTS and p.stat().st_size > 10_000
+        p
+        for p in FIXTURES.iterdir()
+        if p.is_file() and p.suffix in IMAGE_EXTS and p.stat().st_size > 10_000
     )
 
 
@@ -53,7 +59,9 @@ def main() -> None:
             "See fixtures/plates/SOURCES.md."
         )
     if not photos:
-        print("FAIL: no genuine multi-item plate photos found; cannot run vision smoke.")
+        print(
+            "FAIL: no genuine multi-item plate photos found; cannot run vision smoke."
+        )
         raise SystemExit(1)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
@@ -72,7 +80,9 @@ def main() -> None:
             )
         if resp.status_code != 200:
             print(f"\nPHOTO: {photo.name}")
-            print(f"LIMITATION: classify-plate failed ({resp.status_code}): {resp.text[:300]}")
+            print(
+                f"LIMITATION: classify-plate failed ({resp.status_code}): {resp.text[:300]}"
+            )
             continue
         body = resp.json()
         photos_ok += 1
@@ -102,7 +112,11 @@ def main() -> None:
     print("\n=== 2: unmatched label forced (no silent nearest-neighbor) ===")
     probe = photos[0]
     fake = [
-        VisionItem(label="Dragon fruit tart with edible gold", portion="medium", confidence=0.91),
+        VisionItem(
+            label="Dragon fruit tart with edible gold",
+            portion="medium",
+            confidence=0.91,
+        ),
         VisionItem(label="Butter chicken", portion="large", confidence=0.8),
     ]
     with patch("app.routers.food.identify_plate_items", return_value=fake):
@@ -173,7 +187,9 @@ def main() -> None:
     else:
         print("photo_count_limitation: NO")
     if photos_ok < len(photos):
-        print(f"runtime_limitation: {len(photos) - photos_ok} photo(s) failed (e.g. Gemini 503)")
+        print(
+            f"runtime_limitation: {len(photos) - photos_ok} photo(s) failed (e.g. Gemini 503)"
+        )
     print(f"vision_produced_unmatched_naturally: {any_unmatched_from_vision}")
     print("forced_unmatched: PASS")
     print("nutrition_from_dishes: PASS")

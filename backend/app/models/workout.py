@@ -14,7 +14,9 @@ from app.models.enums import WorkoutLevel, WorkoutModality
 class Workout(Base):
     __tablename__ = "workouts"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     name: Mapped[str] = mapped_column(String, nullable=False)
     modality: Mapped[WorkoutModality] = mapped_column(
         Enum(WorkoutModality, name="workout_modality", native_enum=True), nullable=False
@@ -26,30 +28,42 @@ class Workout(Base):
     equipment_needed: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False)
     media_url: Mapped[str] = mapped_column(String, nullable=False)
 
-    program_workouts: Mapped[list[ProgramWorkout]] = relationship(back_populates="workout")
-    workout_exercises: Mapped[list[WorkoutExercise]] = relationship(back_populates="workout")
+    program_workouts: Mapped[list[ProgramWorkout]] = relationship(
+        back_populates="workout"
+    )
+    workout_exercises: Mapped[list[WorkoutExercise]] = relationship(
+        back_populates="workout"
+    )
     workout_logs: Mapped[list[WorkoutLog]] = relationship(back_populates="workout")
 
 
 class Exercise(Base):
     __tablename__ = "exercises"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     name: Mapped[str] = mapped_column(Text, nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     media_url: Mapped[str] = mapped_column(Text, nullable=False)
 
-    workout_exercises: Mapped[list[WorkoutExercise]] = relationship(back_populates="exercise")
+    workout_exercises: Mapped[list[WorkoutExercise]] = relationship(
+        back_populates="exercise"
+    )
 
 
 class WorkoutExercise(Base):
     __tablename__ = "workout_exercises"
 
     workout_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("workouts.id", ondelete="CASCADE"), primary_key=True
+        UUID(as_uuid=True),
+        ForeignKey("workouts.id", ondelete="CASCADE"),
+        primary_key=True,
     )
     exercise_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("exercises.id", ondelete="CASCADE"), primary_key=True
+        UUID(as_uuid=True),
+        ForeignKey("exercises.id", ondelete="CASCADE"),
+        primary_key=True,
     )
     order_index: Mapped[int] = mapped_column(Integer, primary_key=True)
     sets: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -64,18 +78,24 @@ class WorkoutExercise(Base):
 class Program(Base):
     __tablename__ = "programs"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     name: Mapped[str] = mapped_column(String, nullable=False)
     duration_weeks: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    program_workouts: Mapped[list[ProgramWorkout]] = relationship(back_populates="program")
+    program_workouts: Mapped[list[ProgramWorkout]] = relationship(
+        back_populates="program"
+    )
 
 
 class ProgramWorkout(Base):
     __tablename__ = "program_workouts"
 
     program_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("programs.id", ondelete="CASCADE"), primary_key=True
+        UUID(as_uuid=True),
+        ForeignKey("programs.id", ondelete="CASCADE"),
+        primary_key=True,
     )
     workout_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("workouts.id"), primary_key=True
@@ -90,7 +110,9 @@ class ProgramWorkout(Base):
 class WorkoutLog(Base):
     __tablename__ = "workout_logs"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )

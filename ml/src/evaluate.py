@@ -94,7 +94,11 @@ def evaluate(model, loader, device, n_classes: int) -> dict:
         "top3": correct3 / total if total else 0.0,
         "n": total,
         "per_class_index": {
-            str(i): (per_class_correct[i] / per_class_total[i] if per_class_total[i] else None)
+            str(i): (
+                per_class_correct[i] / per_class_total[i]
+                if per_class_total[i]
+                else None
+            )
             for i in range(n_classes)
         },
     }
@@ -124,16 +128,23 @@ def main() -> None:
     model.classifier[1] = nn.Linear(model.classifier[1].in_features, len(classes))
     model.load_state_dict(payload["state_dict"])
     model.to(device)
-    test_loader = DataLoader(ImageList(test_items, eval_tf), batch_size=BATCH, shuffle=False, num_workers=0)
+    test_loader = DataLoader(
+        ImageList(test_items, eval_tf), batch_size=BATCH, shuffle=False, num_workers=0
+    )
     test_metrics = evaluate(model, test_loader, device, len(classes))
     report = {
         "device": str(device),
         "n_classes": len(classes),
-        "split": {"train": len(train_items), "val": len(val_items), "test": len(test_items)},
+        "split": {
+            "train": len(train_items),
+            "val": len(val_items),
+            "test": len(test_items),
+        },
         "held_out_top1": test_metrics["top1"],
         "held_out_top3": test_metrics["top3"],
         "per_class_top1": {
-            classes[int(idx)]: acc for idx, acc in test_metrics["per_class_index"].items()
+            classes[int(idx)]: acc
+            for idx, acc in test_metrics["per_class_index"].items()
         },
         "checkpoint": str(CHECKPOINT),
         "note": "Held-out metrics from best.pt (best validation checkpoint during training).",

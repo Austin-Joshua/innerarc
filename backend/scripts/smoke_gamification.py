@@ -24,9 +24,13 @@ GOOD = ROOT / "ml" / "data" / "raw" / "progress_samples" / "good_standing.jpg"
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
-    reg = client.post("/auth/register", json={"email": email, "password": "password123"})
+    reg = client.post(
+        "/auth/register", json={"email": email, "password": "password123"}
+    )
     if reg.status_code == 409:
-        reg = client.post("/auth/login", json={"email": email, "password": "password123"})
+        reg = client.post(
+            "/auth/login", json={"email": email, "password": "password123"}
+        )
     return {"Authorization": f"Bearer {reg.json()['access_token']}"}
 
 
@@ -35,7 +39,11 @@ def main() -> None:
     today = date(2026, 8, 16)
     consecutive = {today - timedelta(days=i) for i in range(3)}  # 14,15,16
     assert compute_streak(consecutive, today) == 3
-    with_gap = {today - timedelta(days=5), today - timedelta(days=4), today}  # gap then today
+    with_gap = {
+        today - timedelta(days=5),
+        today - timedelta(days=4),
+        today,
+    }  # gap then today
     assert compute_streak(with_gap, today) == 1, "gap must reset streak to 1"
     broken = {today - timedelta(days=5), today - timedelta(days=4)}  # ended 2+ days ago
     assert compute_streak(broken, today) == 0
@@ -43,13 +51,28 @@ def main() -> None:
 
     print("=== UNIT: badges consistency-only ===")
     assert "first_meal_logged" in eligible_badges(
-        meal_count=1, workout_count=0, progress_photo_count=0, streak_count=0, already=set()
+        meal_count=1,
+        workout_count=0,
+        progress_photo_count=0,
+        streak_count=0,
+        already=set(),
     )
-    assert eligible_badges(
-        meal_count=0, workout_count=0, progress_photo_count=0, streak_count=3, already=set()
-    ) == []
+    assert (
+        eligible_badges(
+            meal_count=0,
+            workout_count=0,
+            progress_photo_count=0,
+            streak_count=3,
+            already=set(),
+        )
+        == []
+    )
     assert "7_day_streak" in eligible_badges(
-        meal_count=1, workout_count=0, progress_photo_count=0, streak_count=7, already=set()
+        meal_count=1,
+        workout_count=0,
+        progress_photo_count=0,
+        streak_count=7,
+        already=set(),
     )
     print("badge unit ok")
 
@@ -98,7 +121,12 @@ def main() -> None:
     assert any(b["id"] == "first_meal_logged" for b in g["new_badges"]), g
     assert g["points"] == 10
     assert g["streak_count"] >= 1
-    print("badge first_meal_logged earned; streak=", g["streak_count"], "points=", g["points"])
+    print(
+        "badge first_meal_logged earned; streak=",
+        g["streak_count"],
+        "points=",
+        g["points"],
+    )
 
     status = client.get("/gamification/status", headers=headers)
     assert status.status_code == 200

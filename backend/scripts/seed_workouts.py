@@ -54,7 +54,9 @@ def seed(db: Session) -> None:
             existing.equipment_needed = row["equipment_needed"]
             existing.media_url = row["media_url"]
             workout = existing
-            db.execute(delete(WorkoutExercise).where(WorkoutExercise.workout_id == workout.id))
+            db.execute(
+                delete(WorkoutExercise).where(WorkoutExercise.workout_id == workout.id)
+            )
         else:
             workout = Workout(
                 name=row["name"],
@@ -81,14 +83,18 @@ def seed(db: Session) -> None:
                 )
             )
         workouts_by_slug[row["slug"]] = workout
-        print(f"seeded workout {row['slug']} modality={row['modality']} level={row['level']}")
+        print(
+            f"seeded workout {row['slug']} modality={row['modality']} level={row['level']}"
+        )
 
     for prow in payload["programs"]:
         existing = db.scalar(select(Program).where(Program.name == prow["name"]))
         if existing:
             existing.duration_weeks = prow["duration_weeks"]
             program = existing
-            db.execute(delete(ProgramWorkout).where(ProgramWorkout.program_id == program.id))
+            db.execute(
+                delete(ProgramWorkout).where(ProgramWorkout.program_id == program.id)
+            )
         else:
             program = Program(name=prow["name"], duration_weeks=prow["duration_weeks"])
             db.add(program)

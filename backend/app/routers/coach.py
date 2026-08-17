@@ -54,7 +54,9 @@ def coach_chat(
         except RuntimeError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
         except Exception as exc:  # noqa: BLE001 — surface provider failures cleanly
-            raise HTTPException(status_code=502, detail=f"Coach model error: {exc}") from exc
+            raise HTTPException(
+                status_code=502, detail=f"Coach model error: {exc}"
+            ) from exc
 
     row = AIConversation(
         user_id=user.id,

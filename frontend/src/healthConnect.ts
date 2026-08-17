@@ -51,7 +51,9 @@ export const healthConnect = {
 
   async requestPermissions(includeWrite = false): Promise<boolean> {
     const { requestPermission } = await import("react-native-health-connect");
-    const wanted = includeWrite ? [...READ_PERMISSIONS, ...WRITE_PERMISSIONS] : READ_PERMISSIONS;
+    const wanted = includeWrite
+      ? [...READ_PERMISSIONS, ...WRITE_PERMISSIONS]
+      : READ_PERMISSIONS;
     const granted = await requestPermission(wanted);
     const needed = new Set(READ_PERMISSIONS.map((p) => p.recordType));
     const got = new Set(
@@ -67,7 +69,8 @@ export const healthConnect = {
    * (emulators have no watch history). Not a mock of the sync API.
    */
   async seedVerificationData(): Promise<void> {
-    const { insertRecords, requestPermission } = await import("react-native-health-connect");
+    const { insertRecords, requestPermission } =
+      await import("react-native-health-connect");
     await requestPermission([...READ_PERMISSIONS, ...WRITE_PERMISSIONS]);
     const now = new Date();
     const dayStart = startOfLocalDay(now);
@@ -100,7 +103,8 @@ export const healthConnect = {
   },
 
   async readRecent(): Promise<WearableReading[]> {
-    const { readRecords, aggregateRecord } = await import("react-native-health-connect");
+    const { readRecords, aggregateRecord } =
+      await import("react-native-health-connect");
     const readings: WearableReading[] = [];
     const now = new Date();
     const dayStart = startOfLocalDay(now);
@@ -164,7 +168,9 @@ export const healthConnect = {
       if (session?.startTime && session?.endTime) {
         readings.push({
           metric_type: "sleep",
-          value: Math.round(hoursBetween(session.startTime, session.endTime) * 100) / 100,
+          value:
+            Math.round(hoursBetween(session.startTime, session.endTime) * 100) /
+            100,
           recorded_at: session.endTime,
         });
       }

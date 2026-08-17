@@ -70,7 +70,11 @@ def _get_landmarker():
     if _landmarker is not None:
         return _landmarker
     from mediapipe.tasks.python import BaseOptions
-    from mediapipe.tasks.python.vision import PoseLandmarker, PoseLandmarkerOptions, RunningMode
+    from mediapipe.tasks.python.vision import (
+        PoseLandmarker,
+        PoseLandmarkerOptions,
+        RunningMode,
+    )
 
     options = PoseLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=str(_model_path())),
@@ -139,15 +143,22 @@ def estimate_pose(image_path: str | Path) -> PoseSuccess | PoseFailure:
 
     required_visibility = {str(i): points[i][2] for i in REQUIRED if i in points}
     if len(required_visibility) < len(REQUIRED):
-        return PoseFailure(message=FAIL_MESSAGE, required_visibility=required_visibility)
+        return PoseFailure(
+            message=FAIL_MESSAGE, required_visibility=required_visibility
+        )
 
     vis_values = [required_visibility[str(i)] for i in REQUIRED]
     mean_visibility = sum(vis_values) / len(vis_values)
-    if any(v < MIN_LANDMARK_VISIBILITY for v in vis_values) or mean_visibility < MIN_MEAN_VISIBILITY:
+    if (
+        any(v < MIN_LANDMARK_VISIBILITY for v in vis_values)
+        or mean_visibility < MIN_MEAN_VISIBILITY
+    ):
         return PoseFailure(
             message=FAIL_MESSAGE,
             mean_visibility=round(mean_visibility, 4),
-            required_visibility={k: round(v, 4) for k, v in required_visibility.items()},
+            required_visibility={
+                k: round(v, 4) for k, v in required_visibility.items()
+            },
         )
 
     height, width = rgb.shape[0], rgb.shape[1]
@@ -169,7 +180,9 @@ def estimate_pose(image_path: str | Path) -> PoseSuccess | PoseFailure:
         return PoseFailure(
             message=FAIL_MESSAGE,
             mean_visibility=round(mean_visibility, 4),
-            required_visibility={k: round(v, 4) for k, v in required_visibility.items()},
+            required_visibility={
+                k: round(v, 4) for k, v in required_visibility.items()
+            },
         )
 
     waist_to_hip = waist_w / hip_w
@@ -179,7 +192,9 @@ def estimate_pose(image_path: str | Path) -> PoseSuccess | PoseFailure:
         pose_landmarks_json={
             "status": "ok",
             "mean_visibility": round(mean_visibility, 4),
-            "required_visibility": {k: round(v, 4) for k, v in required_visibility.items()},
+            "required_visibility": {
+                k: round(v, 4) for k, v in required_visibility.items()
+            },
             "landmarks": serialized,
         },
         computed_ratios_json={

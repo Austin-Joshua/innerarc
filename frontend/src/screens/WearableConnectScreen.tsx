@@ -2,7 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { api } from "../api";
 import { healthConnect } from "../healthConnect";
@@ -24,7 +31,8 @@ export default function WearableConnectScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Health Connect</Text>
         <Text style={styles.body}>
-          Wearable sync is Android Health Connect only in this pass. Apple HealthKit is deferred.
+          Wearable sync is Android Health Connect only in this pass. Apple
+          HealthKit is deferred.
         </Text>
       </View>
     );
@@ -42,7 +50,9 @@ export default function WearableConnectScreen() {
       }
       const granted = await healthConnect.requestPermissions(__DEV__);
       if (!granted) {
-        setError("Permissions were not granted. You can try again from Connections.");
+        setError(
+          "Permissions were not granted. You can try again from Connections.",
+        );
         return;
       }
       let readings = await healthConnect.readRecent();
@@ -51,7 +61,9 @@ export default function WearableConnectScreen() {
         readings = await healthConnect.readRecent();
       }
       if (readings.length === 0) {
-        setMessage("Permissions granted, but no recent steps / heart rate / sleep data was found.");
+        setMessage(
+          "Permissions granted, but no recent steps / heart rate / sleep data was found.",
+        );
         return;
       }
       const result = await api.wearableSync(readings);
@@ -71,12 +83,13 @@ export default function WearableConnectScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Connect Health Connect</Text>
       <Text style={styles.body}>
-        Innerarc reads steps, heart rate, and sleep from Android Health Connect so you can see them
-        on Home. Data stays on your device until you tap Sync — nothing is shared automatically.
+        Innerarc reads steps, heart rate, and sleep from Android Health Connect
+        so you can see them on Home. Data stays on your device until you tap
+        Sync — nothing is shared automatically.
       </Text>
       <Text style={styles.body}>
-        Next, Android will ask for Health Connect read access. You can revoke this anytime in system
-        settings.
+        Next, Android will ask for Health Connect read access. You can revoke
+        this anytime in system settings.
       </Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {message ? <Text style={styles.muted}>{message}</Text> : null}
@@ -96,7 +109,11 @@ export default function WearableConnectScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.md },
   body: { ...typography.body, marginBottom: spacing.md, lineHeight: 22 },
   muted: { ...typography.muted, marginBottom: spacing.sm },

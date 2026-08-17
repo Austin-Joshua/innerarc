@@ -1,7 +1,14 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 import { api, BadgeEarned } from "../api";
 import BadgeBanner from "../components/BadgeBanner";
@@ -12,7 +19,10 @@ import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "FoodNutrition">;
 
-function scaleMacros(nutrition: { calories: number; protein: number; carbs: number; fat: number }, grams: number) {
+function scaleMacros(
+  nutrition: { calories: number; protein: number; carbs: number; fat: number },
+  grams: number,
+) {
   const scale = grams / 100;
   return {
     calories: nutrition.calories * scale,
@@ -32,12 +42,14 @@ export default function FoodNutritionScreen() {
 
   const multiReady =
     draft?.mode === "multi"
-      ? draft.items.filter((item) => item.matched && item.dish).map((item) => ({
-          dish: item.dish!,
-          confidence_score: item.confidence_score ?? 0.5,
-          serving_size_g: item.serving_size_g ?? item.dish!.default_serving_g,
-          suggested_label: item.suggested_label,
-        }))
+      ? draft.items
+          .filter((item) => item.matched && item.dish)
+          .map((item) => ({
+            dish: item.dish!,
+            confidence_score: item.confidence_score ?? 0.5,
+            serving_size_g: item.serving_size_g ?? item.dish!.default_serving_g,
+            suggested_label: item.suggested_label,
+          }))
       : [];
 
   const [serving, setServing] = useState(
@@ -51,7 +63,10 @@ export default function FoodNutritionScreen() {
     if (draft?.mode === "single") {
       setServing(String(draft.dish.default_serving_g));
     }
-  }, [draft?.mode === "single" ? draft.dish.id : null, draft?.mode === "single" ? draft.dish.default_serving_g : null]);
+  }, [
+    draft?.mode === "single" ? draft.dish.id : null,
+    draft?.mode === "single" ? draft.dish.default_serving_g : null,
+  ]);
 
   useEffect(() => {
     if (draft?.mode === "multi") {
@@ -97,7 +112,11 @@ export default function FoodNutritionScreen() {
       });
       setBadges(logged.gamification?.new_badges ?? []);
       setDone(true);
-      api.logEvent({ event_type: "task_completed", task: "food_log", screen: "FoodNutrition" });
+      api.logEvent({
+        event_type: "task_completed",
+        task: "food_log",
+        screen: "FoodNutrition",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log meal");
     } finally {
@@ -125,7 +144,11 @@ export default function FoodNutritionScreen() {
       }
       setBadges(earned);
       setDone(true);
-      api.logEvent({ event_type: "task_completed", task: "food_log", screen: "FoodNutrition" });
+      api.logEvent({
+        event_type: "task_completed",
+        task: "food_log",
+        screen: "FoodNutrition",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not log meal");
     } finally {
@@ -146,13 +169,17 @@ export default function FoodNutritionScreen() {
       return (
         <View style={styles.container}>
           <Text style={styles.muted}>
-            No matched plate items yet. Go back and pick dishes for unmatched items.
+            No matched plate items yet. Go back and pick dishes for unmatched
+            items.
           </Text>
         </View>
       );
     }
     return (
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: spacing.xl }}
+      >
         <Text style={styles.title}>Plate nutrition</Text>
         <BadgeBanner badges={badges} />
         {done ? (
@@ -170,14 +197,17 @@ export default function FoodNutritionScreen() {
           </>
         ) : null}
         <Text style={styles.muted}>
-          Macros come from each matched dish in the catalog. Unmatched items are not logged.
+          Macros come from each matched dish in the catalog. Unmatched items are
+          not logged.
         </Text>
         {multiReady.map((item, index) => {
           const row = scaledMulti[index];
           return (
             <View key={`${item.dish.id}-${index}`} style={styles.itemBlock}>
               <Text style={styles.label}>{item.dish.name}</Text>
-              <Text style={styles.muted}>Source: {item.dish.nutrition_source}</Text>
+              <Text style={styles.muted}>
+                Source: {item.dish.nutrition_source}
+              </Text>
               <Text style={styles.label}>Serving size (g)</Text>
               <TextInput
                 keyboardType="numeric"
@@ -192,20 +222,27 @@ export default function FoodNutritionScreen() {
                 }}
               />
               <Text style={styles.heading}>
-                {Math.round(row.calories)} kcal · P {row.protein.toFixed(1)} · C {row.carbs.toFixed(1)} · F{" "}
-                {row.fat.toFixed(1)}
+                {Math.round(row.calories)} kcal · P {row.protein.toFixed(1)} · C{" "}
+                {row.carbs.toFixed(1)} · F {row.fat.toFixed(1)}
               </Text>
             </View>
           );
         })}
         <Text style={styles.heading}>
-          Total {Math.round(multiTotals.calories)} kcal · P {multiTotals.protein.toFixed(1)} · C{" "}
-          {multiTotals.carbs.toFixed(1)} · F {multiTotals.fat.toFixed(1)}
+          Total {Math.round(multiTotals.calories)} kcal · P{" "}
+          {multiTotals.protein.toFixed(1)} · C {multiTotals.carbs.toFixed(1)} ·
+          F {multiTotals.fat.toFixed(1)}
         </Text>
         {error ? <Text style={styles.muted}>{error}</Text> : null}
         {!done ? (
-          <Pressable disabled={busy} onPress={confirmMulti} style={styles.button}>
-            <Text style={styles.buttonLabel}>{busy ? "Saving…" : "Add plate to log"}</Text>
+          <Pressable
+            disabled={busy}
+            onPress={confirmMulti}
+            style={styles.button}
+          >
+            <Text style={styles.buttonLabel}>
+              {busy ? "Saving…" : "Add plate to log"}
+            </Text>
           </Pressable>
         ) : null}
       </ScrollView>
@@ -221,7 +258,10 @@ export default function FoodNutritionScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>{draft.dish.name}</Text>
       <BadgeBanner badges={badges} />
       {done ? (
@@ -239,7 +279,8 @@ export default function FoodNutritionScreen() {
         </>
       ) : null}
       <Text style={styles.muted}>
-        Source: {draft.dish.nutrition_source}. Ingredients are from the recipe table, not the photo.
+        Source: {draft.dish.nutrition_source}. Ingredients are from the recipe
+        table, not the photo.
       </Text>
       <Text style={styles.label}>Inferred ingredients</Text>
       {draft.dish.ingredients.map((item) => (
@@ -255,13 +296,20 @@ export default function FoodNutritionScreen() {
         onChangeText={setServing}
       />
       <Text style={styles.heading}>
-        {Math.round(scaledSingle.calories)} kcal · P {scaledSingle.protein.toFixed(1)} · C{" "}
-        {scaledSingle.carbs.toFixed(1)} · F {scaledSingle.fat.toFixed(1)}
+        {Math.round(scaledSingle.calories)} kcal · P{" "}
+        {scaledSingle.protein.toFixed(1)} · C {scaledSingle.carbs.toFixed(1)} ·
+        F {scaledSingle.fat.toFixed(1)}
       </Text>
       {error ? <Text style={styles.muted}>{error}</Text> : null}
       {!done ? (
-        <Pressable disabled={busy} onPress={confirmSingle} style={styles.button}>
-          <Text style={styles.buttonLabel}>{busy ? "Saving…" : "Add to log"}</Text>
+        <Pressable
+          disabled={busy}
+          onPress={confirmSingle}
+          style={styles.button}
+        >
+          <Text style={styles.buttonLabel}>
+            {busy ? "Saving…" : "Add to log"}
+          </Text>
         </Pressable>
       ) : null}
     </ScrollView>
@@ -269,11 +317,20 @@ export default function FoodNutritionScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title },
   heading: { ...typography.heading, marginVertical: spacing.md },
   muted: { ...typography.muted, marginBottom: 4 },
-  label: { ...typography.heading, fontSize: 16, marginTop: spacing.md, marginBottom: spacing.xs },
+  label: {
+    ...typography.heading,
+    fontSize: 16,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
+  },
   itemBlock: {
     marginTop: spacing.sm,
     marginBottom: spacing.sm,

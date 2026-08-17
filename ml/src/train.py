@@ -95,7 +95,9 @@ def evaluate(model, loader, device, n_classes: int) -> dict:
                 if label in top3[i]:
                     correct3 += 1
     per_class = {
-        str(i): (per_class_correct[i] / per_class_total[i] if per_class_total[i] else None)
+        str(i): (
+            per_class_correct[i] / per_class_total[i] if per_class_total[i] else None
+        )
         for i in range(n_classes)
     }
     return {
@@ -135,10 +137,21 @@ def main() -> None:
     for _, label in train_items:
         counts[label] += 1
     weights = [1.0 / counts[label] for _, label in train_items]
-    sampler = WeightedRandomSampler(weights, num_samples=len(train_items), replacement=True)
-    train_loader = DataLoader(ImageList(train_items, train_tf), batch_size=BATCH, sampler=sampler, num_workers=0)
-    val_loader = DataLoader(ImageList(val_items, eval_tf), batch_size=BATCH, shuffle=False, num_workers=0)
-    test_loader = DataLoader(ImageList(test_items, eval_tf), batch_size=BATCH, shuffle=False, num_workers=0)
+    sampler = WeightedRandomSampler(
+        weights, num_samples=len(train_items), replacement=True
+    )
+    train_loader = DataLoader(
+        ImageList(train_items, train_tf),
+        batch_size=BATCH,
+        sampler=sampler,
+        num_workers=0,
+    )
+    val_loader = DataLoader(
+        ImageList(val_items, eval_tf), batch_size=BATCH, shuffle=False, num_workers=0
+    )
+    test_loader = DataLoader(
+        ImageList(test_items, eval_tf), batch_size=BATCH, shuffle=False, num_workers=0
+    )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(
@@ -178,7 +191,9 @@ def main() -> None:
         )
         if val_metrics["top1"] > best_val:
             best_val = val_metrics["top1"]
-            torch.save({"classes": classes, "state_dict": model.state_dict()}, CHECKPOINT)
+            torch.save(
+                {"classes": classes, "state_dict": model.state_dict()}, CHECKPOINT
+            )
 
     payload = torch.load(CHECKPOINT, map_location=device, weights_only=False)
     model.load_state_dict(payload["state_dict"])
@@ -190,7 +205,11 @@ def main() -> None:
         "device": str(device),
         "epochs": EPOCHS,
         "n_classes": len(classes),
-        "split": {"train": len(train_items), "val": len(val_items), "test": len(test_items)},
+        "split": {
+            "train": len(train_items),
+            "val": len(val_items),
+            "test": len(test_items),
+        },
         "held_out_top1": test_metrics["top1"],
         "held_out_top3": test_metrics["top3"],
         "per_class_top1": per_class_named,

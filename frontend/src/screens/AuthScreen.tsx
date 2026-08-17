@@ -22,7 +22,9 @@ export default function AuthScreen() {
     setError(null);
     try {
       const result =
-        mode === "register" ? await api.register(email.trim(), password) : await api.login(email.trim(), password);
+        mode === "register"
+          ? await api.register(email.trim(), password)
+          : await api.login(email.trim(), password);
       setToken(result.access_token);
       await storeToken(result.access_token);
       const user = await api.me();
@@ -37,7 +39,9 @@ export default function AuthScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.body}>Create an account or sign in to log meals.</Text>
+      <Text style={styles.body}>
+        Create an account or sign in to log meals.
+      </Text>
       <TextInput
         autoCapitalize="none"
         keyboardType="email-address"
@@ -56,10 +60,20 @@ export default function AuthScreen() {
         onChangeText={setPassword}
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Pressable disabled={busy} onPress={() => submit("register")} style={styles.button}>
-        <Text style={styles.buttonLabel}>{busy ? "Working…" : "Create account"}</Text>
+      <Pressable
+        disabled={busy}
+        onPress={() => submit("register")}
+        style={styles.button}
+      >
+        <Text style={styles.buttonLabel}>
+          {busy ? "Working…" : "Create account"}
+        </Text>
       </Pressable>
-      <Pressable disabled={busy} onPress={() => submit("login")} style={styles.secondary}>
+      <Pressable
+        disabled={busy}
+        onPress={() => submit("login")}
+        style={styles.secondary}
+      >
         <Text style={styles.secondaryLabel}>Sign in</Text>
       </Pressable>
     </View>
@@ -74,7 +88,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: { ...typography.title, marginBottom: spacing.sm },
-  body: { ...typography.body, color: colors.textMuted, marginBottom: spacing.lg },
+  body: {
+    ...typography.body,
+    color: colors.textMuted,
+    marginBottom: spacing.lg,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,

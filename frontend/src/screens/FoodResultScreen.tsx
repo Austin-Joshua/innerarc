@@ -33,7 +33,9 @@ export default function FoodResultScreen() {
   if (!draft) {
     return (
       <View style={styles.container}>
-        <Text style={styles.muted}>No prediction yet. Go back and add a photo.</Text>
+        <Text style={styles.muted}>
+          No prediction yet. Go back and add a photo.
+        </Text>
       </View>
     );
   }
@@ -54,36 +56,52 @@ export default function FoodResultScreen() {
       setFoodDraft(next);
       setDraft(next);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Plate classification failed");
+      setError(
+        err instanceof Error ? err.message : "Plate classification failed",
+      );
     } finally {
       setBusy(false);
     }
   }
 
   if (draft.mode === "multi") {
-    const unmatched = draft.items.filter((item) => !item.matched || !item.dish).length;
+    const unmatched = draft.items.filter(
+      (item) => !item.matched || !item.dish,
+    ).length;
     return (
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: spacing.xl }}
+      >
         <Text style={styles.title}>Plate items</Text>
         <Text style={styles.muted}>
-          Each item is separate — edit unmatched dishes before logging. Nutrition still comes from
-          the dishes table, not the photo model.
+          Each item is separate — edit unmatched dishes before logging.
+          Nutrition still comes from the dishes table, not the photo model.
         </Text>
         {draft.local_uri ? (
-          <Image source={{ uri: draft.local_uri }} style={styles.photo} accessibilityLabel="Meal photo" />
+          <Image
+            source={{ uri: draft.local_uri }}
+            style={styles.photo}
+            accessibilityLabel="Meal photo"
+          />
         ) : null}
         {draft.items.map((item, index) => {
           const title = item.dish?.name ?? item.suggested_label;
           const conf =
-            item.confidence_score != null ? `${Math.round(item.confidence_score * 100)}%` : "—";
+            item.confidence_score != null
+              ? `${Math.round(item.confidence_score * 100)}%`
+              : "—";
           return (
             <View key={`${title}-${index}`} style={styles.itemCard}>
               <Text style={styles.itemTitle}>{title}</Text>
               <Text style={styles.muted}>
-                {item.matched ? "Matched" : "No dish match"} · portion {item.portion} · conf {conf}
+                {item.matched ? "Matched" : "No dish match"} · portion{" "}
+                {item.portion} · conf {conf}
               </Text>
               {!item.matched ? (
-                <Text style={styles.warn}>Pick a dish to include this item in the log.</Text>
+                <Text style={styles.warn}>
+                  Pick a dish to include this item in the log.
+                </Text>
               ) : null}
               <Pressable
                 onPress={() => {
@@ -102,7 +120,8 @@ export default function FoodResultScreen() {
         {error ? <Text style={styles.muted}>{error}</Text> : null}
         {unmatched ? (
           <Text style={styles.warn}>
-            {unmatched} unmatched item{unmatched === 1 ? "" : "s"} will be skipped until corrected.
+            {unmatched} unmatched item{unmatched === 1 ? "" : "s"} will be
+            skipped until corrected.
           </Text>
         ) : null}
         <Pressable
@@ -123,23 +142,38 @@ export default function FoodResultScreen() {
       <Text style={styles.title}>{draft.dish.name}</Text>
       <Text style={styles.confidence}>Confidence {pct}%</Text>
       <Text style={styles.muted}>
-        Predictions are estimates. If this is the wrong dish, edit it before logging.
+        Predictions are estimates. If this is the wrong dish, edit it before
+        logging.
       </Text>
       {draft.local_uri ? (
-        <Image source={{ uri: draft.local_uri }} style={styles.photo} accessibilityLabel="Meal photo" />
+        <Image
+          source={{ uri: draft.local_uri }}
+          style={styles.photo}
+          accessibilityLabel="Meal photo"
+        />
       ) : null}
       {error ? <Text style={styles.muted}>{error}</Text> : null}
-      <Pressable onPress={() => navigation.navigate("FoodEdit")} style={styles.secondary}>
+      <Pressable
+        onPress={() => navigation.navigate("FoodEdit")}
+        style={styles.secondary}
+      >
         <Text style={styles.secondaryLabel}>Edit dish</Text>
       </Pressable>
-      <Pressable onPress={runPlateClassify} style={styles.secondary} disabled={busy}>
+      <Pressable
+        onPress={runPlateClassify}
+        style={styles.secondary}
+        disabled={busy}
+      >
         {busy ? (
           <ActivityIndicator color={colors.accent} />
         ) : (
           <Text style={styles.secondaryLabel}>This is more than one dish</Text>
         )}
       </Pressable>
-      <Pressable onPress={() => navigation.navigate("FoodNutrition")} style={styles.button}>
+      <Pressable
+        onPress={() => navigation.navigate("FoodNutrition")}
+        style={styles.button}
+      >
         <Text style={styles.buttonLabel}>This looks right</Text>
       </Pressable>
     </View>
@@ -147,12 +181,26 @@ export default function FoodResultScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title },
-  confidence: { ...typography.heading, marginTop: spacing.sm, marginBottom: spacing.sm },
+  confidence: {
+    ...typography.heading,
+    marginTop: spacing.sm,
+    marginBottom: spacing.sm,
+  },
   muted: { ...typography.muted, marginBottom: spacing.lg },
   warn: { ...typography.muted, color: colors.accent, marginBottom: spacing.sm },
-  photo: { width: "100%", height: 220, borderRadius: 16, marginBottom: spacing.lg, backgroundColor: colors.surface },
+  photo: {
+    width: "100%",
+    height: 220,
+    borderRadius: 16,
+    marginBottom: spacing.lg,
+    backgroundColor: colors.surface,
+  },
   itemCard: {
     backgroundColor: colors.white,
     borderWidth: 1,

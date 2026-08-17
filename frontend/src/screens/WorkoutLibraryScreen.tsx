@@ -9,7 +9,14 @@ import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutLibrary">;
 
-const MODALITIES = ["all", "bodyweight", "home_gym", "weighted", "yoga", "aerobics"] as const;
+const MODALITIES = [
+  "all",
+  "bodyweight",
+  "home_gym",
+  "weighted",
+  "yoga",
+  "aerobics",
+] as const;
 const LEVELS = ["all", "beginner", "intermediate", "advanced"] as const;
 const GOALS = [
   "all",
@@ -30,8 +37,13 @@ function Chip({
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={[styles.chip, active && styles.chipActive]}>
-      <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{label.replace(/_/g, " ")}</Text>
+    <Pressable
+      onPress={onPress}
+      style={[styles.chip, active && styles.chipActive]}
+    >
+      <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
+        {label.replace(/_/g, " ")}
+      </Text>
     </Pressable>
   );
 }
@@ -61,11 +73,13 @@ export default function WorkoutLibraryScreen() {
         };
         return Promise.all([
           api.workouts(params),
-          api.recommendWorkouts({
-            modality: params.modality,
-            level: params.level,
-            goal: params.goal,
-          }).catch(() => [] as WorkoutSummary[]),
+          api
+            .recommendWorkouts({
+              modality: params.modality,
+              level: params.level,
+              goal: params.goal,
+            })
+            .catch(() => [] as WorkoutSummary[]),
         ]).then(([w, r]) => {
           if (!active) return;
           setWorkouts(w);
@@ -74,7 +88,10 @@ export default function WorkoutLibraryScreen() {
         });
       })
       .catch((err) => {
-        if (active) setError(err instanceof Error ? err.message : "Could not load workouts");
+        if (active)
+          setError(
+            err instanceof Error ? err.message : "Could not load workouts",
+          );
       });
     return () => {
       active = false;
@@ -87,30 +104,66 @@ export default function WorkoutLibraryScreen() {
     }, [load]),
   );
 
-  const suggestedIds = useMemo(() => new Set(recommended.map((item) => item.id)), [recommended]);
+  const suggestedIds = useMemo(
+    () => new Set(recommended.map((item) => item.id)),
+    [recommended],
+  );
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: spacing.xl }}
+    >
       <Text style={styles.title}>Workouts</Text>
-      <Text style={styles.muted}>Filter by modality, level, and goal. Equipment is applied from your profile on Recommend.</Text>
+      <Text style={styles.muted}>
+        Filter by modality, level, and goal. Equipment is applied from your
+        profile on Recommend.
+      </Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <Text style={styles.section}>Modality</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.row}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.row}
+      >
         {MODALITIES.map((item) => (
-          <Chip key={item} label={item} active={modality === item} onPress={() => setModality(item)} />
+          <Chip
+            key={item}
+            label={item}
+            active={modality === item}
+            onPress={() => setModality(item)}
+          />
         ))}
       </ScrollView>
       <Text style={styles.section}>Level</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.row}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.row}
+      >
         {LEVELS.map((item) => (
-          <Chip key={item} label={item} active={level === item} onPress={() => setLevel(item)} />
+          <Chip
+            key={item}
+            label={item}
+            active={level === item}
+            onPress={() => setLevel(item)}
+          />
         ))}
       </ScrollView>
       <Text style={styles.section}>Goal</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.row}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.row}
+      >
         {GOALS.map((item) => (
-          <Chip key={item} label={item} active={goal === item} onPress={() => setGoal(item)} />
+          <Chip
+            key={item}
+            label={item}
+            active={goal === item}
+            onPress={() => setGoal(item)}
+          />
         ))}
       </ScrollView>
 
@@ -121,11 +174,14 @@ export default function WorkoutLibraryScreen() {
             <Pressable
               key={`rec-${workout.id}`}
               style={styles.card}
-              onPress={() => navigation.navigate("WorkoutDetail", { workoutId: workout.id })}
+              onPress={() =>
+                navigation.navigate("WorkoutDetail", { workoutId: workout.id })
+              }
             >
               <Text style={styles.cardTitle}>{workout.name}</Text>
               <Text style={styles.muted}>
-                {workout.modality.replace(/_/g, " ")} · {workout.level} · {workout.exercise_count} moves
+                {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
+                {workout.exercise_count} moves
               </Text>
             </Pressable>
           ))}
@@ -137,7 +193,9 @@ export default function WorkoutLibraryScreen() {
         <Pressable
           key={program.id}
           style={styles.card}
-          onPress={() => navigation.navigate("ProgramDetail", { programId: program.id })}
+          onPress={() =>
+            navigation.navigate("ProgramDetail", { programId: program.id })
+          }
         >
           <Text style={styles.cardTitle}>{program.name}</Text>
           <Text style={styles.muted}>
@@ -150,26 +208,42 @@ export default function WorkoutLibraryScreen() {
       {workouts.map((workout) => (
         <Pressable
           key={workout.id}
-          style={[styles.card, suggestedIds.has(workout.id) && styles.cardSuggested]}
-          onPress={() => navigation.navigate("WorkoutDetail", { workoutId: workout.id })}
+          style={[
+            styles.card,
+            suggestedIds.has(workout.id) && styles.cardSuggested,
+          ]}
+          onPress={() =>
+            navigation.navigate("WorkoutDetail", { workoutId: workout.id })
+          }
         >
           <Text style={styles.cardTitle}>{workout.name}</Text>
           <Text style={styles.muted}>
-            {workout.modality.replace(/_/g, " ")} · {workout.level} · {workout.goal_tags[0]?.replace(/_/g, " ")}
+            {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
+            {workout.goal_tags[0]?.replace(/_/g, " ")}
           </Text>
         </Pressable>
       ))}
-      {!workouts.length ? <Text style={styles.muted}>No workouts match these filters.</Text> : null}
+      {!workouts.length ? (
+        <Text style={styles.muted}>No workouts match these filters.</Text>
+      ) : null}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+  },
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
   error: { ...typography.muted, color: "#8B3A3A", marginTop: spacing.sm },
-  section: { ...typography.muted, marginTop: spacing.md, marginBottom: spacing.xs },
+  section: {
+    ...typography.muted,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
+  },
   row: { marginBottom: spacing.sm },
   chip: {
     borderWidth: 1,
@@ -180,10 +254,17 @@ const styles = StyleSheet.create({
     marginRight: spacing.xs,
     borderRadius: 10,
   },
-  chipActive: { backgroundColor: colors.accentSoft, borderColor: colors.accent },
+  chipActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accent,
+  },
   chipLabel: { ...typography.muted, textTransform: "capitalize" },
   chipLabelActive: { color: colors.accent, fontWeight: "600" },
-  heading: { ...typography.heading, marginTop: spacing.lg, marginBottom: spacing.sm },
+  heading: {
+    ...typography.heading,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+  },
   card: {
     backgroundColor: colors.white,
     borderWidth: 1,
@@ -192,6 +273,9 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     marginBottom: spacing.sm,
   },
-  cardSuggested: { borderColor: colors.accent, backgroundColor: colors.accentSoft },
+  cardSuggested: {
+    borderColor: colors.accent,
+    backgroundColor: colors.accentSoft,
+  },
   cardTitle: { ...typography.body, fontWeight: "600", marginBottom: 4 },
 });

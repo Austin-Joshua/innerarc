@@ -35,7 +35,9 @@ class Dish(Base):
         ),
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     name: Mapped[str] = mapped_column(String, nullable=False)
     cuisine: Mapped[str] = mapped_column(String, nullable=False)
     nutrition_source: Mapped[str] = mapped_column(Text, nullable=False)
@@ -51,20 +53,28 @@ class Dish(Base):
 class Ingredient(Base):
     __tablename__ = "ingredients"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     name: Mapped[str] = mapped_column(String, nullable=False)
 
-    dish_ingredients: Mapped[list[DishIngredient]] = relationship(back_populates="ingredient")
+    dish_ingredients: Mapped[list[DishIngredient]] = relationship(
+        back_populates="ingredient"
+    )
 
 
 class DishIngredient(Base):
     __tablename__ = "dish_ingredients"
 
     dish_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("dishes.id", ondelete="CASCADE"), primary_key=True
+        UUID(as_uuid=True),
+        ForeignKey("dishes.id", ondelete="CASCADE"),
+        primary_key=True,
     )
     ingredient_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("ingredients.id", ondelete="CASCADE"), primary_key=True
+        UUID(as_uuid=True),
+        ForeignKey("ingredients.id", ondelete="CASCADE"),
+        primary_key=True,
     )
     typical_quantity: Mapped[str] = mapped_column(String, nullable=False)
 
@@ -75,7 +85,9 @@ class DishIngredient(Base):
 class FoodLog(Base):
     __tablename__ = "food_logs"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -103,7 +115,9 @@ class CalorieTarget(Base):
         ),
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )

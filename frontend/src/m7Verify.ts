@@ -54,10 +54,14 @@ export async function runModule7Verify(): Promise<void> {
     }
 
     const sync1 = await api.wearableSync(readings1);
-    log(`SYNC1 inserted=${sync1.inserted} updated=${sync1.updated} total=${sync1.total}`);
+    log(
+      `SYNC1 inserted=${sync1.inserted} updated=${sync1.updated} total=${sync1.total}`,
+    );
 
     const sync2 = await api.wearableSync(readings1);
-    log(`SYNC2 inserted=${sync2.inserted} updated=${sync2.updated} total=${sync2.total}`);
+    log(
+      `SYNC2 inserted=${sync2.inserted} updated=${sync2.updated} total=${sync2.total}`,
+    );
 
     if (sync2.inserted !== 0) {
       log("FAIL dedupe_expected_zero_inserts_on_second_sync");
