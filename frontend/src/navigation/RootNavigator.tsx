@@ -15,6 +15,7 @@ import ProgressCompareScreen from "../screens/ProgressCompareScreen";
 import SplashScreen from "../screens/SplashScreen";
 import WorkoutDetailScreen from "../screens/WorkoutDetailScreen";
 import WorkoutLibraryScreen from "../screens/WorkoutLibraryScreen";
+import WearableConnectScreen from "../screens/WearableConnectScreen";
 import WorkoutSessionScreen from "../screens/WorkoutSessionScreen";
 import { colors } from "../theme";
 import { RootStackParamList } from "./types";
@@ -60,6 +61,11 @@ export default function RootNavigator() {
         <Stack.Screen name="ProgressCapture" component={ProgressCaptureScreen} options={{ title: "Progress" }} />
         <Stack.Screen name="ProgressCompare" component={ProgressCompareScreen} options={{ title: "Compare" }} />
         <Stack.Screen name="CoachChat" component={CoachChatScreen} options={{ title: "Coach" }} />
+        <Stack.Screen
+          name="WearableConnect"
+          component={WearableConnectScreen}
+          options={{ title: "Health Connect" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -205,6 +205,26 @@ export type CoachMessage = {
   safety_precheck_blocked: boolean;
 };
 
+export type WearableReading = {
+  id: string;
+  source: string;
+  metric_type: "steps" | "heart_rate" | "sleep" | "spo2";
+  value: number;
+  recorded_at: string;
+};
+
+export type WearableSyncResult = {
+  inserted: number;
+  updated: number;
+  total: number;
+  readings: WearableReading[];
+};
+
+export type WearableRecent = {
+  readings: WearableReading[];
+  synced_at: string | null;
+};
+
 function workoutQuery(params?: { modality?: string; level?: string; goal?: string; equipment_access?: string }) {
   const query = new URLSearchParams();
   if (params?.modality) query.set("modality", params.modality);
@@ -304,4 +324,10 @@ export const api = {
       body: JSON.stringify({ message }),
     }),
   coachHistory: () => request<CoachMessage[]>("/coach/history"),
+  wearableSync: (readings: Array<{ metric_type: string; value: number; recorded_at: string }>) =>
+    request<WearableSyncResult>("/wearable/sync", {
+      method: "POST",
+      body: JSON.stringify({ readings }),
+    }),
+  wearableRecent: () => request<WearableRecent>("/wearable/recent"),
 };

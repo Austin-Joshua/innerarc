@@ -1,10 +1,21 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-import { api, Dashboard, GamificationState } from "../api";
+import { api, Dashboard, GamificationState, WearableReading } from "../api";
+import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
+import { LAST_SYNC_KEY } from "./WearableConnectScreen";
 import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Home">;
@@ -34,27 +45,91 @@ function MacroRow({
   );
 }
 
+function formatMetric(reading: WearableReading | undefined, unit: string): string {
+  if (!reading) return "—";
+  const v = reading.metric_type === "sleep" ? reading.value.toFixed(1) : Math.round(reading.value);
+  return `${v} ${unit}`;
+}
+
 export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [data, setData] = useState<Dashboard | null>(null);
   const [game, setGame] = useState<GamificationState | null>(null);
+  const [wearable, setWearable] = useState<WearableReading[]>([]);
+  const [lastSynced, setLastSynced] = useState<string | null>(null);
+  const [syncBusy, setSyncBusy] = useState(false);
+  const [syncMsg, setSyncMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(() => {
+    let active = true;
+    Promise.all([
+      api.dashboardToday(),
+      api.gamificationStatus().catch(() => null),
+      api.wearableRecent().catch(() => null),
+      AsyncStorage.getItem(LAST_SYNC_KEY),
+    ])
+      .then(([dash, g, w, synced]) => {
+        if (!active) return;
+        setData(dash);
+        setGame(g);
+        setWearable(w?.readings ?? []);
+        setLastSynced(synced);
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : "Could not load dashboard"));
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      let active = true;
-      Promise.all([api.dashboardToday(), api.gamificationStatus().catch(() => null)])
-        .then(([dash, g]) => {
-          if (!active) return;
-          setData(dash);
-          setGame(g);
-        })
-        .catch((err) => setError(err instanceof Error ? err.message : "Could not load dashboard"));
-      return () => {
-        active = false;
-      };
-    }, []),
+      return refresh();
+    }, [refresh]),
   );
+
+  const byType = (t: string) => wearable.find((r) => r.metric_type === t);
+
+  const onSyncNow = async () => {
+    if (Platform.OS !== "android") {
+      setSyncMsg("Health Connect is Android-only in this pass.");
+      return;
+    }
+    setSyncBusy(true);
+    setSyncMsg(null);
+    try {
+      const ok = await healthConnect.initialize();
+      if (!ok) {
+        navigation.navigate("WearableConnect");
+        return;
+      }
+      const granted = await healthConnect.requestPermissions(__DEV__);
+      if (!granted) {
+        navigation.navigate("WearableConnect");
+        return;
+      }
+      let readings = await healthConnect.readRecent();
+      if (readings.length === 0 && __DEV__) {
+        await healthConnect.seedVerificationData();
+        readings = await healthConnect.readRecent();
+      }
+      if (readings.length === 0) {
+        setSyncMsg("No recent Health Connect data found.");
+        return;
+      }
+      const result = await api.wearableSync(readings);
+      const iso = new Date().toISOString();
+      await AsyncStorage.setItem(LAST_SYNC_KEY, iso);
+      setLastSynced(iso);
+      setSyncMsg(`Synced ${result.total} · ${result.inserted} new, ${result.updated} updated`);
+      const recent = await api.wearableRecent();
+      setWearable(recent.readings);
+    } catch (err) {
+      setSyncMsg(err instanceof Error ? err.message : "Sync failed");
+    } finally {
+      setSyncBusy(false);
+    }
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xl }}>
@@ -81,6 +156,40 @@ export default function HomeScreen() {
           <MacroRow label="Fat (g)" logged={data.logged.fat_g} target={data.target.fat_g} />
         </>
       ) : null}
+
+      <Text style={[styles.sectionLabel, { marginTop: spacing.lg }]}>Wearables</Text>
+      <Text style={styles.muted}>
+        Steps today · latest heart rate · latest sleep
+        {lastSynced ? ` · last sync ${new Date(lastSynced).toLocaleString()}` : ""}
+      </Text>
+      <View style={styles.wearableRow}>
+        <Text style={styles.wearableItem}>Steps {formatMetric(byType("steps"), "")}</Text>
+        <Text style={styles.wearableItem}>HR {formatMetric(byType("heart_rate"), "bpm")}</Text>
+        <Text style={styles.wearableItem}>Sleep {formatMetric(byType("sleep"), "h")}</Text>
+      </View>
+      {syncMsg ? <Text style={styles.muted}>{syncMsg}</Text> : null}
+      <Pressable
+        onPress={onSyncNow}
+        style={[styles.secondary, { marginTop: spacing.sm }]}
+        disabled={syncBusy}
+      >
+        {syncBusy ? (
+          <ActivityIndicator color={colors.accent} />
+        ) : (
+          <>
+            <Text style={styles.actionLabel}>Sync Now</Text>
+            <Text style={styles.muted}>Pull from Health Connect (manual)</Text>
+          </>
+        )}
+      </Pressable>
+      <Pressable
+        onPress={() => navigation.navigate("WearableConnect")}
+        style={[styles.secondary, { marginTop: spacing.sm }]}
+      >
+        <Text style={styles.actionLabel}>Connections</Text>
+        <Text style={styles.muted}>Explain permissions before first grant</Text>
+      </Pressable>
+
       <Pressable onPress={() => navigation.navigate("FoodCapture")} style={styles.button}>
         <Text style={styles.buttonLabel}>Log meal</Text>
       </Pressable>
@@ -111,6 +220,9 @@ const styles = StyleSheet.create({
   title: { ...typography.title, marginBottom: spacing.xs },
   muted: { ...typography.muted },
   streakLine: { ...typography.muted, marginTop: spacing.xs, marginBottom: spacing.sm },
+  sectionLabel: { ...typography.heading, fontSize: 16, marginBottom: spacing.xs },
+  wearableRow: { marginTop: spacing.sm, marginBottom: spacing.sm, gap: 4 },
+  wearableItem: { ...typography.body },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 16,

@@ -14,4 +14,5 @@ export type RootStackParamList = {
   ProgressCapture: undefined;
   ProgressCompare: undefined;
   CoachChat: undefined;
+  WearableConnect: undefined;
 };

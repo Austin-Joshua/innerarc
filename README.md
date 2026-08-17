@@ -2,7 +2,7 @@
 
 Closed-loop AI health companion: food recognition, structured workouts, pose-based progress tracking, a retrieval-grounded AI coach, and consistency-based gamification.
 
-**Core tier is implemented** (Modules 1–6). Phase 2 items (multi-item plate segmentation, Health Connect, proactive coaching) are intentionally not built.
+**Core tier is implemented** (Modules 1–6). **Module 7 (Android Health Connect)** is also done. Remaining Phase 2 items (multi-item plate segmentation, Apple HealthKit, proactive coaching) are intentionally not built.
 
 ## Stack
 
@@ -34,6 +34,7 @@ data/photos/    Local object storage for meal/progress images (created at runtim
 | 4 | Server-side pose → waist-to-hip & shoulder-to-waist; auth-scoped photo fetch |
 | 5 | On-demand Gemini coach with log snapshot + safety constraints |
 | 6 | Streaks/badges/points from logging events only (not body-change metrics) |
+| 7 | Android Health Connect — manual Sync Now for steps, heart rate, sleep |
 
 ## Local setup
 
@@ -115,7 +116,10 @@ From `backend/` with `PYTHONPATH=.`:
 python -u scripts/smoke_coach.py
 python -u scripts/smoke_gamification.py
 python -u scripts/smoke_progress_pose.py
+python -u scripts/smoke_wearable.py
 ```
+
+Health Connect (Module 7) needs a **custom Android development build** (`expo-dev-client`); it is not available in Expo Go. Use `npx expo run:android` or a prebuilt debug APK on an emulator/device with the Play Store (Health Connect preinstalled or installable).
 
 ## Schema notes
 
@@ -125,7 +129,7 @@ Migrations follow [requirements/Innerarc_Backend_Schema.md](requirements/Innerar
 - `calorie_targets` — daily calorie/macro targets
 - `dishes.nutrition_confidence` / `match_coverage_pct` — IFCT coverage tiers
 
-`wearable_data` and `reminders` tables exist; there is no Health Connect/HealthKit ingestion or reminder scheduler (Phase 2 / later).
+`wearable_data` is ingested from **Android Health Connect** via manual Sync Now (`POST /wearable/sync`, `GET /wearable/recent`; source `health_connect`; dedupe on `user_id` + `metric_type` + `recorded_at`). Apple HealthKit and background sync are not built. The `reminders` table exists with no reminder scheduler yet.
 
 Progress photos are **not** served via public StaticFiles. Use authenticated `GET /progress/photos/{id}/image` (404 if not owner).
 

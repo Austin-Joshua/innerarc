@@ -28,6 +28,8 @@ node_modules/
 .expo-shared/
 dist/
 web-build/
+android/
+ios/
 *.jks
 *.p8
 *.p12
@@ -64,3 +66,4 @@ Thumbs.db
 # Docker
 postgres-data/
 ml/reports/e2e_food_smoke.json
+m7_home_sync.png

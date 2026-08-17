@@ -35,10 +35,13 @@ functional modules below implement that loop.
 - Gamification Layer — streaks, badges, and points, event-driven off
   logging/completion events only (not visual body-change metrics).
 
-**Phase 2 / not in Core demo**
+- Wearable Integration (Android) — Health Connect manual Sync Now for
+  steps, heart rate, and sleep into `wearable_data` (no background sync;
+  not wired into the AI coach snapshot yet).
 
-- Wearable Integration — Health Connect (Android) and Apple HealthKit
-  (iOS) data ingestion (schema present; ingestion not built).
+**Phase 2 / remaining**
+
+- Apple HealthKit (iOS) wearable ingestion.
 
 - Proactive (scheduled) AI coaching; multi-item plate segmentation.
 
@@ -52,7 +55,7 @@ functional modules below implement that loop.
 | Frontend                | React Native (mobile) or React (web demo)                                      |
 | Database                | PostgreSQL (relational data) with object storage (S3-compatible) for photos    |
 | AI coach                | Gemini API (`google-genai`), with a retrieval step over the user's own logged data |
-| Wearable data           | Android Health Connect; Apple HealthKit (Phase 2)                                  |
+| Wearable data           | Android Health Connect (done); Apple HealthKit (Phase 2)                       |
 | Nutrition data          | USDA FoodData Central API; IFCT 2017 for Indian dishes                             |
 
 **3. Module-by-Module Technical Breakdown**
@@ -104,12 +107,16 @@ intake, for example) rather than only responding to direct questions.
 
 **3.5 Wearable Integration**
 
-Steps, heart rate, sleep, and — on supported devices — blood oxygen are
-read through Android Health Connect and Apple HealthKit rather than
-through custom hardware. Both platforms aggregate data from whatever
-wearable the user already owns (Fitbit, Galaxy Watch, Apple Watch, Mi
-Band, and others), so this integration is the practical route to
-wearable-backed data without a hardware build.
+**Implemented (Android):** steps, heart rate, and sleep are read through
+Health Connect on a manual Sync Now path (custom Expo development
+client; not Expo Go). Readings upsert into `wearable_data` with
+`source = health_connect`, deduped on `(user_id, metric_type,
+recorded_at)`. SpO2 is not specially chased. Background sync and wiring
+into the AI coach snapshot are deferred.
+
+**Not yet built:** Apple HealthKit (iOS). Both platforms are still the
+intended long-term route to aggregate data from whatever wearable the
+user already owns, without custom hardware.
 
 **3.6 Gamification Layer**
 

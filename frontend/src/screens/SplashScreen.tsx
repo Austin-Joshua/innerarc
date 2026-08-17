@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { api, setToken } from "../api";
+import { runModule7Verify } from "../m7Verify";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
 import { getStoredToken } from "../storage";
@@ -17,6 +18,11 @@ export default function SplashScreen() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      if (process.env.EXPO_PUBLIC_M7_VERIFY === "1") {
+        await runModule7Verify();
+        if (!cancelled) navigation.replace("Home");
+        return;
+      }
       try {
         const stored = await getStoredToken();
         if (!stored) {
@@ -40,7 +46,11 @@ export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.wordmark}>Innerarc</Text>
-      <Text style={styles.tagline}>Nutrition, training, and progress — one loop.</Text>
+      <Text style={styles.tagline}>
+        {process.env.EXPO_PUBLIC_M7_VERIFY === "1"
+          ? "Module 7 Health Connect verification…"
+          : "Nutrition, training, and progress — one loop."}
+      </Text>
       <ActivityIndicator color={colors.accent} style={{ marginTop: spacing.lg }} />
       {error ? <Text style={styles.tagline}>{error}</Text> : null}
     </View>
