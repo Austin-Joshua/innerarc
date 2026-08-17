@@ -24,6 +24,21 @@ export default function FoodEditScreen() {
 
   function select(dish: Dish) {
     if (!draft) return;
+    if (draft.mode === "multi") {
+      const index = draft.editingItemIndex ?? 0;
+      const items = draft.items.map((item, i) => {
+        if (i !== index) return item;
+        return {
+          ...item,
+          matched: true,
+          dish,
+          serving_size_g: item.serving_size_g ?? dish.default_serving_g,
+        };
+      });
+      setFoodDraft({ ...draft, items, editingItemIndex: null });
+      navigation.navigate("FoodResult");
+      return;
+    }
     setFoodDraft({ ...draft, dish });
     navigation.navigate("FoodNutrition");
   }

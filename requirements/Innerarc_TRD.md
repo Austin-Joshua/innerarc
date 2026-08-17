@@ -20,7 +20,9 @@ functional modules below implement that loop.
 **Core (implemented in this repository)**
 
 - Food and Nutrition Module — dish classification, ingredient inference,
-  calorie and macro tracking.
+  calorie and macro tracking; plus multi-item plate recognition via
+  Gemini Vision (user-toggled), mapping each item to the dishes table
+  (unmatched items flagged; nutrition never invented by the model).
 
 - Workout Engine — tagged content database and rule-based
   program/individual-workout recommender.
@@ -45,8 +47,6 @@ functional modules below implement that loop.
 - Apple HealthKit (iOS) wearable ingestion — **explicitly blocked** in
   this workspace (no macOS/Xcode); remains in scope, not cancelled.
 
-- Multi-item plate segmentation.
-
 **2. Technology Stack**
 
 | **Layer**               | **Choice**                                                                     |
@@ -59,6 +59,7 @@ functional modules below implement that loop.
 | AI coach                | Gemini API (`google-genai`), with a retrieval step over the user's own logged data |
 | Wearable data           | Android Health Connect (done); Apple HealthKit (blocked: no macOS/Xcode)       |
 | Proactive AI coaching   | Done — Home `GET /coach/nudge`, not cron; logging-gap + adherence+progress     |
+| Multi-item plate        | Done — Gemini Vision (user toggle); dish-table match; no trained detector      |
 | Nutrition data          | USDA FoodData Central API; IFCT 2017 for Indian dishes                             |
 
 **3. Module-by-Module Technical Breakdown**
@@ -71,9 +72,13 @@ is looked up in a recipe/ingredient table to return its typical
 ingredients, then mapped to nutrition data from USDA FoodData Central or
 IFCT 2017. This is implemented as ingredient inference (dish to known
 recipe) rather than pixel-level ingredient detection, which is not
-reliable for cooked or mixed dishes. Where a plate has clearly separated
-items, a secondary object-detection pass (e.g. YOLO) can identify each
-item independently.
+reliable for cooked or mixed dishes. For multi-item plates, a
+user-toggled Gemini Vision path (`POST /food/classify-plate`) lists
+distinct visible items with portion size; each label is matched to the
+dishes table (unmatched items are flagged, not forced). Nutrition still
+comes only from the recipe/nutrition pipeline — never invented by the
+vision model. A custom-trained object detector remains out of scope
+until labeled multi-item data exists.
 
 **3.2 Progress Intelligence Module**
 

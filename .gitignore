@@ -46,6 +46,14 @@ data/photos/
 !data/photos/.gitkeep
 backend/data/photos/
 
+# Module 10 plate smoke fixtures (large Wikimedia downloads; see SOURCES.md)
+backend/scripts/fixtures/plates/*.jpg
+backend/scripts/fixtures/plates/*.jpeg
+backend/scripts/fixtures/plates/*.JPG
+backend/scripts/fixtures/plates/*.png
+!backend/scripts/fixtures/plates/SOURCES.md
+
+
 # ML artifacts (datasets and trained weights are not committed)
 ml/data/raw/
 ml/data/processed/

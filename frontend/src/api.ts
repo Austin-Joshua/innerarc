@@ -64,6 +64,20 @@ export type Dish = {
 
 export type ClassifyResult = Dish & { confidence_score: number; image_url: string };
 
+export type PlateItem = {
+  matched: boolean;
+  suggested_label: string;
+  portion: "small" | "medium" | "large" | string;
+  serving_size_g: number | null;
+  confidence_score: number | null;
+  dish: Dish | null;
+};
+
+export type PlateClassifyResult = {
+  image_url: string;
+  items: PlateItem[];
+};
+
 export type Dashboard = {
   date: string;
   target: { calories: number; protein_g: number; carbs_g: number; fat_g: number; source: string };
@@ -275,13 +289,28 @@ export const api = {
     }
     return request<ClassifyResult>("/food/classify", { method: "POST", body: form });
   },
+  classifyPlate: async (uri: string) => {
+    const form = new FormData();
+    if (uri.startsWith("file:")) {
+      form.append("file", {
+        uri,
+        name: "plate.jpg",
+        type: "image/jpeg",
+      } as unknown as Blob);
+    } else {
+      const blob = await fetch(uri).then((response) => response.blob());
+      form.append("file", blob, "plate.jpg");
+    }
+    return request<PlateClassifyResult>("/food/classify-plate", { method: "POST", body: form });
+  },
   logMeal: (body: {
     dish_id: string;
     confidence_score: number;
     serving_size_g: number;
     image_url: string;
+    logged_at?: string;
   }) =>
-    request<{ gamification?: GamificationState | null }>("/food/logs", {
+    request<{ gamification?: GamificationState | null; logged_at?: string }>("/food/logs", {
       method: "POST",
       body: JSON.stringify(body),
     }),

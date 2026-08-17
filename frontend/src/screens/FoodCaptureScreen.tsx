@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { api } from "../api";
-import { setFoodDraft } from "../foodDraft";
+import { setFoodDraft, singleFromClassify } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
 import { colors, spacing, typography } from "../theme";
 
@@ -33,12 +33,7 @@ export default function FoodCaptureScreen() {
       if (result.canceled || !result.assets[0]) return;
       const uri = result.assets[0].uri;
       const classified = await api.classify(uri);
-      setFoodDraft({
-        dish: classified,
-        confidence_score: classified.confidence_score,
-        image_url: classified.image_url,
-        local_uri: uri,
-      });
+      setFoodDraft(singleFromClassify(classified, uri));
       navigation.navigate("FoodResult");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Classification failed");

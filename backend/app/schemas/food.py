@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -26,11 +27,26 @@ class ClassifyResponse(DishOut):
     image_url: str
 
 
+class PlateItemOut(BaseModel):
+    matched: bool
+    suggested_label: str
+    portion: str
+    serving_size_g: float | None = None
+    confidence_score: float | None = None
+    dish: DishOut | None = None
+
+
+class PlateClassifyResponse(BaseModel):
+    image_url: str
+    items: list[PlateItemOut]
+
+
 class FoodLogCreate(BaseModel):
     dish_id: UUID
     confidence_score: float = Field(ge=0, le=1)
     serving_size_g: float = Field(gt=0)
     image_url: str
+    logged_at: datetime | None = None
 
 
 class FoodLogOut(BaseModel):

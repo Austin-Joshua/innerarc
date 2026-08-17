@@ -9,10 +9,23 @@ from app.config import settings
 from app.db import get_db
 from app.models.food import Dish, DishIngredient, FoodLog
 from app.models.user import User
-from app.schemas.food import ClassifyResponse, DishOut, FoodLogCreate, FoodLogOut, IngredientOut
+from app.schemas.food import (
+    ClassifyResponse,
+    DishOut,
+    FoodLogCreate,
+    FoodLogOut,
+    IngredientOut,
+    PlateClassifyResponse,
+    PlateItemOut,
+)
 from app.security import get_current_user
 from app.services.classifier import classify_image
 from app.services.gamification import apply_event, state_dict
+from app.services.plate_vision import (
+    identify_plate_items,
+    normalize_label,
+    serving_from_portion,
+)
 
 router = APIRouter(prefix="/food", tags=["food"])
 dishes_router = APIRouter(tags=["dishes"])
@@ -69,6 +82,25 @@ def _dish_out(dish: Dish) -> DishOut:
     )
 
 
+def _match_dish(label: str, dishes: list[Dish]) -> Dish | None:
+    """Exact normalized name / class-key match only — never force a nearest neighbor."""
+    needle = normalize_label(label)
+    if not needle:
+        return None
+    by_name = {normalize_label(d.name): d for d in dishes}
+    if needle in by_name:
+        return by_name[needle]
+    for class_key, display in CLASS_TO_NAME.items():
+        aliases = {
+            normalize_label(class_key),
+            normalize_label(class_key.replace("_", " ")),
+            normalize_label(display),
+        }
+        if needle in aliases:
+            return by_name.get(normalize_label(display))
+    return None
+
+
 @router.get("/dishes", response_model=list[DishOut])
 @dishes_router.get("/dishes", response_model=list[DishOut])
 def list_dishes(db: Session = Depends(get_db)) -> list[DishOut]:
@@ -120,6 +152,61 @@ def classify(
     return ClassifyResponse(**body.model_dump(), confidence_score=round(confidence, 4), image_url=str(stored))
 
 
+@router.post("/classify-plate", response_model=PlateClassifyResponse)
+def classify_plate(
+    file: UploadFile = File(...),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> PlateClassifyResponse:
+    photo_root = Path(settings.object_storage_path)
+    photo_root.mkdir(parents=True, exist_ok=True)
+    suffix = Path(file.filename or "plate.jpg").suffix or ".jpg"
+    stored = photo_root / f"{uuid4()}{suffix}"
+    stored.write_bytes(file.file.read())
+
+    dishes = list(
+        db.scalars(
+            select(Dish)
+            .options(selectinload(Dish.dish_ingredients).selectinload(DishIngredient.ingredient))
+            .order_by(Dish.name)
+        ).all()
+    )
+    catalog = [d.name for d in dishes] + list(CLASS_TO_NAME.keys())
+    try:
+        vision_items = identify_plate_items(str(stored), catalog)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail=f"Plate vision error: {exc}") from exc
+
+    items: list[PlateItemOut] = []
+    for vis in vision_items:
+        dish = _match_dish(vis.label, dishes)
+        if dish is None:
+            items.append(
+                PlateItemOut(
+                    matched=False,
+                    suggested_label=vis.label,
+                    portion=vis.portion,
+                    serving_size_g=None,
+                    confidence_score=vis.confidence,
+                    dish=None,
+                )
+            )
+            continue
+        items.append(
+            PlateItemOut(
+                matched=True,
+                suggested_label=vis.label,
+                portion=vis.portion,
+                serving_size_g=serving_from_portion(dish.default_serving_g, vis.portion),
+                confidence_score=vis.confidence,
+                dish=_dish_out(dish),
+            )
+        )
+    return PlateClassifyResponse(image_url=str(stored), items=items)
+
+
 @router.post("/logs", response_model=FoodLogOut)
 def create_log(
     body: FoodLogCreate,
@@ -140,6 +227,8 @@ def create_log(
         confidence_score=body.confidence_score,
         serving_size_g=body.serving_size_g,
     )
+    if body.logged_at is not None:
+        log.logged_at = body.logged_at
     db.add(log)
     db.commit()
     db.refresh(log)
