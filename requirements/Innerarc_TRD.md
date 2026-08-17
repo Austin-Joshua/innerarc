@@ -30,7 +30,8 @@ functional modules below implement that loop.
 
 - AI Coach — on-demand LLM assistant with retrieval over the user's own
   logged data (Gemini), with hard safety constraints on deficit and
-  training volume.
+  training volume; plus proactive Home-triggered nudges (logging gap /
+  adherence+progress patterns, rate-limited in `ai_conversations`).
 
 - Gamification Layer — streaks, badges, and points, event-driven off
   logging/completion events only (not visual body-change metrics).
@@ -41,9 +42,10 @@ functional modules below implement that loop.
 
 **Phase 2 / remaining**
 
-- Apple HealthKit (iOS) wearable ingestion.
+- Apple HealthKit (iOS) wearable ingestion — **explicitly blocked** in
+  this workspace (no macOS/Xcode); remains in scope, not cancelled.
 
-- Proactive (scheduled) AI coaching; multi-item plate segmentation.
+- Multi-item plate segmentation.
 
 **2. Technology Stack**
 
@@ -55,7 +57,8 @@ functional modules below implement that loop.
 | Frontend                | React Native (mobile) or React (web demo)                                      |
 | Database                | PostgreSQL (relational data) with object storage (S3-compatible) for photos    |
 | AI coach                | Gemini API (`google-genai`), with a retrieval step over the user's own logged data |
-| Wearable data           | Android Health Connect (done); Apple HealthKit (Phase 2)                       |
+| Wearable data           | Android Health Connect (done); Apple HealthKit (blocked: no macOS/Xcode)       |
+| Proactive AI coaching   | Done — Home `GET /coach/nudge`, not cron; logging-gap + adherence+progress     |
 | Nutrition data          | USDA FoodData Central API; IFCT 2017 for Indian dishes                             |
 
 **3. Module-by-Module Technical Breakdown**
@@ -100,10 +103,13 @@ augmented with a snapshot of the user's recent logs (meals, workouts,
 progress metrics, and — when available — wearable data) before being
 sent to the model, so responses are grounded in the user's actual data
 rather than generic advice. **Core** ships on-demand chat (Gemini) with
-hard constraints on calorie deficit and training volume. In the Phase 2
-tier, the coach also runs on a schedule to
-proactively surface patterns (adherence drop plus falling protein
-intake, for example) rather than only responding to direct questions.
+hard constraints on calorie deficit and training volume. **Proactive
+coaching is also done:** Home focus calls `GET /coach/nudge` (not a
+cron). Patterns are a logging gap (3+ quiet days) and adherence+progress
+(0 workouts this week vs ≥3/week prior average, gated internally by
+flat/declining pose ratios when ≥2 photos exist). Nudges reuse the same
+snapshot + safety path as chat; adherence prompts describe behavior only,
+never body appearance or ratio trends.
 
 **3.5 Wearable Integration**
 
@@ -114,9 +120,10 @@ client; not Expo Go). Readings upsert into `wearable_data` with
 recorded_at)`. SpO2 is not specially chased. Background sync and wiring
 into the AI coach snapshot are deferred.
 
-**Not yet built:** Apple HealthKit (iOS). Both platforms are still the
-intended long-term route to aggregate data from whatever wearable the
-user already owns, without custom hardware.
+**Blocked (not cancelled):** Apple HealthKit (iOS) — requires macOS and
+Xcode; this Windows workspace cannot complete Module 8. Both platforms
+remain the intended long-term route to aggregate data from whatever
+wearable the user already owns, without custom hardware.
 
 **3.6 Gamification Layer**
 

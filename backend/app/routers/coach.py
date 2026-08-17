@@ -7,7 +7,13 @@ from sqlalchemy.orm import Session, selectinload
 from app.db import get_db
 from app.models.engagement import AIConversation
 from app.models.user import User
-from app.schemas.coach import CoachChatRequest, CoachChatResponse, CoachHistoryItem
+from app.schemas.coach import (
+    CoachChatRequest,
+    CoachChatResponse,
+    CoachHistoryItem,
+    CoachNudgeItem,
+    CoachNudgeResponse,
+)
 from app.security import get_current_user
 from app.services.coach import (
     build_user_snapshot,
@@ -15,6 +21,7 @@ from app.services.coach import (
     safety_precheck,
     snapshot_summary,
 )
+from app.services.proactive import maybe_create_nudge, nudge_payload
 
 router = APIRouter(prefix="/coach", tags=["coach"])
 
@@ -92,3 +99,28 @@ def coach_history(
             )
         )
     return items
+
+
+@router.get("/nudge", response_model=CoachNudgeResponse)
+def coach_nudge(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> CoachNudgeResponse:
+    user = db.scalar(
+        select(User).options(selectinload(User.profile)).where(User.id == user.id)
+    )
+    if user is None:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+
+    row = maybe_create_nudge(db, user)
+    if row is None:
+        return CoachNudgeResponse(nudge=None)
+    payload = nudge_payload(row)
+    return CoachNudgeResponse(
+        nudge=CoachNudgeItem(
+            id=payload["id"],
+            response=payload["response"],
+            created_at=payload["created_at"],
+            pattern_code=payload["pattern_code"],
+        )
+    )

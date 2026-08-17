@@ -25,3 +25,14 @@ class CoachHistoryItem(BaseModel):
     response: str
     created_at: datetime
     safety_precheck_blocked: bool = False
+
+
+class CoachNudgeItem(BaseModel):
+    id: UUID
+    response: str
+    created_at: datetime
+    pattern_code: str
+
+
+class CoachNudgeResponse(BaseModel):
+    nudge: CoachNudgeItem | None = None

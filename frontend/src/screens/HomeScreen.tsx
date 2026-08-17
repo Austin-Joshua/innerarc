@@ -12,13 +12,15 @@ import {
   View,
 } from "react-native";
 
-import { api, Dashboard, GamificationState, WearableReading } from "../api";
+import { api, CoachNudge, Dashboard, GamificationState, WearableReading } from "../api";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
 import { LAST_SYNC_KEY } from "./WearableConnectScreen";
 import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Home">;
+
+const nudgeDismissKey = (nudgeId: string, day: string) => `coach_nudge_dismissed:${day}:${nudgeId}`;
 
 function MacroRow({
   label,
@@ -59,22 +61,33 @@ export default function HomeScreen() {
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [syncBusy, setSyncBusy] = useState(false);
   const [syncMsg, setSyncMsg] = useState<string | null>(null);
+  const [nudge, setNudge] = useState<CoachNudge | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
     let active = true;
+    const utcDay = new Date().toISOString().slice(0, 10);
     Promise.all([
       api.dashboardToday(),
       api.gamificationStatus().catch(() => null),
       api.wearableRecent().catch(() => null),
+      api.coachNudge().catch(() => ({ nudge: null })),
       AsyncStorage.getItem(LAST_SYNC_KEY),
     ])
-      .then(([dash, g, w, synced]) => {
+      .then(async ([dash, g, w, nudgeRes, synced]) => {
         if (!active) return;
         setData(dash);
         setGame(g);
         setWearable(w?.readings ?? []);
         setLastSynced(synced);
+        const next = nudgeRes?.nudge ?? null;
+        if (!next) {
+          setNudge(null);
+          return;
+        }
+        const dismissed = await AsyncStorage.getItem(nudgeDismissKey(next.id, utcDay));
+        if (!active) return;
+        setNudge(dismissed ? null : next);
       })
       .catch((err) => setError(err instanceof Error ? err.message : "Could not load dashboard"));
     return () => {
@@ -87,6 +100,18 @@ export default function HomeScreen() {
       return refresh();
     }, [refresh]),
   );
+
+  const onDismissNudge = async () => {
+    if (!nudge) return;
+    const utcDay = new Date().toISOString().slice(0, 10);
+    const id = nudge.id;
+    setNudge(null);
+    try {
+      await AsyncStorage.setItem(nudgeDismissKey(id, utcDay), "1");
+    } catch {
+      /* local dismiss only — never block navigation */
+    }
+  };
 
   const byType = (t: string) => wearable.find((r) => r.metric_type === t);
 
@@ -143,6 +168,19 @@ export default function HomeScreen() {
         </Text>
       ) : null}
       {error ? <Text style={styles.muted}>{error}</Text> : null}
+
+      {nudge ? (
+        <View style={styles.nudgeCard}>
+          <View style={styles.nudgeHeader}>
+            <Text style={styles.nudgeLabel}>Coach note</Text>
+            <Pressable onPress={onDismissNudge} hitSlop={12} accessibilityRole="button">
+              <Text style={styles.nudgeDismiss}>Dismiss</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.nudgeBody}>{nudge.response}</Text>
+        </View>
+      ) : null}
+
       <View style={styles.card}>
         <Text style={styles.numeral}>{data ? Math.round(data.logged.calories) : "—"}</Text>
         <Text style={styles.muted}>
@@ -223,11 +261,43 @@ const styles = StyleSheet.create({
   sectionLabel: { ...typography.heading, fontSize: 16, marginBottom: spacing.xs },
   wearableRow: { marginTop: spacing.sm, marginBottom: spacing.sm, gap: 4 },
   wearableItem: { ...typography.body },
+  nudgeCard: {
+    marginTop: spacing.sm,
+    marginBottom: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.accentSoft,
+    borderWidth: 2,
+    borderColor: colors.accent,
+    borderRadius: 10,
+  },
+  nudgeHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: spacing.xs,
+  },
+  nudgeLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+    color: colors.accent,
+  },
+  nudgeDismiss: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.textMuted,
+  },
+  nudgeBody: {
+    ...typography.body,
+    fontSize: 15,
+    lineHeight: 22,
+  },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 16,
     padding: spacing.lg,
-    marginTop: spacing.lg,
+    marginTop: spacing.sm,
     marginBottom: spacing.lg,
     borderWidth: 1,
     borderColor: colors.border,

@@ -205,6 +205,17 @@ export type CoachMessage = {
   safety_precheck_blocked: boolean;
 };
 
+export type CoachNudge = {
+  id: string;
+  response: string;
+  created_at: string;
+  pattern_code: string;
+};
+
+export type CoachNudgeResult = {
+  nudge: CoachNudge | null;
+};
+
 export type WearableReading = {
   id: string;
   source: string;
@@ -324,6 +335,7 @@ export const api = {
       body: JSON.stringify({ message }),
     }),
   coachHistory: () => request<CoachMessage[]>("/coach/history"),
+  coachNudge: () => request<CoachNudgeResult>("/coach/nudge"),
   wearableSync: (readings: Array<{ metric_type: string; value: number; recorded_at: string }>) =>
     request<WearableSyncResult>("/wearable/sync", {
       method: "POST",
