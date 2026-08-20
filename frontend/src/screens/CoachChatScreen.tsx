@@ -6,15 +6,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 
 import { api, CoachMessage } from "../api";
+import { Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
+import { colors } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "CoachChat">;
 
@@ -85,122 +85,74 @@ export default function CoachChatScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={88}
-    >
-      <Text style={styles.title}>Coach</Text>
-      <Text style={styles.muted}>
-        Answers use your last 7 days of logged meals, workouts, and targets —
-        not generic advice.
-      </Text>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <FlatList
-        data={bubbles}
-        keyExtractor={(item) => item.key}
-        style={styles.list}
-        contentContainerStyle={{ paddingVertical: spacing.sm }}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.bubble,
-              item.role === "user" ? styles.userBubble : styles.coachBubble,
-            ]}
-          >
-            <Text style={styles.role}>
-              {item.role === "user" ? "You" : "Coach"}
-            </Text>
-            <Text style={styles.body}>{item.text}</Text>
-          </View>
-        )}
-        ListEmptyComponent={
-          <Text style={styles.muted}>Ask about your logged week to start.</Text>
-        }
-      />
-      <View style={styles.composer}>
-        <TextInput
-          value={draft}
-          onChangeText={setDraft}
-          placeholder="Ask your coach…"
-          placeholderTextColor={colors.textMuted}
-          style={styles.input}
-          editable={!busy}
-          multiline
-        />
-        <Pressable
-          onPress={send}
-          disabled={busy || !draft.trim()}
-          style={styles.send}
-        >
-          <Text style={styles.sendLabel}>{busy ? "…" : "Send"}</Text>
-        </Pressable>
-      </View>
-      <Pressable
-        onPress={() => navigation.navigate("Home")}
-        style={styles.home}
+    <Screen scroll={false}>
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={88}
       >
-        <Text style={styles.homeLabel}>Back to Home</Text>
-      </Pressable>
-    </KeyboardAvoidingView>
+        <Text className="mb-xs text-title text-ink">Coach</Text>
+        <Text className="mb-sm text-caption text-muted">
+          Answers use your last 7 days of logged meals, workouts, and targets —
+          not generic advice.
+        </Text>
+        {error ? (
+          <Text className="mb-sm text-caption text-danger">{error}</Text>
+        ) : null}
+        <FlatList
+          data={bubbles}
+          keyExtractor={(item) => item.key}
+          className="flex-1"
+          contentContainerClassName="py-sm"
+          renderItem={({ item }) => (
+            <View
+              className={
+                item.role === "user"
+                  ? "mb-sm self-end rounded-md border border-accent bg-accent-soft p-md"
+                  : "mb-sm self-start rounded-md border border-border bg-white p-md"
+              }
+            >
+              <Text className="mb-xxs text-caption text-muted">
+                {item.role === "user" ? "You" : "Coach"}
+              </Text>
+              <Text className="text-body text-ink">{item.text}</Text>
+            </View>
+          )}
+          ListEmptyComponent={
+            <Text className="text-caption text-muted">
+              Ask about your logged week to start.
+            </Text>
+          }
+        />
+        <View className="mt-sm flex-row items-end gap-sm">
+          <TextInput
+            value={draft}
+            onChangeText={setDraft}
+            placeholder="Ask your coach…"
+            placeholderTextColor={colors.textMuted}
+            className="max-h-[120px] min-h-[44px] flex-1 rounded-md border border-border bg-white px-md py-sm text-ink"
+            editable={!busy}
+            multiline
+          />
+          <Pressable
+            onPress={send}
+            disabled={busy || !draft.trim()}
+            className={`min-h-[44px] justify-center rounded-md bg-accent px-md py-sm ${
+              busy || !draft.trim() ? "opacity-50" : ""
+            }`}
+          >
+            <Text className="font-semibold text-white">
+              {busy ? "…" : "Send"}
+            </Text>
+          </Pressable>
+        </View>
+        <Pressable
+          onPress={() => navigation.navigate("Home")}
+          className="mt-sm items-center p-sm"
+        >
+          <Text className="text-caption text-muted">Back to Home</Text>
+        </Pressable>
+      </KeyboardAvoidingView>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted, marginBottom: spacing.sm },
-  error: { ...typography.muted, color: "#8B3A3A", marginBottom: spacing.sm },
-  list: { flex: 1 },
-  bubble: {
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-    borderWidth: 1,
-  },
-  userBubble: {
-    backgroundColor: colors.accentSoft,
-    borderColor: colors.accent,
-    alignSelf: "flex-end",
-  },
-  coachBubble: {
-    backgroundColor: colors.white,
-    borderColor: colors.border,
-    alignSelf: "flex-start",
-  },
-  role: { ...typography.muted, marginBottom: 4 },
-  body: { ...typography.body },
-  composer: {
-    flexDirection: "row",
-    gap: spacing.sm,
-    alignItems: "flex-end",
-    marginTop: spacing.sm,
-  },
-  input: {
-    flex: 1,
-    minHeight: 44,
-    maxHeight: 120,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.white,
-    color: colors.text,
-  },
-  send: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    minHeight: 44,
-    justifyContent: "center",
-  },
-  sendLabel: { color: colors.white, fontWeight: "600" },
-  home: { marginTop: spacing.sm, alignItems: "center", padding: spacing.sm },
-  homeLabel: { ...typography.muted },
-});

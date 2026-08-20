@@ -1,21 +1,14 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Text, TextInput } from "react-native";
 
 import { api, BadgeEarned } from "../api";
+import { Button, Card, Screen } from "../components/ui";
 import BadgeBanner from "../components/BadgeBanner";
 import FeedbackPrompt from "../components/FeedbackPrompt";
 import { getFoodDraft } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "FoodNutrition">;
 
@@ -158,60 +151,61 @@ export default function FoodNutritionScreen() {
 
   if (!draft) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>No dish selected.</Text>
-      </View>
+      <Screen>
+        <Text className="text-caption text-muted">No dish selected.</Text>
+      </Screen>
     );
   }
 
   if (draft.mode === "multi") {
     if (!scaledMulti || !multiTotals || multiReady.length === 0) {
       return (
-        <View style={styles.container}>
-          <Text style={styles.muted}>
+        <Screen>
+          <Text className="text-caption text-muted">
             No matched plate items yet. Go back and pick dishes for unmatched
             items.
           </Text>
-        </View>
+        </Screen>
       );
     }
     return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: spacing.xl }}
-      >
-        <Text style={styles.title}>Plate nutrition</Text>
+      <Screen>
+        <Text className="text-display font-semibold text-ink">
+          Plate nutrition
+        </Text>
         <BadgeBanner badges={badges} />
         {done ? (
           <>
             <FeedbackPrompt screen="FoodNutrition" />
-            <Pressable
-              style={styles.button}
+            <Button
+              label="Continue"
               onPress={() => {
                 navigation.popToTop();
                 navigation.navigate("Home");
               }}
-            >
-              <Text style={styles.buttonLabel}>Continue</Text>
-            </Pressable>
+            />
           </>
         ) : null}
-        <Text style={styles.muted}>
+        <Text className="mb-sm mt-sm text-caption text-muted">
           Macros come from each matched dish in the catalog. Unmatched items are
           not logged.
         </Text>
         {multiReady.map((item, index) => {
           const row = scaledMulti[index];
           return (
-            <View key={`${item.dish.id}-${index}`} style={styles.itemBlock}>
-              <Text style={styles.label}>{item.dish.name}</Text>
-              <Text style={styles.muted}>
+            <Card key={`${item.dish.id}-${index}`} className="mb-sm mt-sm">
+              <Text className="text-heading font-semibold text-ink">
+                {item.dish.name}
+              </Text>
+              <Text className="mt-xxs text-caption text-muted">
                 Source: {item.dish.nutrition_source}
               </Text>
-              <Text style={styles.label}>Serving size (g)</Text>
+              <Text className="mb-xs mt-md text-caption font-semibold text-ink">
+                Serving size (g)
+              </Text>
               <TextInput
                 keyboardType="numeric"
-                style={styles.input}
+                className="rounded-md border border-border bg-white p-md text-ink"
                 value={servings[index] ?? ""}
                 onChangeText={(value) => {
                   setServings((prev) => {
@@ -221,137 +215,98 @@ export default function FoodNutritionScreen() {
                   });
                 }}
               />
-              <Text style={styles.heading}>
+              <Text className="mt-md text-heading font-semibold text-ink">
                 {Math.round(row.calories)} kcal · P {row.protein.toFixed(1)} · C{" "}
                 {row.carbs.toFixed(1)} · F {row.fat.toFixed(1)}
               </Text>
-            </View>
+            </Card>
           );
         })}
-        <Text style={styles.heading}>
+        <Text className="my-md text-heading font-semibold text-ink">
           Total {Math.round(multiTotals.calories)} kcal · P{" "}
           {multiTotals.protein.toFixed(1)} · C {multiTotals.carbs.toFixed(1)} ·
           F {multiTotals.fat.toFixed(1)}
         </Text>
-        {error ? <Text style={styles.muted}>{error}</Text> : null}
-        {!done ? (
-          <Pressable
-            disabled={busy}
-            onPress={confirmMulti}
-            style={styles.button}
-          >
-            <Text style={styles.buttonLabel}>
-              {busy ? "Saving…" : "Add plate to log"}
-            </Text>
-          </Pressable>
+        {error ? (
+          <Text className="text-caption text-danger">{error}</Text>
         ) : null}
-      </ScrollView>
+        {!done ? (
+          <Button
+            label={busy ? "Saving…" : "Add plate to log"}
+            onPress={confirmMulti}
+            disabled={busy}
+            busy={busy}
+            className="mt-lg"
+          />
+        ) : null}
+      </Screen>
     );
   }
 
   if (!scaledSingle) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>No dish selected.</Text>
-      </View>
+      <Screen>
+        <Text className="text-caption text-muted">No dish selected.</Text>
+      </Screen>
     );
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>{draft.dish.name}</Text>
+    <Screen>
+      <Text className="text-display font-semibold text-ink">
+        {draft.dish.name}
+      </Text>
       <BadgeBanner badges={badges} />
       {done ? (
         <>
           <FeedbackPrompt screen="FoodNutrition" />
-          <Pressable
-            style={styles.button}
+          <Button
+            label="Continue"
             onPress={() => {
               navigation.popToTop();
               navigation.navigate("Home");
             }}
-          >
-            <Text style={styles.buttonLabel}>Continue</Text>
-          </Pressable>
+          />
         </>
       ) : null}
-      <Text style={styles.muted}>
+      <Text className="mt-sm text-caption text-muted">
         Source: {draft.dish.nutrition_source}. Ingredients are from the recipe
         table, not the photo.
       </Text>
-      <Text style={styles.label}>Inferred ingredients</Text>
+      <Text className="mb-xs mt-md text-caption font-semibold text-ink">
+        Inferred ingredients
+      </Text>
       {draft.dish.ingredients.map((item) => (
-        <Text key={item.name} style={styles.muted}>
+        <Text key={item.name} className="mb-xxs text-caption text-muted">
           {item.name} — {item.typical_quantity}
         </Text>
       ))}
-      <Text style={styles.label}>Serving size (g)</Text>
+      <Text className="mb-xs mt-md text-caption font-semibold text-ink">
+        Serving size (g)
+      </Text>
       <TextInput
         keyboardType="numeric"
-        style={styles.input}
+        className="rounded-md border border-border bg-white p-md text-ink"
         value={serving}
         onChangeText={setServing}
       />
-      <Text style={styles.heading}>
+      <Text className="my-md text-heading font-semibold text-ink">
         {Math.round(scaledSingle.calories)} kcal · P{" "}
         {scaledSingle.protein.toFixed(1)} · C {scaledSingle.carbs.toFixed(1)} ·
         F {scaledSingle.fat.toFixed(1)}
       </Text>
-      {error ? <Text style={styles.muted}>{error}</Text> : null}
-      {!done ? (
-        <Pressable
-          disabled={busy}
-          onPress={confirmSingle}
-          style={styles.button}
-        >
-          <Text style={styles.buttonLabel}>
-            {busy ? "Saving…" : "Add to log"}
-          </Text>
-        </Pressable>
+      {error ? (
+        <Text className="text-caption text-danger">{error}</Text>
       ) : null}
-    </ScrollView>
+      {!done ? (
+        <Button
+          label={busy ? "Saving…" : "Add to log"}
+          onPress={confirmSingle}
+          disabled={busy}
+          busy={busy}
+          className="mt-lg"
+        />
+      ) : null}
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title },
-  heading: { ...typography.heading, marginVertical: spacing.md },
-  muted: { ...typography.muted, marginBottom: 4 },
-  label: {
-    ...typography.heading,
-    fontSize: 16,
-    marginTop: spacing.md,
-    marginBottom: spacing.xs,
-  },
-  itemBlock: {
-    marginTop: spacing.sm,
-    marginBottom: spacing.sm,
-    paddingBottom: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.md,
-    color: colors.text,
-  },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.lg,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-});

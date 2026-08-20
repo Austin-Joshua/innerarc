@@ -1,11 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
+import { Pressable, ScrollView, Text } from "react-native";
 
 import { api, ProgramSummary, WorkoutSummary } from "../api";
+import { Card, Screen, SectionHeader } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutLibrary">;
 
@@ -39,9 +39,19 @@ function Chip({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.chip, active && styles.chipActive]}
+      className={
+        active
+          ? "mr-xs rounded-full border border-accent bg-accent-soft px-sm py-xs"
+          : "mr-xs rounded-full border border-border bg-white px-sm py-xs"
+      }
     >
-      <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
+      <Text
+        className={
+          active
+            ? "text-caption font-semibold capitalize text-accent"
+            : "text-caption capitalize text-muted"
+        }
+      >
         {label.replace(/_/g, " ")}
       </Text>
     </Pressable>
@@ -110,22 +120,21 @@ export default function WorkoutLibraryScreen() {
   );
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>Workouts</Text>
-      <Text style={styles.muted}>
+    <Screen>
+      <Text className="text-title text-ink">Workouts</Text>
+      <Text className="mt-xs text-caption text-muted">
         Filter by modality, level, and goal. Equipment is applied from your
         profile on Recommend.
       </Text>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? (
+        <Text className="mt-sm text-caption text-danger">{error}</Text>
+      ) : null}
 
-      <Text style={styles.section}>Modality</Text>
+      <Text className="mb-xs mt-md text-caption text-muted">Modality</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={styles.row}
+        className="mb-sm"
       >
         {MODALITIES.map((item) => (
           <Chip
@@ -136,11 +145,11 @@ export default function WorkoutLibraryScreen() {
           />
         ))}
       </ScrollView>
-      <Text style={styles.section}>Level</Text>
+      <Text className="mb-xs mt-md text-caption text-muted">Level</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={styles.row}
+        className="mb-sm"
       >
         {LEVELS.map((item) => (
           <Chip
@@ -151,11 +160,11 @@ export default function WorkoutLibraryScreen() {
           />
         ))}
       </ScrollView>
-      <Text style={styles.section}>Goal</Text>
+      <Text className="mb-xs mt-md text-caption text-muted">Goal</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={styles.row}
+        className="mb-sm"
       >
         {GOALS.map((item) => (
           <Chip
@@ -169,113 +178,77 @@ export default function WorkoutLibraryScreen() {
 
       {recommended.length ? (
         <>
-          <Text style={styles.heading}>Recommended for you</Text>
+          <SectionHeader title="Recommended for you" />
           {recommended.slice(0, 5).map((workout) => (
             <Pressable
               key={`rec-${workout.id}`}
-              style={styles.card}
               onPress={() =>
                 navigation.navigate("WorkoutDetail", { workoutId: workout.id })
               }
             >
-              <Text style={styles.cardTitle}>{workout.name}</Text>
-              <Text style={styles.muted}>
-                {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
-                {workout.exercise_count} moves
-              </Text>
+              <Card className="mb-sm">
+                <Text className="mb-xxs text-body font-semibold text-ink">
+                  {workout.name}
+                </Text>
+                <Text className="text-caption text-muted">
+                  {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
+                  {workout.exercise_count} moves
+                </Text>
+              </Card>
             </Pressable>
           ))}
         </>
       ) : null}
 
-      <Text style={styles.heading}>Programs</Text>
+      <SectionHeader title="Programs" />
       {programs.map((program) => (
         <Pressable
           key={program.id}
-          style={styles.card}
           onPress={() =>
             navigation.navigate("ProgramDetail", { programId: program.id })
           }
         >
-          <Text style={styles.cardTitle}>{program.name}</Text>
-          <Text style={styles.muted}>
-            {program.duration_weeks} weeks · {program.workout_count} sessions
-          </Text>
+          <Card className="mb-sm">
+            <Text className="mb-xxs text-body font-semibold text-ink">
+              {program.name}
+            </Text>
+            <Text className="text-caption text-muted">
+              {program.duration_weeks} weeks · {program.workout_count} sessions
+            </Text>
+          </Card>
         </Pressable>
       ))}
 
-      <Text style={styles.heading}>Library</Text>
+      <SectionHeader title="Library" />
       {workouts.map((workout) => (
         <Pressable
           key={workout.id}
-          style={[
-            styles.card,
-            suggestedIds.has(workout.id) && styles.cardSuggested,
-          ]}
           onPress={() =>
             navigation.navigate("WorkoutDetail", { workoutId: workout.id })
           }
         >
-          <Text style={styles.cardTitle}>{workout.name}</Text>
-          <Text style={styles.muted}>
-            {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
-            {workout.goal_tags[0]?.replace(/_/g, " ")}
-          </Text>
+          <Card
+            className={
+              suggestedIds.has(workout.id)
+                ? "mb-sm border-accent bg-accent-soft"
+                : "mb-sm"
+            }
+          >
+            <Text className="mb-xxs text-body font-semibold text-ink">
+              {workout.name}
+            </Text>
+            <Text className="text-caption text-muted">
+              {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
+              {workout.goal_tags[0]?.replace(/_/g, " ")}
+            </Text>
+          </Card>
         </Pressable>
       ))}
       {!workouts.length ? (
-        <Text style={styles.muted}>No workouts match these filters.</Text>
+        <Text className="text-caption text-muted">
+          No workouts match these filters.
+        </Text>
       ) : null}
-    </ScrollView>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted },
-  error: { ...typography.muted, color: "#8B3A3A", marginTop: spacing.sm },
-  section: {
-    ...typography.muted,
-    marginTop: spacing.md,
-    marginBottom: spacing.xs,
-  },
-  row: { marginBottom: spacing.sm },
-  chip: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 8,
-    marginRight: spacing.xs,
-    borderRadius: 10,
-  },
-  chipActive: {
-    backgroundColor: colors.accentSoft,
-    borderColor: colors.accent,
-  },
-  chipLabel: { ...typography.muted, textTransform: "capitalize" },
-  chipLabelActive: { color: colors.accent, fontWeight: "600" },
-  heading: {
-    ...typography.heading,
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-  },
-  card: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  cardSuggested: {
-    borderColor: colors.accent,
-    backgroundColor: colors.accentSoft,
-  },
-  cardTitle: { ...typography.body, fontWeight: "600", marginBottom: 4 },
-});

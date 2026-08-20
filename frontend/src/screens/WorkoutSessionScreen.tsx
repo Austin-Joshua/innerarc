@@ -1,13 +1,13 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Text } from "react-native";
 
 import { api, BadgeEarned, WorkoutDetail } from "../api";
 import BadgeBanner from "../components/BadgeBanner";
 import FeedbackPrompt from "../components/FeedbackPrompt";
+import { Button, Card, Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutSession">;
 type R = RouteProp<RootStackParamList, "WorkoutSession">;
@@ -123,110 +123,79 @@ export default function WorkoutSessionScreen() {
 
   if (error && !workout) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>{error}</Text>
-      </View>
+      <Screen scroll={false} confirmLeaveHome={false}>
+        <Text className="text-caption text-muted">{error}</Text>
+      </Screen>
     );
   }
   if (!workout || !current) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>Loading session…</Text>
-      </View>
+      <Screen scroll={false} confirmLeaveHome={false}>
+        <Text className="text-caption text-muted">Loading session…</Text>
+      </Screen>
     );
   }
 
   if (doneMessage) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Session complete</Text>
-        <Text style={styles.heading}>{workout.name}</Text>
-        <Text style={styles.muted}>{doneMessage}</Text>
+      <Screen scroll={false} confirmLeaveHome={false}>
+        <Text className="text-title text-ink">Session complete</Text>
+        <Text className="mb-sm mt-xs text-heading text-ink">{workout.name}</Text>
+        <Text className="text-caption text-muted">{doneMessage}</Text>
         <BadgeBanner badges={badges} />
         <FeedbackPrompt screen="WorkoutSession" />
-        {error ? <Text style={styles.muted}>{error}</Text> : null}
-        <Pressable
-          style={styles.button}
+        {error ? (
+          <Text className="mt-sm text-caption text-muted">{error}</Text>
+        ) : null}
+        <Button
+          label="Back to Home"
+          className="mt-lg"
           onPress={() => navigation.navigate("Home")}
-        >
-          <Text style={styles.buttonLabel}>Back to Home</Text>
-        </Pressable>
-      </View>
+        />
+      </Screen>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.muted}>{progressLabel}</Text>
-      <Text style={styles.title}>{current.name}</Text>
-      <Text style={styles.body}>{current.description}</Text>
-      <Text style={styles.meta}>
+    <Screen scroll={false}>
+      <Text className="text-caption text-muted">{progressLabel}</Text>
+      <Text className="mb-sm mt-sm text-title text-ink">{current.name}</Text>
+      <Text className="mb-sm text-body text-ink">{current.description}</Text>
+      <Text className="mb-lg text-heading text-ink">
         {current.reps != null
           ? `${current.reps} reps`
           : `${current.duration_seconds ?? 45}s hold`}
       </Text>
 
-      <View style={styles.timerBlock}>
-        <Text style={styles.phase}>{phase === "work" ? "Work" : "Rest"}</Text>
-        <Text style={styles.timer}>{secondsLeft}s</Text>
-      </View>
+      <Card className="my-lg items-center py-xl">
+        <Text className="mb-xs text-caption uppercase text-muted">
+          {phase === "work" ? "Work" : "Rest"}
+        </Text>
+        <Text className="text-[56px] font-bold text-ink">{secondsLeft}s</Text>
+      </Card>
 
       {next ? (
-        <Text style={styles.muted}>Up next: {next.name}</Text>
+        <Text className="text-caption text-muted">Up next: {next.name}</Text>
       ) : (
-        <Text style={styles.muted}>Final exercise</Text>
+        <Text className="text-caption text-muted">Final exercise</Text>
       )}
 
       {phase === "work" ? (
-        <Pressable style={styles.button} onPress={markSetComplete}>
-          <Text style={styles.buttonLabel}>Complete set</Text>
-        </Pressable>
+        <Button
+          label="Complete set"
+          className="mt-lg"
+          onPress={markSetComplete}
+        />
       ) : (
-        <Pressable style={styles.button} onPress={skipRest}>
-          <Text style={styles.buttonLabel}>Skip rest / next</Text>
-        </Pressable>
+        <Button
+          label="Skip rest / next"
+          className="mt-lg"
+          onPress={skipRest}
+        />
       )}
-      {logging ? <Text style={styles.muted}>Saving log…</Text> : null}
-    </View>
+      {logging ? (
+        <Text className="mt-sm text-caption text-muted">Saving log…</Text>
+      ) : null}
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: {
-    ...typography.title,
-    marginTop: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  heading: { ...typography.heading, marginBottom: spacing.sm },
-  body: { ...typography.body, marginBottom: spacing.sm },
-  muted: { ...typography.muted },
-  meta: { ...typography.heading, marginBottom: spacing.lg },
-  timerBlock: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    paddingVertical: spacing.xl,
-    alignItems: "center",
-    marginVertical: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  phase: {
-    ...typography.muted,
-    marginBottom: spacing.xs,
-    textTransform: "uppercase",
-  },
-  timer: { fontSize: 56, fontWeight: "700", color: colors.text },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.lg,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-});

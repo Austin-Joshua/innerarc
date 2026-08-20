@@ -36,7 +36,54 @@ const navTheme = {
 
 export default function RootNavigator() {
   return (
-    <NavigationContainer theme={navTheme}>
+    <NavigationContainer
+      theme={navTheme}
+      linking={
+        __DEV__
+          ? {
+              prefixes: [
+                "http://localhost:8090",
+                "http://localhost:8089",
+                "http://localhost:8088",
+                "http://localhost:8087",
+                "http://localhost:8086",
+                "http://localhost:8085",
+                "http://localhost:8084",
+                "http://localhost:8083",
+                "http://localhost:8082",
+                "http://localhost:8081",
+                "http://127.0.0.1:8087",
+                "http://127.0.0.1:8086",
+                "http://127.0.0.1:8085",
+                "http://127.0.0.1:8084",
+                "http://127.0.0.1:8083",
+                "http://127.0.0.1:8082",
+                "http://127.0.0.1:8081",
+              ],
+              config: {
+                screens: {
+                  Splash: "",
+                  Home: "home",
+                  Auth: "auth",
+                  Onboarding: "onboarding",
+                  FoodCapture: "food-capture",
+                  FoodResult: "food-result",
+                  FoodEdit: "food-edit",
+                  FoodNutrition: "food-nutrition",
+                  WorkoutLibrary: "workouts",
+                  WorkoutDetail: "workout/:workoutId",
+                  ProgramDetail: "program/:programId",
+                  WorkoutSession: "session/:workoutId",
+                  ProgressCapture: "progress",
+                  ProgressCompare: "compare",
+                  CoachChat: "coach",
+                  WearableConnect: "connections",
+                },
+              },
+            }
+          : undefined
+      }
+    >
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{
@@ -64,7 +111,7 @@ export default function RootNavigator() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "Innerarc" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="FoodCapture"

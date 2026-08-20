@@ -2,15 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 
 import {
   api,
@@ -19,40 +11,16 @@ import {
   GamificationState,
   WearableReading,
 } from "../api";
+import { CalorieDonut, MacroBarChart } from "../charts/NutritionCharts";
+import { Badge, Button, Card, Screen, SectionHeader, StatCard } from "../components/ui";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
 import { LAST_SYNC_KEY } from "./WearableConnectScreen";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Home">;
 
 const nudgeDismissKey = (nudgeId: string, day: string) =>
   `coach_nudge_dismissed:${day}:${nudgeId}`;
-
-function MacroRow({
-  label,
-  logged,
-  target,
-}: {
-  label: string;
-  logged: number;
-  target: number;
-}) {
-  const ratio = target > 0 ? Math.min(1, logged / target) : 0;
-  return (
-    <View style={styles.macro}>
-      <View style={styles.macroHeader}>
-        <Text style={styles.macroLabel}>{label}</Text>
-        <Text style={styles.numeralSmall}>
-          {Math.round(logged)} / {target}
-        </Text>
-      </View>
-      <View style={styles.track}>
-        <View style={[styles.fill, { width: `${ratio * 100}%` }]} />
-      </View>
-    </View>
-  );
-}
 
 function formatMetric(
   reading: WearableReading | undefined,
@@ -64,6 +32,25 @@ function formatMetric(
       ? reading.value.toFixed(1)
       : Math.round(reading.value);
   return `${v} ${unit}`;
+}
+
+function NavCard({
+  title,
+  caption,
+  onPress,
+}: {
+  title: string;
+  caption: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} className="mt-sm">
+      <Card>
+        <Text className="text-heading font-semibold text-ink">{title}</Text>
+        <Text className="mt-xxs text-caption text-muted">{caption}</Text>
+      </Card>
+    </Pressable>
+  );
 }
 
 export default function HomeScreen() {
@@ -178,232 +165,116 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>Today</Text>
-      <Text style={styles.muted}>
+    <Screen>
+      <Text className="mb-xs text-display font-semibold text-ink">Today</Text>
+      <Text className="text-caption text-muted">
         Logged vs your calculated target{data ? ` (${data.target.source})` : ""}
         .
       </Text>
       {game ? (
-        <Text style={styles.streakLine}>
+        <Text className="mb-sm mt-xs text-caption text-muted">
           {game.streak_count} day streak · {game.points} pts
         </Text>
       ) : null}
-      {error ? <Text style={styles.muted}>{error}</Text> : null}
+      {error ? (
+        <Text className="text-caption text-danger">{error}</Text>
+      ) : null}
 
       {nudge ? (
-        <View style={styles.nudgeCard}>
-          <View style={styles.nudgeHeader}>
-            <Text style={styles.nudgeLabel}>Coach note</Text>
+        <Card className="mb-md mt-sm border-2 border-accent bg-accent-soft">
+          <View className="mb-xs flex-row items-center justify-between">
+            <Badge label="Coach note" tone="accent" />
             <Pressable
               onPress={onDismissNudge}
               hitSlop={12}
               accessibilityRole="button"
             >
-              <Text style={styles.nudgeDismiss}>Dismiss</Text>
+              <Text className="text-caption font-semibold text-muted">
+                Dismiss
+              </Text>
             </Pressable>
           </View>
-          <Text style={styles.nudgeBody}>{nudge.response}</Text>
-        </View>
+          <Text className="text-body text-ink">{nudge.response}</Text>
+        </Card>
       ) : null}
 
-      <View style={styles.card}>
-        <Text style={styles.numeral}>
-          {data ? Math.round(data.logged.calories) : "—"}
-        </Text>
-        <Text style={styles.muted}>
-          of {data ? data.target.calories : "—"} kcal
-        </Text>
-      </View>
-      {data ? (
-        <>
-          <MacroRow
-            label="Protein (g)"
-            logged={data.logged.protein_g}
-            target={data.target.protein_g}
-          />
-          <MacroRow
-            label="Carbs (g)"
-            logged={data.logged.carbs_g}
-            target={data.target.carbs_g}
-          />
-          <MacroRow
-            label="Fat (g)"
-            logged={data.logged.fat_g}
-            target={data.target.fat_g}
-          />
-        </>
-      ) : null}
-
-      <Text style={[styles.sectionLabel, { marginTop: spacing.lg }]}>
-        Wearables
-      </Text>
-      <Text style={styles.muted}>
-        Steps today · latest heart rate · latest sleep
-        {lastSynced
-          ? ` · last sync ${new Date(lastSynced).toLocaleString()}`
-          : ""}
-      </Text>
-      <View style={styles.wearableRow}>
-        <Text style={styles.wearableItem}>
-          Steps {formatMetric(byType("steps"), "")}
-        </Text>
-        <Text style={styles.wearableItem}>
-          HR {formatMetric(byType("heart_rate"), "bpm")}
-        </Text>
-        <Text style={styles.wearableItem}>
-          Sleep {formatMetric(byType("sleep"), "h")}
-        </Text>
-      </View>
-      {syncMsg ? <Text style={styles.muted}>{syncMsg}</Text> : null}
-      <Pressable
-        onPress={onSyncNow}
-        style={[styles.secondary, { marginTop: spacing.sm }]}
-        disabled={syncBusy}
-      >
-        {syncBusy ? (
-          <ActivityIndicator color={colors.accent} />
+      <Card className="mb-lg mt-sm bg-surface">
+        {data ? (
+          <CalorieDonut data={data} />
         ) : (
           <>
-            <Text style={styles.actionLabel}>Sync Now</Text>
-            <Text style={styles.muted}>Pull from Health Connect (manual)</Text>
+            <Text className="mb-xs text-numeral font-bold text-ink">—</Text>
+            <Text className="text-caption text-muted">of — kcal</Text>
           </>
         )}
-      </Pressable>
-      <Pressable
-        onPress={() => navigation.navigate("WearableConnect")}
-        style={[styles.secondary, { marginTop: spacing.sm }]}
-      >
-        <Text style={styles.actionLabel}>Connections</Text>
-        <Text style={styles.muted}>Explain permissions before first grant</Text>
-      </Pressable>
+      </Card>
+      {data ? <MacroBarChart data={data} /> : null}
 
-      <Pressable
+      <SectionHeader
+        title="Wearables"
+        caption={`Steps today · latest heart rate · latest sleep${
+          lastSynced
+            ? ` · last sync ${new Date(lastSynced).toLocaleString()}`
+            : ""
+        }`}
+      />
+      <View className="mb-sm mt-sm flex-row gap-sm">
+        <StatCard
+          value={formatMetric(byType("steps"), "")}
+          label="Steps"
+          className="flex-1"
+        />
+        <StatCard
+          value={formatMetric(byType("heart_rate"), "bpm")}
+          label="HR"
+          className="flex-1"
+        />
+        <StatCard
+          value={formatMetric(byType("sleep"), "h")}
+          label="Sleep"
+          className="flex-1"
+        />
+      </View>
+      {syncMsg ? (
+        <Text className="text-caption text-muted">{syncMsg}</Text>
+      ) : null}
+      <Button
+        label="Sync Now"
+        variant="secondary"
+        onPress={onSyncNow}
+        disabled={syncBusy}
+        busy={syncBusy}
+        className="mt-sm"
+      />
+      <Text className="mb-sm mt-xxs text-center text-caption text-muted">
+        Pull from Health Connect (manual)
+      </Text>
+      <NavCard
+        title="Connections"
+        caption="Explain permissions before first grant"
+        onPress={() => navigation.navigate("WearableConnect")}
+      />
+
+      <Button
+        label="Log meal"
         onPress={() => navigation.navigate("FoodCapture")}
-        style={styles.button}
-      >
-        <Text style={styles.buttonLabel}>Log meal</Text>
-      </Pressable>
-      <Pressable
+        className="mb-sm mt-md"
+      />
+      <NavCard
+        title="Workouts"
+        caption="Library, programs, and session player"
         onPress={() => navigation.navigate("WorkoutLibrary")}
-        style={styles.secondary}
-      >
-        <Text style={styles.actionLabel}>Workouts</Text>
-        <Text style={styles.muted}>Library, programs, and session player</Text>
-      </Pressable>
-      <Pressable
+      />
+      <NavCard
+        title="Progress"
+        caption="Pose ratios and side-by-side check-in"
         onPress={() => navigation.navigate("ProgressCapture")}
-        style={[styles.secondary, { marginTop: spacing.sm }]}
-      >
-        <Text style={styles.actionLabel}>Progress</Text>
-        <Text style={styles.muted}>Pose ratios and side-by-side check-in</Text>
-      </Pressable>
-      <Pressable
+      />
+      <NavCard
+        title="Coach"
+        caption="Ask about your logged week"
         onPress={() => navigation.navigate("CoachChat")}
-        style={[styles.secondary, { marginTop: spacing.sm }]}
-      >
-        <Text style={styles.actionLabel}>Coach</Text>
-        <Text style={styles.muted}>Ask about your logged week</Text>
-      </Pressable>
-    </ScrollView>
+      />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted },
-  streakLine: {
-    ...typography.muted,
-    marginTop: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  sectionLabel: {
-    ...typography.heading,
-    fontSize: 16,
-    marginBottom: spacing.xs,
-  },
-  wearableRow: { marginTop: spacing.sm, marginBottom: spacing.sm, gap: 4 },
-  wearableItem: { ...typography.body },
-  nudgeCard: {
-    marginTop: spacing.sm,
-    marginBottom: spacing.md,
-    padding: spacing.md,
-    backgroundColor: colors.accentSoft,
-    borderWidth: 2,
-    borderColor: colors.accent,
-    borderRadius: 10,
-  },
-  nudgeHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: spacing.xs,
-  },
-  nudgeLabel: {
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 0.6,
-    textTransform: "uppercase",
-    color: colors.accent,
-  },
-  nudgeDismiss: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.textMuted,
-  },
-  nudgeBody: {
-    ...typography.body,
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: spacing.lg,
-    marginTop: spacing.sm,
-    marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  numeral: { ...typography.numeral, marginBottom: spacing.xs },
-  numeralSmall: { fontWeight: "700", color: colors.text },
-  macro: { marginBottom: spacing.md },
-  macroHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  macroLabel: { ...typography.body },
-  track: {
-    height: 8,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    overflow: "hidden",
-  },
-  fill: { height: 8, backgroundColor: colors.accent, borderRadius: 8 },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  secondary: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  actionLabel: { ...typography.heading, fontSize: 16, marginBottom: 2 },
-});

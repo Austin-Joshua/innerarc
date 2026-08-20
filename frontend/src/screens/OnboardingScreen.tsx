@@ -1,18 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 
 import { api } from "../api";
+import { Button, Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Onboarding">;
 
@@ -43,20 +36,31 @@ function Chips<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <View style={styles.chips}>
-      {options.map((option) => (
-        <Pressable
-          key={option}
-          onPress={() => onChange(option)}
-          style={[styles.chip, value === option && styles.chipOn]}
-        >
-          <Text
-            style={[styles.chipLabel, value === option && styles.chipLabelOn]}
+    <View className="flex-row flex-wrap gap-xs">
+      {options.map((option) => {
+        const selected = value === option;
+        return (
+          <Pressable
+            key={option}
+            onPress={() => onChange(option)}
+            className={
+              selected
+                ? "rounded-full border border-accent bg-accent-soft px-sm py-xs"
+                : "rounded-full border border-border bg-white px-sm py-xs"
+            }
           >
-            {option.replaceAll("_", " ")}
-          </Text>
-        </Pressable>
-      ))}
+            <Text
+              className={
+                selected
+                  ? "text-caption font-semibold text-ink"
+                  : "text-caption text-muted"
+              }
+            >
+              {option.replaceAll("_", " ")}
+            </Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
@@ -91,84 +95,51 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>Your starting point</Text>
-      <Text style={styles.muted}>
+    <Screen>
+      <Text className="mb-xs text-display font-semibold text-ink">
+        Your starting point
+      </Text>
+      <Text className="mb-lg text-caption text-muted">
         Used only to set calorie targets — not to gate workouts.
       </Text>
-      <Text style={styles.label}>Height (cm)</Text>
+      <Text className="mb-xs mt-sm text-caption font-semibold text-ink">
+        Height (cm)
+      </Text>
       <TextInput
         keyboardType="numeric"
-        style={styles.input}
+        className="rounded-md border border-border bg-white p-md text-ink"
         value={height}
         onChangeText={setHeight}
       />
-      <Text style={styles.label}>Weight (kg)</Text>
+      <Text className="mb-xs mt-sm text-caption font-semibold text-ink">
+        Weight (kg)
+      </Text>
       <TextInput
         keyboardType="numeric"
-        style={styles.input}
+        className="rounded-md border border-border bg-white p-md text-ink"
         value={weight}
         onChangeText={setWeight}
       />
-      <Text style={styles.label}>Biological sex</Text>
+      <Text className="mb-xs mt-sm text-caption font-semibold text-ink">
+        Biological sex
+      </Text>
       <Chips options={SEX} value={sex} onChange={setSex} />
-      <Text style={styles.label}>Goal</Text>
+      <Text className="mb-xs mt-sm text-caption font-semibold text-ink">
+        Goal
+      </Text>
       <Chips options={GOALS} value={goal} onChange={setGoal} />
-      <Text style={styles.label}>Activity</Text>
+      <Text className="mb-xs mt-sm text-caption font-semibold text-ink">
+        Activity
+      </Text>
       <Chips options={ACTIVITY} value={activity} onChange={setActivity} />
-      <Text style={styles.label}>Equipment</Text>
+      <Text className="mb-xs mt-sm text-caption font-semibold text-ink">
+        Equipment
+      </Text>
       <Chips options={EQUIPMENT} value={equipment} onChange={setEquipment} />
-      {error ? <Text style={styles.muted}>{error}</Text> : null}
-      <Pressable onPress={save} style={styles.button}>
-        <Text style={styles.buttonLabel}>Continue</Text>
-      </Pressable>
-    </ScrollView>
+      {error ? (
+        <Text className="mt-sm text-caption text-danger">{error}</Text>
+      ) : null}
+      <Button label="Continue" onPress={save} className="mt-lg" />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted, marginBottom: spacing.lg },
-  label: {
-    ...typography.heading,
-    fontSize: 14,
-    marginTop: spacing.sm,
-    marginBottom: spacing.xs,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.md,
-    color: colors.text,
-  },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  chip: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: colors.white,
-  },
-  chipOn: { backgroundColor: colors.accentSoft, borderColor: colors.accent },
-  chipLabel: { color: colors.textMuted, fontSize: 13 },
-  chipLabelOn: { color: colors.text, fontWeight: "600" },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.lg,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-});

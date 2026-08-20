@@ -1,61 +1,18 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Text, View } from "react-native";
 
-import { api, ProgressPhoto } from "../api";
+import { api } from "../api";
+import { RatioTrendChart } from "../charts/RatioTrendChart";
 import BadgeBanner from "../components/BadgeBanner";
+import { Button, Card, Screen } from "../components/ui";
 import { getProgressDraft } from "../progressDraft";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "ProgressCompare">;
 
-function RatioTrend({ photos }: { photos: ProgressPhoto[] }) {
-  if (!photos.length) {
-    return (
-      <Text style={styles.muted}>
-        Trend appears after your first successful check-in.
-      </Text>
-    );
-  }
-  const wh = photos.map((p) => p.ratios.waist_to_hip);
-  const sw = photos.map((p) => p.ratios.shoulder_to_waist);
-  const max = Math.max(...wh, ...sw, 0.01);
-  const min = Math.min(...wh, ...sw);
-  const span = Math.max(max - min, 0.05);
-
-  return (
-    <View>
-      <Text style={styles.sectionLabel}>Ratio trend (pose estimates)</Text>
-      <View style={styles.chart}>
-        {photos.map((photo, index) => {
-          const whH = ((photo.ratios.waist_to_hip - min) / span) * 72 + 8;
-          const swH = ((photo.ratios.shoulder_to_waist - min) / span) * 72 + 8;
-          return (
-            <View key={photo.id} style={styles.barCol}>
-              <View style={styles.barPair}>
-                <View style={[styles.bar, styles.barWh, { height: whH }]} />
-                <View style={[styles.bar, styles.barSw, { height: swH }]} />
-              </View>
-              <Text style={styles.barLabel}>{index + 1}</Text>
-            </View>
-          );
-        })}
-      </View>
-      <Text style={styles.muted}>
-        Teal: waist-to-hip · Dark: shoulder-to-waist
-      </Text>
-    </View>
-  );
-}
+const photoStyle = { width: "100%" as const, height: 180 };
 
 export default function ProgressCompareScreen() {
   const navigation = useNavigation<Nav>();
@@ -94,53 +51,53 @@ export default function ProgressCompareScreen() {
 
   if (!draft) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>
+      <Screen>
+        <Text className="text-caption text-muted">
           No progress result yet. Capture a photo first.
         </Text>
-        <Pressable
-          style={styles.button}
+        <Button
+          label="Capture"
+          className="mt-lg"
           onPress={() => navigation.navigate("ProgressCapture")}
-        >
-          <Text style={styles.buttonLabel}>Capture</Text>
-        </Pressable>
-      </View>
+        />
+      </Screen>
     );
   }
 
   const { current, previous, consistency, milestone, trend } = draft;
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>{previous ? "Compare" : "Baseline"}</Text>
+    <Screen>
+      <Text className="mb-xs text-title text-ink">
+        {previous ? "Compare" : "Baseline"}
+      </Text>
       <BadgeBanner badges={draft.gamification?.new_badges ?? []} />
-      <Text style={styles.muted}>
+      <Text className="text-caption text-muted">
         Relative pose ratios only — not body-fat percentage or a clinical
         measure.
       </Text>
       {milestone.streak_count > 0 ? (
-        <Text style={styles.muted}>
+        <Text className="mt-xs text-caption text-muted">
           Current streak: {milestone.streak_count} days
         </Text>
       ) : null}
 
-      <View style={styles.row}>
-        <View style={styles.half}>
-          <Text style={styles.sectionLabel}>
-            {previous ? "Previous" : "Previous"}
-          </Text>
+      <View className="mt-md flex-row gap-sm">
+        <View className="flex-1">
+          <Text className="mb-xs mt-sm text-caption text-muted">Previous</Text>
           {previous && prevUri ? (
             <Image
               source={{ uri: prevUri }}
-              style={styles.photo}
+              style={photoStyle}
+              className="rounded-md border border-border bg-surface"
               accessibilityLabel="Previous progress photo"
             />
           ) : (
-            <View style={[styles.photo, styles.placeholder]}>
-              <Text style={styles.muted}>
+            <View
+              style={photoStyle}
+              className="items-center justify-center rounded-md border border-border bg-surface p-sm"
+            >
+              <Text className="text-center text-caption text-muted">
                 {previous
                   ? "Loading…"
                   : "Baseline — next photo unlocks compare"}
@@ -148,162 +105,89 @@ export default function ProgressCompareScreen() {
             </View>
           )}
         </View>
-        <View style={styles.half}>
-          <Text style={styles.sectionLabel}>Current</Text>
+        <View className="flex-1">
+          <Text className="mb-xs mt-sm text-caption text-muted">Current</Text>
           {currUri ? (
             <Image
               source={{ uri: currUri }}
-              style={styles.photo}
+              style={photoStyle}
+              className="rounded-md border border-border bg-surface"
               accessibilityLabel="Current progress photo"
             />
           ) : (
-            <View style={[styles.photo, styles.placeholder]}>
-              <Text style={styles.muted}>Loading…</Text>
+            <View
+              style={photoStyle}
+              className="items-center justify-center rounded-md border border-border bg-surface p-sm"
+            >
+              <Text className="text-caption text-muted">Loading…</Text>
             </View>
           )}
         </View>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.sectionLabel}>Current ratios</Text>
-        <Text style={styles.ratioLine}>
+      <Card className="mt-lg">
+        <Text className="mb-xs text-caption text-muted">Current ratios</Text>
+        <Text className="mb-xxs text-body text-ink">
           Waist-to-hip{" "}
-          <Text style={styles.numeral}>
+          <Text className="font-bold text-ink">
             {current.ratios.waist_to_hip.toFixed(3)}
           </Text>
         </Text>
-        <Text style={styles.ratioLine}>
+        <Text className="mb-xxs text-body text-ink">
           Shoulder-to-waist{" "}
-          <Text style={styles.numeral}>
+          <Text className="font-bold text-ink">
             {current.ratios.shoulder_to_waist.toFixed(3)}
           </Text>
         </Text>
         {current.mean_visibility != null ? (
-          <Text style={styles.muted}>
+          <Text className="text-caption text-muted">
             Landmark confidence {Math.round(current.mean_visibility * 100)}%
           </Text>
         ) : null}
-      </View>
+      </Card>
 
-      <RatioTrend photos={trend} />
+      <RatioTrendChart photos={trend} />
 
-      <View style={styles.card}>
-        <Text style={styles.sectionLabel}>Consistency (same period)</Text>
-        <Text style={styles.ratioLine}>
+      <Card className="mt-lg">
+        <Text className="mb-xs text-caption text-muted">
+          Consistency (same period)
+        </Text>
+        <Text className="mb-xxs text-body text-ink">
           Workouts logged{" "}
-          <Text style={styles.numeral}>{consistency.workouts_logged}</Text>
+          <Text className="font-bold text-ink">
+            {consistency.workouts_logged}
+          </Text>
         </Text>
-        <Text style={styles.ratioLine}>
+        <Text className="mb-xxs text-body text-ink">
           Days active{" "}
-          <Text style={styles.numeral}>{consistency.days_active}</Text>
+          <Text className="font-bold text-ink">{consistency.days_active}</Text>
         </Text>
-        <Text style={styles.muted}>
+        <Text className="text-caption text-muted">
           Visual change is never the only signal — meals and sessions count too.
         </Text>
-      </View>
+      </Card>
 
       {milestone.message ? (
-        <View style={styles.milestone}>
-          <Text style={styles.sectionLabel}>Milestone</Text>
-          <Text style={styles.body}>{milestone.message}</Text>
-          <Text style={styles.muted}>
+        <Card className="mt-lg border-accent bg-accent-soft">
+          <Text className="mb-xs text-caption text-muted">Milestone</Text>
+          <Text className="mt-xs text-body text-ink">{milestone.message}</Text>
+          <Text className="mt-xs text-caption text-muted">
             Streak data (when available): {milestone.streak_count}
           </Text>
-        </View>
+        </Card>
       ) : null}
 
-      <Pressable
-        style={styles.button}
+      <Button
+        label="Back to Home"
+        className="mt-lg"
         onPress={() => navigation.navigate("Home")}
-      >
-        <Text style={styles.buttonLabel}>Back to Home</Text>
-      </Pressable>
-      <Pressable
-        style={styles.secondary}
+      />
+      <Button
+        label="New check-in"
+        variant="secondary"
+        className="mt-sm"
         onPress={() => navigation.navigate("ProgressCapture")}
-      >
-        <Text style={styles.secondaryLabel}>New check-in</Text>
-      </Pressable>
-    </ScrollView>
+      />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted },
-  body: { ...typography.body, marginTop: spacing.xs },
-  sectionLabel: {
-    ...typography.muted,
-    marginBottom: spacing.xs,
-    marginTop: spacing.sm,
-  },
-  row: { flexDirection: "row", gap: spacing.sm, marginTop: spacing.md },
-  half: { flex: 1 },
-  photo: {
-    width: "100%",
-    height: 180,
-    borderRadius: 12,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  placeholder: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: spacing.sm,
-  },
-  card: {
-    marginTop: spacing.lg,
-    padding: spacing.md,
-    borderRadius: 12,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  ratioLine: { ...typography.body, marginBottom: 4 },
-  numeral: { fontWeight: "700", color: colors.text },
-  chart: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    height: 100,
-    gap: 8,
-    marginVertical: spacing.sm,
-  },
-  barCol: { alignItems: "center", flex: 1 },
-  barPair: { flexDirection: "row", alignItems: "flex-end", gap: 3, height: 88 },
-  bar: { width: 10, borderRadius: 4 },
-  barWh: { backgroundColor: colors.accent },
-  barSw: { backgroundColor: colors.text },
-  barLabel: { ...typography.muted, fontSize: 12, marginTop: 4 },
-  milestone: {
-    marginTop: spacing.lg,
-    padding: spacing.md,
-    borderRadius: 12,
-    backgroundColor: colors.accentSoft,
-    borderWidth: 1,
-    borderColor: colors.accent,
-  },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.lg,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  secondary: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  secondaryLabel: { color: colors.text, fontWeight: "600", fontSize: 16 },
-});

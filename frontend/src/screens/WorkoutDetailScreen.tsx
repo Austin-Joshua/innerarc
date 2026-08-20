@@ -1,11 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Text } from "react-native";
 
 import { api, WorkoutDetail } from "../api";
+import { Button, Card, Screen, SectionHeader } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutDetail">;
 type R = RouteProp<RootStackParamList, "WorkoutDetail">;
@@ -27,44 +27,41 @@ export default function WorkoutDetailScreen() {
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>{error}</Text>
-      </View>
+      <Screen>
+        <Text className="text-caption text-muted">{error}</Text>
+      </Screen>
     );
   }
   if (!workout) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>Loading…</Text>
-      </View>
+      <Screen>
+        <Text className="text-caption text-muted">Loading…</Text>
+      </Screen>
     );
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>{workout.name}</Text>
-      <Text style={styles.muted}>
+    <Screen>
+      <Text className="text-title text-ink">{workout.name}</Text>
+      <Text className="mt-xs text-caption text-muted">
         {workout.modality.replace(/_/g, " ")} · {workout.level} · needs{" "}
         {workout.equipment_needed.join(", ").replace(/_/g, " ")}
       </Text>
-      <Text style={styles.goals}>
+      <Text className="mb-lg mt-sm text-body text-ink">
         {workout.goal_tags.map((g) => g.replace(/_/g, " ")).join(" · ")}
       </Text>
 
-      <Text style={styles.heading}>Exercises</Text>
+      <SectionHeader title="Exercises" className="mt-0" />
       {workout.exercises.map((item) => (
-        <View
+        <Card
           key={`${item.exercise_id}-${item.order_index}`}
-          style={styles.card}
+          className="mb-sm"
         >
-          <Text style={styles.cardTitle}>
+          <Text className="mb-xxs text-body font-semibold text-ink">
             {item.order_index + 1}. {item.name}
           </Text>
-          <Text style={styles.muted}>{item.description}</Text>
-          <Text style={styles.meta}>
+          <Text className="text-caption text-muted">{item.description}</Text>
+          <Text className="mt-xs text-caption text-muted">
             {item.sets} sets
             {item.reps != null ? ` · ${item.reps} reps` : ""}
             {item.duration_seconds != null
@@ -72,11 +69,12 @@ export default function WorkoutDetailScreen() {
               : ""}
             {` · ${item.rest_seconds}s rest`}
           </Text>
-        </View>
+        </Card>
       ))}
 
-      <Pressable
-        style={styles.button}
+      <Button
+        label="Start session"
+        className="mt-lg"
         onPress={() => {
           api.logEvent({
             event_type: "task_started",
@@ -85,43 +83,7 @@ export default function WorkoutDetailScreen() {
           });
           navigation.navigate("WorkoutSession", { workoutId: workout.id });
         }}
-      >
-        <Text style={styles.buttonLabel}>Start session</Text>
-      </Pressable>
-    </ScrollView>
+      />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted },
-  goals: {
-    ...typography.body,
-    marginTop: spacing.sm,
-    marginBottom: spacing.lg,
-  },
-  heading: { ...typography.heading, marginBottom: spacing.sm },
-  card: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  cardTitle: { ...typography.body, fontWeight: "600", marginBottom: 4 },
-  meta: { ...typography.muted, marginTop: spacing.xs },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.lg,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-});

@@ -1,11 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text } from "react-native";
 
 import { api, ProgramDetail } from "../api";
+import { Card, Screen, SectionHeader } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "ProgramDetail">;
 type R = RouteProp<RootStackParamList, "ProgramDetail">;
@@ -27,71 +27,46 @@ export default function ProgramDetailScreen() {
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>{error}</Text>
-      </View>
+      <Screen>
+        <Text className="text-caption text-muted">{error}</Text>
+      </Screen>
     );
   }
   if (!program) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.muted}>Loading…</Text>
-      </View>
+      <Screen>
+        <Text className="text-caption text-muted">Loading…</Text>
+      </Screen>
     );
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: spacing.xl }}
-    >
-      <Text style={styles.title}>{program.name}</Text>
-      <Text style={styles.muted}>
+    <Screen>
+      <Text className="text-title text-ink">{program.name}</Text>
+      <Text className="mt-xs text-caption text-muted">
         {program.duration_weeks} weeks · {program.workout_count} sessions
       </Text>
-      <Text style={styles.heading}>Schedule</Text>
+      <SectionHeader title="Schedule" />
       {program.schedule.map((slot) => (
         <Pressable
           key={`${slot.week_number}-${slot.day_number}-${slot.workout.id}`}
-          style={styles.card}
           onPress={() =>
             navigation.navigate("WorkoutDetail", { workoutId: slot.workout.id })
           }
         >
-          <Text style={styles.meta}>
-            Week {slot.week_number} · Day {slot.day_number}
-          </Text>
-          <Text style={styles.cardTitle}>{slot.workout.name}</Text>
-          <Text style={styles.muted}>
-            {slot.workout.modality.replace(/_/g, " ")} · {slot.workout.level}
-          </Text>
+          <Card className="mb-sm">
+            <Text className="mb-xxs text-caption text-muted">
+              Week {slot.week_number} · Day {slot.day_number}
+            </Text>
+            <Text className="mb-xxs text-body font-semibold text-ink">
+              {slot.workout.name}
+            </Text>
+            <Text className="text-caption text-muted">
+              {slot.workout.modality.replace(/_/g, " ")} · {slot.workout.level}
+            </Text>
+          </Card>
         </Pressable>
       ))}
-    </ScrollView>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  muted: { ...typography.muted },
-  heading: {
-    ...typography.heading,
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-  },
-  card: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  meta: { ...typography.muted, marginBottom: 4 },
-  cardTitle: { ...typography.body, fontWeight: "600", marginBottom: 4 },
-});

@@ -1,11 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Text } from "react-native";
 
 import { api } from "../api";
+import { Button, Screen } from "../components/ui";
 import { setProgressDraft } from "../progressDraft";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 import { usePhotoCapture } from "../usePhotoCapture";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "ProgressCapture">;
@@ -32,59 +32,33 @@ export default function ProgressCaptureScreen() {
   });
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Progress photo</Text>
-      <Text style={styles.muted}>
+    <Screen scroll={false} className="justify-center">
+      <Text className="mb-xs text-title text-ink">Progress photo</Text>
+      <Text className="mb-lg text-caption text-muted">
         Capture a full-body standing photo. We estimate pose landmarks and two
         relative ratios — not body composition or clinical measures.
       </Text>
-      {busy ? <Text style={styles.heading}>Estimating pose…</Text> : null}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Pressable
-        disabled={busy}
-        onPress={() => pick(true)}
-        style={styles.button}
-      >
-        <Text style={styles.buttonLabel}>
-          {busy ? "Working…" : "Take photo"}
+      {busy ? (
+        <Text className="mb-md mt-md text-heading text-ink">
+          Estimating pose…
         </Text>
-      </Pressable>
-      <Pressable
+      ) : null}
+      {error ? (
+        <Text className="mb-md text-caption text-danger">{error}</Text>
+      ) : null}
+      <Button
+        label={busy ? "Working…" : "Take photo"}
+        onPress={() => pick(true)}
         disabled={busy}
+        busy={busy}
+        className="mb-sm"
+      />
+      <Button
+        label="Choose from library"
+        variant="secondary"
         onPress={() => pick(false)}
-        style={styles.secondary}
-      >
-        <Text style={styles.secondaryLabel}>Choose from library</Text>
-      </Pressable>
-    </View>
+        disabled={busy}
+      />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.xs },
-  heading: { ...typography.heading, marginVertical: spacing.md },
-  muted: { ...typography.muted, marginBottom: spacing.lg },
-  error: { ...typography.muted, color: "#8B3A3A", marginBottom: spacing.md },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginBottom: spacing.sm,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  secondary: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  secondaryLabel: { color: colors.text, fontWeight: "600", fontSize: 16 },
-});

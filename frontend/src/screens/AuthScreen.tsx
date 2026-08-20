@@ -1,12 +1,13 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Text, TextInput } from "react-native";
 
 import { api, setToken } from "../api";
+import { Button, Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
 import { storeToken } from "../storage";
-import { colors, spacing, typography } from "../theme";
+import { colors } from "../theme";
 
 type AuthNav = NativeStackNavigationProp<RootStackParamList, "Auth">;
 
@@ -37,9 +38,9 @@ export default function AuthScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.body}>
+    <Screen scroll={false} className="justify-center">
+      <Text className="mb-sm text-display font-semibold text-ink">Welcome</Text>
+      <Text className="mb-lg text-body text-muted">
         Create an account or sign in to log meals.
       </Text>
       <TextInput
@@ -47,7 +48,7 @@ export default function AuthScreen() {
         keyboardType="email-address"
         placeholder="Email"
         placeholderTextColor={colors.textMuted}
-        style={styles.input}
+        className="mb-sm rounded-md border border-border bg-white p-md text-ink"
         value={email}
         onChangeText={setEmail}
       />
@@ -55,62 +56,27 @@ export default function AuthScreen() {
         secureTextEntry
         placeholder="Password (8+ characters)"
         placeholderTextColor={colors.textMuted}
-        style={styles.input}
+        className="mb-sm rounded-md border border-border bg-white p-md text-ink"
         value={password}
         onChangeText={setPassword}
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Pressable
-        disabled={busy}
+      {error ? (
+        <Text className="mb-sm text-caption text-danger">{error}</Text>
+      ) : null}
+      <Button
+        label={busy ? "Working…" : "Create account"}
         onPress={() => submit("register")}
-        style={styles.button}
-      >
-        <Text style={styles.buttonLabel}>
-          {busy ? "Working…" : "Create account"}
-        </Text>
-      </Pressable>
-      <Pressable
         disabled={busy}
+        busy={busy}
+        className="mt-sm"
+      />
+      <Button
+        label="Sign in"
+        variant="secondary"
         onPress={() => submit("login")}
-        style={styles.secondary}
-      >
-        <Text style={styles.secondaryLabel}>Sign in</Text>
-      </Pressable>
-    </View>
+        disabled={busy}
+        className="mt-sm"
+      />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-    justifyContent: "center",
-  },
-  title: { ...typography.title, marginBottom: spacing.sm },
-  body: {
-    ...typography.body,
-    color: colors.textMuted,
-    marginBottom: spacing.lg,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-    color: colors.text,
-  },
-  error: { color: colors.text, marginBottom: spacing.sm },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.sm,
-  },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-  secondary: { paddingVertical: spacing.md, alignItems: "center" },
-  secondaryLabel: { color: colors.accent, fontWeight: "600" },
-});

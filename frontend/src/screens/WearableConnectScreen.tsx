@@ -2,19 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Platform, Text } from "react-native";
 
 import { api } from "../api";
+import { Button, Screen } from "../components/ui";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WearableConnect">;
 
@@ -28,13 +21,13 @@ export default function WearableConnectScreen() {
 
   if (Platform.OS !== "android") {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Health Connect</Text>
-        <Text style={styles.body}>
+      <Screen>
+        <Text className="mb-md text-title text-ink">Health Connect</Text>
+        <Text className="mb-md text-body text-ink">
           Wearable sync is Android Health Connect only in this pass. Apple
           HealthKit is deferred.
         </Text>
-      </View>
+      </Screen>
     );
   }
 
@@ -80,51 +73,30 @@ export default function WearableConnectScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Connect Health Connect</Text>
-      <Text style={styles.body}>
+    <Screen>
+      <Text className="mb-md text-title text-ink">Connect Health Connect</Text>
+      <Text className="mb-md text-body text-ink">
         Innerarc reads steps, heart rate, and sleep from Android Health Connect
         so you can see them on Home. Data stays on your device until you tap
         Sync — nothing is shared automatically.
       </Text>
-      <Text style={styles.body}>
+      <Text className="mb-md text-body text-ink">
         Next, Android will ask for Health Connect read access. You can revoke
         this anytime in system settings.
       </Text>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      {message ? <Text style={styles.muted}>{message}</Text> : null}
-      <Pressable
-        style={[styles.button, busy && styles.buttonDisabled]}
+      {error ? (
+        <Text className="mb-sm text-caption text-danger">{error}</Text>
+      ) : null}
+      {message ? (
+        <Text className="mb-sm text-caption text-muted">{message}</Text>
+      ) : null}
+      <Button
+        label="Continue to permissions"
+        className="mt-lg"
         onPress={onContinue}
         disabled={busy}
-      >
-        {busy ? (
-          <ActivityIndicator color={colors.white} />
-        ) : (
-          <Text style={styles.buttonLabel}>Continue to permissions</Text>
-        )}
-      </Pressable>
-    </View>
+        busy={busy}
+      />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.md },
-  body: { ...typography.body, marginBottom: spacing.md, lineHeight: 22 },
-  muted: { ...typography.muted, marginBottom: spacing.sm },
-  error: { color: "#B42318", marginBottom: spacing.sm },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.lg,
-  },
-  buttonDisabled: { opacity: 0.7 },
-  buttonLabel: { color: colors.white, fontWeight: "600", fontSize: 16 },
-});

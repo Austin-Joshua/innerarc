@@ -1,18 +1,13 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-} from "react-native";
+import { Pressable, Text, TextInput } from "react-native";
 
 import { api, Dish } from "../api";
+import { Card, Screen } from "../components/ui";
 import { getFoodDraft, setFoodDraft } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
+import { colors } from "../theme";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "FoodEdit">;
 
@@ -23,10 +18,18 @@ export default function FoodEditScreen() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
+    let active = true;
     api
       .dishes()
-      .then(setDishes)
-      .catch(() => setDishes([]));
+      .then((list) => {
+        if (active) setDishes(list);
+      })
+      .catch(() => {
+        if (active) setDishes([]);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const filtered = dishes.filter((dish) =>
@@ -55,53 +58,29 @@ export default function FoodEditScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Correct the dish</Text>
+    <Screen>
+      <Text className="mb-md text-display font-semibold text-ink">
+        Correct the dish
+      </Text>
       <TextInput
         placeholder="Search dishes"
         placeholderTextColor={colors.textMuted}
-        style={styles.input}
+        className="mb-md rounded-md border border-border bg-white p-md text-ink"
         value={query}
         onChangeText={setQuery}
       />
       {filtered.map((dish) => (
-        <Pressable
-          key={dish.id}
-          onPress={() => select(dish)}
-          style={styles.row}
-        >
-          <Text style={styles.name}>{dish.name}</Text>
-          <Text style={styles.muted}>{dish.nutrition_source}</Text>
+        <Pressable key={dish.id} onPress={() => select(dish)} className="mb-sm">
+          <Card>
+            <Text className="text-heading font-semibold text-ink">
+              {dish.name}
+            </Text>
+            <Text className="mt-xxs text-caption text-muted">
+              {dish.nutrition_source}
+            </Text>
+          </Card>
         </Pressable>
       ))}
-    </ScrollView>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.xl,
-  },
-  title: { ...typography.title, marginBottom: spacing.md },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-    color: colors.text,
-  },
-  row: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  name: { ...typography.heading, fontSize: 16 },
-  muted: { ...typography.muted },
-});
