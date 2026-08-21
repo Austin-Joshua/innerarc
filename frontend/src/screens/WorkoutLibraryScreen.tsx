@@ -42,7 +42,7 @@ function Chip({
       className={
         active
           ? "mr-xs rounded-full border border-accent bg-accent-soft px-sm py-xs"
-          : "mr-xs rounded-full border border-border bg-white px-sm py-xs"
+          : "mr-xs rounded-full border border-border bg-elevated px-sm py-xs"
       }
     >
       <Text

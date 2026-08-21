@@ -7,12 +7,13 @@ import { api, Dish } from "../api";
 import { Card, Screen } from "../components/ui";
 import { getFoodDraft, setFoodDraft } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
-import { colors } from "../theme";
+import { useTheme } from "../ThemeProvider";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "FoodEdit">;
 
 export default function FoodEditScreen() {
   const navigation = useNavigation<Nav>();
+  const { colors } = useTheme();
   const draft = getFoodDraft();
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [query, setQuery] = useState("");
@@ -65,7 +66,7 @@ export default function FoodEditScreen() {
       <TextInput
         placeholder="Search dishes"
         placeholderTextColor={colors.textMuted}
-        className="mb-md rounded-md border border-border bg-white p-md text-ink"
+        className="mb-md rounded-md border border-border bg-elevated p-md text-ink"
         value={query}
         onChangeText={setQuery}
       />

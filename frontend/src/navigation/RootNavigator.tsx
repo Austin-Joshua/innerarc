@@ -1,6 +1,7 @@
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import { useTheme } from "../ThemeProvider";
 import AuthScreen from "../screens/AuthScreen";
 import CoachChatScreen from "../screens/CoachChatScreen";
 import FoodCaptureScreen from "../screens/FoodCaptureScreen";
@@ -17,24 +18,25 @@ import WorkoutDetailScreen from "../screens/WorkoutDetailScreen";
 import WorkoutLibraryScreen from "../screens/WorkoutLibraryScreen";
 import WearableConnectScreen from "../screens/WearableConnectScreen";
 import WorkoutSessionScreen from "../screens/WorkoutSessionScreen";
-import { colors } from "../theme";
 import { RootStackParamList } from "./types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: colors.background,
-    card: colors.background,
-    text: colors.text,
-    border: colors.border,
-    primary: colors.accent,
-  },
-};
-
 export default function RootNavigator() {
+  const { colors, isDark } = useTheme();
+  const base = isDark ? DarkTheme : DefaultTheme;
+  const navTheme = {
+    ...base,
+    colors: {
+      ...base.colors,
+      background: colors.background,
+      card: colors.background,
+      text: colors.text,
+      border: colors.border,
+      primary: colors.accent,
+    },
+  };
+
   return (
     <NavigationContainer
       theme={navTheme}
@@ -42,6 +44,10 @@ export default function RootNavigator() {
         __DEV__
           ? {
               prefixes: [
+                "http://localhost:8094",
+                "http://localhost:8093",
+                "http://localhost:8092",
+                "http://localhost:8091",
                 "http://localhost:8090",
                 "http://localhost:8089",
                 "http://localhost:8088",
@@ -52,6 +58,11 @@ export default function RootNavigator() {
                 "http://localhost:8083",
                 "http://localhost:8082",
                 "http://localhost:8081",
+                "http://127.0.0.1:8094",
+                "http://127.0.0.1:8093",
+                "http://127.0.0.1:8092",
+                "http://127.0.0.1:8091",
+                "http://127.0.0.1:8090",
                 "http://127.0.0.1:8087",
                 "http://127.0.0.1:8086",
                 "http://127.0.0.1:8085",

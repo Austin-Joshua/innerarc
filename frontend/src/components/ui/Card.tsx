@@ -8,7 +8,7 @@ type CardProps = PropsWithChildren<{
 export function Card({ children, className = "" }: CardProps) {
   return (
     <View
-      className={`rounded-lg border border-border bg-white p-md ${className}`.trim()}
+      className={`rounded-lg border border-border bg-elevated p-md ${className}`.trim()}
     >
       {children}
     </View>

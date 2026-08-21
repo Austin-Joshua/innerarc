@@ -64,15 +64,14 @@ export default function ProgressCompareScreen() {
     );
   }
 
-  const { current, previous, consistency, milestone, trend } = draft;
+  const { current, previous, consistency, milestone, trend, gamification } =
+    draft;
 
   return (
     <Screen>
-      <Text className="mb-xs text-title text-ink">
-        {previous ? "Compare" : "Baseline"}
-      </Text>
-      <BadgeBanner badges={draft.gamification?.new_badges ?? []} />
-      <Text className="text-caption text-muted">
+      <BadgeBanner badges={gamification?.new_badges ?? []} />
+      <Text className="text-title text-ink">Compare</Text>
+      <Text className="mt-xs text-caption text-muted">
         Relative pose ratios only — not body-fat percentage or a clinical
         measure.
       </Text>

@@ -14,7 +14,7 @@ import {
 import { api, CoachMessage } from "../api";
 import { Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
-import { colors } from "../theme";
+import { useTheme } from "../ThemeProvider";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "CoachChat">;
 
@@ -26,6 +26,7 @@ type Bubble = {
 
 export default function CoachChatScreen() {
   const navigation = useNavigation<Nav>();
+  const { colors } = useTheme();
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -109,7 +110,7 @@ export default function CoachChatScreen() {
               className={
                 item.role === "user"
                   ? "mb-sm self-end rounded-md border border-accent bg-accent-soft p-md"
-                  : "mb-sm self-start rounded-md border border-border bg-white p-md"
+                  : "mb-sm self-start rounded-md border border-border bg-elevated p-md"
               }
             >
               <Text className="mb-xxs text-caption text-muted">
@@ -130,7 +131,7 @@ export default function CoachChatScreen() {
             onChangeText={setDraft}
             placeholder="Ask your coach…"
             placeholderTextColor={colors.textMuted}
-            className="max-h-[120px] min-h-[44px] flex-1 rounded-md border border-border bg-white px-md py-sm text-ink"
+            className="max-h-[120px] min-h-[44px] flex-1 rounded-md border border-border bg-elevated px-md py-sm text-ink"
             editable={!busy}
             multiline
           />

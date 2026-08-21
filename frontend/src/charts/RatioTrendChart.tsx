@@ -2,9 +2,12 @@ import { Text, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
 import { ProgressPhoto } from "../api";
-import { colors, spacing, typography } from "../theme";
+import { useTheme } from "../ThemeProvider";
+import { spacing } from "../theme";
 
 export function RatioTrendChart({ photos }: { photos: ProgressPhoto[] }) {
+  const { colors, typography } = useTheme();
+
   if (!photos.length) {
     return (
       <Text style={typography.muted}>
@@ -32,7 +35,13 @@ export function RatioTrendChart({ photos }: { photos: ProgressPhoto[] }) {
 
   return (
     <View>
-      <Text style={{ ...typography.muted, marginBottom: spacing.xs, marginTop: spacing.sm }}>
+      <Text
+        style={{
+          ...typography.muted,
+          marginBottom: spacing.xs,
+          marginTop: spacing.sm,
+        }}
+      >
         Ratio trend (pose estimates)
       </Text>
       <LineChart
@@ -62,7 +71,7 @@ export function RatioTrendChart({ photos }: { photos: ProgressPhoto[] }) {
         backgroundColor={colors.background}
       />
       <Text style={typography.muted}>
-        Teal: waist-to-hip · Dark: shoulder-to-waist
+        Accent: waist-to-hip · Ink: shoulder-to-waist
       </Text>
     </View>
   );

@@ -7,12 +7,13 @@ import { api, setToken } from "../api";
 import { Button, Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
 import { storeToken } from "../storage";
-import { colors } from "../theme";
+import { useTheme } from "../ThemeProvider";
 
 type AuthNav = NativeStackNavigationProp<RootStackParamList, "Auth">;
 
 export default function AuthScreen() {
   const navigation = useNavigation<AuthNav>();
+  const { colors } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +49,7 @@ export default function AuthScreen() {
         keyboardType="email-address"
         placeholder="Email"
         placeholderTextColor={colors.textMuted}
-        className="mb-sm rounded-md border border-border bg-white p-md text-ink"
+        className="mb-sm rounded-md border border-border bg-elevated p-md text-ink"
         value={email}
         onChangeText={setEmail}
       />
@@ -56,7 +57,7 @@ export default function AuthScreen() {
         secureTextEntry
         placeholder="Password (8+ characters)"
         placeholderTextColor={colors.textMuted}
-        className="mb-sm rounded-md border border-border bg-white p-md text-ink"
+        className="mb-sm rounded-md border border-border bg-elevated p-md text-ink"
         value={password}
         onChangeText={setPassword}
       />

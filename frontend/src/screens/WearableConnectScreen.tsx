@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Platform, Text } from "react-native";
 
 import { api } from "../api";
-import { Button, Screen } from "../components/ui";
+import { AppearanceToggle, Button, Screen } from "../components/ui";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
 
@@ -27,6 +27,7 @@ export default function WearableConnectScreen() {
           Wearable sync is Android Health Connect only in this pass. Apple
           HealthKit is deferred.
         </Text>
+        <AppearanceToggle />
       </Screen>
     );
   }
@@ -97,6 +98,10 @@ export default function WearableConnectScreen() {
         disabled={busy}
         busy={busy}
       />
+      <Text className="mb-sm mt-xl text-heading font-semibold text-ink">
+        Settings
+      </Text>
+      <AppearanceToggle />
     </Screen>
   );
 }

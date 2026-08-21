@@ -205,7 +205,7 @@ export default function FoodNutritionScreen() {
               </Text>
               <TextInput
                 keyboardType="numeric"
-                className="rounded-md border border-border bg-white p-md text-ink"
+                className="rounded-md border border-border bg-elevated p-md text-ink"
                 value={servings[index] ?? ""}
                 onChangeText={(value) => {
                   setServings((prev) => {
@@ -286,7 +286,7 @@ export default function FoodNutritionScreen() {
       </Text>
       <TextInput
         keyboardType="numeric"
-        className="rounded-md border border-border bg-white p-md text-ink"
+        className="rounded-md border border-border bg-elevated p-md text-ink"
         value={serving}
         onChangeText={setServing}
       />

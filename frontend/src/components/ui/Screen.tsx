@@ -108,8 +108,8 @@ export function Screen({
       />
       {body}
       {leaveOpen ? (
-        <View className="absolute inset-0 z-50 items-center justify-center bg-ink/40 px-xl">
-          <Card className="w-full">
+        <View className="absolute inset-0 z-50 items-center justify-center bg-black/50 px-xl">
+          <Card className="w-full bg-elevated">
             <Text className="text-heading text-ink">Leave workout?</Text>
             <Text className="mb-lg mt-xs text-body text-muted">
               Your session progress will be lost.

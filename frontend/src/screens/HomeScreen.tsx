@@ -11,7 +11,7 @@ import {
   GamificationState,
   WearableReading,
 } from "../api";
-import { CalorieDonut, MacroBarChart } from "../charts/NutritionCharts";
+import { HomeProgressRings } from "../charts/HomeProgressRings";
 import { Badge, Button, Card, Screen, SectionHeader, StatCard } from "../components/ui";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
@@ -200,7 +200,10 @@ export default function HomeScreen() {
 
       <Card className="mb-lg mt-sm bg-surface">
         {data ? (
-          <CalorieDonut data={data} />
+          <HomeProgressRings
+            data={data}
+            streakCount={game?.streak_count ?? 0}
+          />
         ) : (
           <>
             <Text className="mb-xs text-numeral font-bold text-ink">—</Text>
@@ -208,7 +211,6 @@ export default function HomeScreen() {
           </>
         )}
       </Card>
-      {data ? <MacroBarChart data={data} /> : null}
 
       <SectionHeader
         title="Wearables"

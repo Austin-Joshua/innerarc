@@ -46,7 +46,7 @@ function Chips<T extends string>({
             className={
               selected
                 ? "rounded-full border border-accent bg-accent-soft px-sm py-xs"
-                : "rounded-full border border-border bg-white px-sm py-xs"
+                : "rounded-full border border-border bg-elevated px-sm py-xs"
             }
           >
             <Text
@@ -107,7 +107,7 @@ export default function OnboardingScreen() {
       </Text>
       <TextInput
         keyboardType="numeric"
-        className="rounded-md border border-border bg-white p-md text-ink"
+        className="rounded-md border border-border bg-elevated p-md text-ink"
         value={height}
         onChangeText={setHeight}
       />
@@ -116,7 +116,7 @@ export default function OnboardingScreen() {
       </Text>
       <TextInput
         keyboardType="numeric"
-        className="rounded-md border border-border bg-white p-md text-ink"
+        className="rounded-md border border-border bg-elevated p-md text-ink"
         value={weight}
         onChangeText={setWeight}
       />

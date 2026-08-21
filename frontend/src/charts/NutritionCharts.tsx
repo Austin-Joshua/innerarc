@@ -2,9 +2,11 @@ import { Text, View } from "react-native";
 import { BarChart, PieChart } from "react-native-gifted-charts";
 
 import { Dashboard } from "../api";
-import { colors, spacing, typography } from "../theme";
+import { useTheme } from "../ThemeProvider";
+import { spacing } from "../theme";
 
 export function CalorieDonut({ data }: { data: Dashboard }) {
+  const { colors, typography } = useTheme();
   const logged = Math.max(0, data.logged.calories);
   const remaining = Math.max(0, data.remaining.calories);
   const pieData =
@@ -31,7 +33,9 @@ export function CalorieDonut({ data }: { data: Dashboard }) {
         backgroundColor={colors.background}
         centerLabelComponent={() => (
           <View style={{ alignItems: "center" }}>
-            <Text style={typography.numeral}>{Math.round(data.logged.calories)}</Text>
+            <Text style={typography.numeral}>
+              {Math.round(data.logged.calories)}
+            </Text>
             <Text style={typography.muted}>kcal</Text>
           </View>
         )}
@@ -44,8 +48,13 @@ export function CalorieDonut({ data }: { data: Dashboard }) {
 }
 
 export function MacroBarChart({ data }: { data: Dashboard }) {
+  const { colors, typography } = useTheme();
   const groups: { label: string; logged: number; target: number }[] = [
-    { label: "P", logged: data.logged.protein_g, target: data.target.protein_g },
+    {
+      label: "P",
+      logged: data.logged.protein_g,
+      target: data.target.protein_g,
+    },
     { label: "C", logged: data.logged.carbs_g, target: data.target.carbs_g },
     { label: "F", logged: data.logged.fat_g, target: data.target.fat_g },
   ];
@@ -108,7 +117,7 @@ export function MacroBarChart({ data }: { data: Dashboard }) {
         backgroundColor={colors.background}
       />
       <Text style={{ ...typography.muted, marginTop: spacing.xs }}>
-        Teal: logged · Grey: target
+        Accent: logged · Neutral: target
       </Text>
     </View>
   );

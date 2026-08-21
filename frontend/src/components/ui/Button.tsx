@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, Text } from "react-native";
 
-import { colors } from "../../theme";
+import { useTheme } from "../../ThemeProvider";
 
 type Variant = "primary" | "secondary" | "destructive";
 
@@ -33,6 +33,7 @@ export function Button({
   busy = false,
   className = "",
 }: ButtonProps) {
+  const { colors } = useTheme();
   const inactive = disabled || busy;
   return (
     <Pressable
