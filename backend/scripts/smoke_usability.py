@@ -21,7 +21,17 @@ from app.models.food import Dish  # noqa: E402
 from app.models.usability import Feedback, UsabilityEvent  # noqa: E402
 from app.models.workout import Workout  # noqa: E402
 
-GOOD_PHOTO = ROOT / "ml" / "data" / "raw" / "progress_samples" / "good_standing.jpg"
+GOOD_PHOTO = (
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "fixtures"
+    / "progress"
+    / "good_standing.jpg"
+)
+if not GOOD_PHOTO.is_file():
+    GOOD_PHOTO = (
+        ROOT / "ml" / "data" / "raw" / "progress_samples" / "good_standing.jpg"
+    )
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:

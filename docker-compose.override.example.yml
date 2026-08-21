@@ -1,0 +1,21 @@
+# Example: second local Postgres when the default stack is already running.
+#
+# Usage (from repo root):
+#   copy this file to docker-compose.override.yml  (gitignored locally)
+#   set COMPOSE_PROJECT_NAME=innerarc_alt   # required — prefixes the volume name
+#   set POSTGRES_PORT=5433 in .env (and DATABASE_URL host port to match)
+#   Optionally also: $env:POSTGRES_PORT=5433  (ensures Compose interpolates the override)
+#   docker compose up -d
+#
+# Why COMPOSE_PROJECT_NAME alone is not enough without the container name change:
+# docker-compose.yml defaults POSTGRES_CONTAINER_NAME=innerarc-postgres. Two
+# projects cannot share that exact container name. This override renames it.
+#
+# After changing ports, point .env DATABASE_URL at localhost:<POSTGRES_PORT>
+# and run uvicorn on a free port (e.g. 8001) if 8000 is busy.
+
+services:
+  postgres:
+    container_name: innerarc-postgres-alt
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"

@@ -17,7 +17,10 @@ from app.db import SessionLocal  # noqa: E402
 from app.models.food import Dish, DishIngredient, Ingredient  # noqa: E402
 
 SEED_PATH = Path(__file__).resolve().parents[1] / "seed" / "dishes.json"
-CSV_PATH = ROOT / "ml" / "data" / "raw" / "indian_food.csv"
+# Prefer tracked seed copy (clean install); fall back to legacy ml/data/raw path.
+CSV_PATH = Path(__file__).resolve().parents[1] / "seed" / "indian_food.csv"
+if not CSV_PATH.exists():
+    CSV_PATH = ROOT / "ml" / "data" / "raw" / "indian_food.csv"
 
 
 def _norm(name: str) -> str:

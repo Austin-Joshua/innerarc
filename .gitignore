@@ -71,7 +71,8 @@ Thumbs.db
 .vscode/
 *.swp
 
-# Docker
+# Local compose overrides (isolation / alternate ports — see docker-compose.override.example.yml)
+docker-compose.override.yml
 postgres-data/
 ml/reports/e2e_food_smoke.json
 m7_home_sync.png

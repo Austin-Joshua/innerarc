@@ -18,7 +18,10 @@ from app.models.progress import ProgressPhoto  # noqa: E402
 from app.models.workout import Workout, WorkoutLog  # noqa: E402
 from app.services.pose import PoseFailure, PoseSuccess, estimate_pose  # noqa: E402
 
-SAMPLES = ROOT / "ml" / "data" / "raw" / "progress_samples"
+SAMPLES = Path(__file__).resolve().parents[1] / "scripts" / "fixtures" / "progress"
+# Legacy location (gitignored ml/data/raw) still accepted if fixtures/ not present.
+if not (SAMPLES / "good_standing.jpg").is_file():
+    SAMPLES = ROOT / "ml" / "data" / "raw" / "progress_samples"
 GOOD = SAMPLES / "good_standing.jpg"
 BAD = SAMPLES / "bad_dark.jpg"
 

@@ -75,7 +75,31 @@ pip install -r requirements.txt
 alembic upgrade head
 ```
 
+If **port 5432** or the container name `innerarc-postgres` is already in use
+(second checkout, leftover stack), do **not** expect `COMPOSE_PROJECT_NAME`
+alone to fix it — `docker-compose.yml` sets a fixed default
+`POSTGRES_CONTAINER_NAME`. Use the isolation example:
+
+```bash
+# from repo root
+cp docker-compose.override.example.yml docker-compose.override.yml
+# Windows PowerShell
+$env:COMPOSE_PROJECT_NAME = "innerarc_alt"
+# macOS / Linux
+# export COMPOSE_PROJECT_NAME=innerarc_alt
+```
+
+Set `POSTGRES_PORT=5433` (or another free port) and matching `DATABASE_URL` in
+`.env`, then `docker compose up -d`. The example override renames the
+container to `innerarc-postgres-alt`. Run uvicorn on a free port (e.g. `8001`)
+if `8000` is taken.
+
 ### 3. Seed data
+
+Food seeding needs `backend/seed/indian_food.csv` (vendored; see
+[`backend/seed/SOURCES.md`](backend/seed/SOURCES.md)). It is already in the
+repo for clean installs. If you deleted it, re-download Indian Food 101 from
+Kaggle into that path (or into `ml/data/raw/indian_food.csv`).
 
 From `backend/` with the venv active and `PYTHONPATH=.` (Windows: `$env:PYTHONPATH='.'`):
 
@@ -89,8 +113,18 @@ python -u scripts/seed_workouts.py
 Download the MediaPipe Tasks pose landmarker once (path matches `.env.example`):
 
 ```bash
-# from repo root, create ml/checkpoints if needed
-# URL: https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
+# from repo root
+mkdir -p ml/checkpoints
+curl -L -o ml/checkpoints/pose_landmarker_lite.task \
+  "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"
+```
+
+Windows PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force -Path ml\checkpoints | Out-Null
+Invoke-WebRequest -Uri "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task" `
+  -OutFile ml\checkpoints\pose_landmarker_lite.task -UseBasicParsing
 ```
 
 Save as `ml/checkpoints/pose_landmarker_lite.task` (directory is gitignored).
@@ -132,7 +166,12 @@ Health Connect (Module 7) needs a **custom Android development build** (`expo-de
 
 Apple HealthKit (Module 8) is **blocked** until a macOS/Xcode environment is available; do not treat it as cancelled.
 
-Multi-item plate smoke expects genuine multi-item photos under `backend/scripts/fixtures/plates/` (see `SOURCES.md`). Do not pad with Food-101 single-dish images.
+Multi-item plate smoke expects genuine multi-item photos under
+`backend/scripts/fixtures/plates/` (see `SOURCES.md`). Do not pad with Food-101
+single-dish images.
+
+Progress-pose smoke expects fixtures under
+`backend/scripts/fixtures/progress/` (see that folder’s `SOURCES.md`).
 
 ## Schema notes
 

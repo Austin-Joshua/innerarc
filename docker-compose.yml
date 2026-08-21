@@ -1,7 +1,10 @@
 services:
   postgres:
     image: postgres:16
-    container_name: innerarc-postgres
+    # Optional fixed name — override via POSTGRES_CONTAINER_NAME when 5432 /
+    # the default name is already taken. Omit entirely in an override file if
+    # you want Compose to auto-name as {project}_postgres_1 (best for parallel stacks).
+    container_name: ${POSTGRES_CONTAINER_NAME:-innerarc-postgres}
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-innerarc}

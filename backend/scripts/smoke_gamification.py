@@ -20,7 +20,15 @@ from app.models.food import Dish, FoodLog  # noqa: E402
 from app.models.workout import Workout, WorkoutLog  # noqa: E402
 from app.services.gamification import compute_streak, eligible_badges  # noqa: E402
 
-GOOD = ROOT / "ml" / "data" / "raw" / "progress_samples" / "good_standing.jpg"
+GOOD = (
+    Path(__file__).resolve().parents[1]
+    / "scripts"
+    / "fixtures"
+    / "progress"
+    / "good_standing.jpg"
+)
+if not GOOD.is_file():
+    GOOD = ROOT / "ml" / "data" / "raw" / "progress_samples" / "good_standing.jpg"
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
