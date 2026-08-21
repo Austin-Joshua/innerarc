@@ -1,22 +1,33 @@
-# Indian Food 101 — ingredient lists for `seed_food.py`
+# Food seed data for clean installs
 
-**File:** `indian_food.csv` (vendored next to this note)
+## What clean installs need
 
-**Source:** [Indian Food 101 (Neha Prabhavalkar / Kaggle)](https://www.kaggle.com/datasets/nehaprabhavalkar/indian-food-101)
+**Tracked file:** [`dishes.json`](dishes.json) — dish nutrition + ingredient lists
+for all Core classes. `python -u scripts/seed_food.py` uses this alone.
 
-**Why it is in-repo:** `seed_food.py` needs this CSV to map dish names → ingredient
-lists. The path under `ml/data/raw/` is gitignored (training downloads), so a
-tracked copy lives here for clean installs.
+No third-party CSV is required for seeding.
 
-**License:** Confirm on the Kaggle dataset page before redistributing further.
-Community mirrors commonly treat the CSV as public-domain / CC0; we vendor it
-only for local seeding. Re-download from Kaggle into this path if you prefer
-not to use the committed file:
+## Optional legacy: Kaggle Indian Food 101 CSV
+
+**Do not vendor `indian_food.csv` into this repo.**
+
+| Field | Value |
+| --- | --- |
+| Dataset | [Indian Food 101 (Neha Prabhavalkar)](https://www.kaggle.com/datasets/nehaprabhavalkar/indian-food-101) |
+| Kaggle `licenseName` (API, 2026-08-21) | **Data files © Original Authors** |
+| Size | 28 306 bytes |
+
+That license is **not** CC0 / public domain. Redistributing the CSV into a
+public GitHub tree is not permitted under Kaggle’s “Data files © Original
+Authors” terms. An earlier Module 15 attempt briefly committed a copy; that
+was incorrect and has been removed.
+
+If you still want the CSV locally for optional enrichment / research, download
+it yourself from Kaggle into the gitignored path:
 
 ```
-# destination (tracked seed path)
-backend/seed/indian_food.csv
-
-# legacy path also accepted by seed_food.py
 ml/data/raw/indian_food.csv
 ```
+
+`seed_food.py` will use it only as a fallback for IFCT rows that lack inline
+ingredients in `dishes.json` (none do, after the samosa seed row was completed).

@@ -96,10 +96,11 @@ if `8000` is taken.
 
 ### 3. Seed data
 
-Food seeding needs `backend/seed/indian_food.csv` (vendored; see
-[`backend/seed/SOURCES.md`](backend/seed/SOURCES.md)). It is already in the
-repo for clean installs. If you deleted it, re-download Indian Food 101 from
-Kaggle into that path (or into `ml/data/raw/indian_food.csv`).
+Food seeding uses the tracked file
+[`backend/seed/dishes.json`](backend/seed/dishes.json) only (see
+[`backend/seed/SOURCES.md`](backend/seed/SOURCES.md)). Do **not** add
+`indian_food.csv` to the repo — the Kaggle source is licensed
+**Data files © Original Authors**, not CC0.
 
 From `backend/` with the venv active and `PYTHONPATH=.` (Windows: `$env:PYTHONPATH='.'`):
 
@@ -146,7 +147,12 @@ npm install
 npx expo start
 ```
 
-Point `EXPO_PUBLIC_API_URL` at your machine if not using the default `http://127.0.0.1:8000`.
+Point `EXPO_PUBLIC_API_URL` at your machine if not using the default
+`http://127.0.0.1:8000`.
+
+> Deferred (Module 15 clean-install follow-up #5): document updating
+> `CORS_ORIGINS` when the Expo web port is not 8081/19006 and the API is not
+> on 8000 — only needed for non-default parallel stacks.
 
 ### 7. Optional smoke scripts
 

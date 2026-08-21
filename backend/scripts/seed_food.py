@@ -1,4 +1,10 @@
-"""Parse indian_food.csv ingredients and upsert dishes / ingredients / dish_ingredients."""
+"""Upsert dishes / ingredients / dish_ingredients from backend/seed/dishes.json.
+
+Clean installs need only dishes.json (tracked). The optional Kaggle CSV at
+ml/data/raw/indian_food.csv is a legacy fallback for IFCT rows that lack
+inline ingredients — do not vendor that CSV (Kaggle license: Data files ©
+Original Authors). See backend/seed/SOURCES.md.
+"""
 
 from __future__ import annotations
 
@@ -17,10 +23,7 @@ from app.db import SessionLocal  # noqa: E402
 from app.models.food import Dish, DishIngredient, Ingredient  # noqa: E402
 
 SEED_PATH = Path(__file__).resolve().parents[1] / "seed" / "dishes.json"
-# Prefer tracked seed copy (clean install); fall back to legacy ml/data/raw path.
-CSV_PATH = Path(__file__).resolve().parents[1] / "seed" / "indian_food.csv"
-if not CSV_PATH.exists():
-    CSV_PATH = ROOT / "ml" / "data" / "raw" / "indian_food.csv"
+CSV_PATH = ROOT / "ml" / "data" / "raw" / "indian_food.csv"
 
 
 def _norm(name: str) -> str:
@@ -28,11 +31,12 @@ def _norm(name: str) -> str:
 
 
 def load_csv_ingredients() -> dict[str, list[str]]:
+    """Optional legacy fallback — only if the operator placed the Kaggle CSV."""
     import csv
 
     mapping: dict[str, list[str]] = {}
     if not CSV_PATH.exists():
-        raise FileNotFoundError(f"Missing {CSV_PATH}")
+        return mapping
     with CSV_PATH.open(encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
@@ -80,7 +84,9 @@ def seed(db: Session) -> None:
                 names = csv_ingredients.get(csv_key) or csv_ingredients.get(csv_key_alt)
                 if not names:
                     raise KeyError(
-                        f"No indian_food.csv ingredients for {display_name!r} / {class_name!r}"
+                        f"No ingredients in dishes.json for {display_name!r} / "
+                        f"{class_name!r}, and optional {CSV_PATH.name} is missing "
+                        f"or has no match. See backend/seed/SOURCES.md."
                     )
                 ingredients = [
                     {"name": n, "typical_quantity": "as prepared"} for n in names

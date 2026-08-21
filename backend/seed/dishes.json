@@ -367,7 +367,32 @@
         "protein": 5.2,
         "carbs": 31.8,
         "fat": 13.1
-      }
+      },
+      "ingredients": [
+        {
+          "name": "Wheat flour, refined",
+          "typical_quantity": "40 g (estimated)",
+          "estimated_quantity_g": 40.0,
+          "ifct_code": "A018",
+          "ifct_name": "Wheat flour, refined (Triticum aestivum)"
+        },
+        {
+          "name": "potato",
+          "typical_quantity": "45 g (estimated)",
+          "estimated_quantity_g": 45.0,
+          "ifct_code": "F006",
+          "ifct_name": "Potato, brown skin, big (Solanum tuberosum)"
+        },
+        {
+          "name": "cooking oil",
+          "typical_quantity": "15 g (estimated)",
+          "estimated_quantity_g": 15.0,
+          "ifct_code": null,
+          "ifct_match": "none"
+        }
+      ],
+      "nutrition_confidence": "medium",
+      "match_coverage_pct": 85.0
     },
     {
       "class_name": "biryani",
