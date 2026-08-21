@@ -2,7 +2,7 @@
 
 Closed-loop AI health companion: food recognition, structured workouts, pose-based progress tracking, a retrieval-grounded AI coach, and consistency-based gamification.
 
-**Core tier is implemented** (Modules 1–6). **Modules 7, 9, 10, and 11** are also done (Android Health Connect, proactive coaching, multi-item plate via Gemini Vision, usability instrumentation). **Module 8 (Apple HealthKit)** remains **blocked** — no macOS/Xcode access in this workspace — and is not silently dropped from scope.
+**Core tier is implemented** (Modules 1–6). **Modules 7, 9, 10, 11, 12, and 14** are also done (Android Health Connect, proactive coaching, multi-item plate via Gemini Vision, usability instrumentation, shared UI token/component system, system-aware dark theme). **Module 8 (Apple HealthKit)** remains **blocked** — no macOS/Xcode access in this workspace — and is not silently dropped from scope.
 
 ## Stack
 
@@ -39,6 +39,8 @@ data/photos/    Local object storage for meal/progress images (created at runtim
 | 9 | Proactive AI coaching — Home-triggered `GET /coach/nudge`, rate-limited logging-gap / adherence patterns |
 | 10 | Multi-item plate recognition — Gemini Vision (`POST /food/classify-plate`); dish-table match; no trained detector |
 | 11 | Usability instrumentation — `usability_events` log (screen/task started/completed/abandoned) + `POST /feedback` (1–5 rating + comment); data collection only, not a completed usability study |
+| 12 | UI redesign — shared design tokens + component system (NativeWind); calm light palette with blue accent |
+| 14 | System-aware dark theme — System/Light/Dark preference, AA-verified dark tokens, charts and screens themed end-to-end |
 
 ## Local setup
 
