@@ -1,6 +1,6 @@
 # Backend CI: Postgres + migrate + seed + all seven smoke scripts.
 #
-# Required repository secret (GitHub → Settings → Secrets and variables → Actions):
+# Required secret (Settings → Environments → Env → Environment secrets):
 #   GEMINI_API_KEY  — required for:
 #     • smoke_coach.py     — live Gemini chat (grounded + model-only decline paths)
 #     • smoke_plate.py     — live Gemini Vision on genuine multi-item plate photos
@@ -28,6 +28,8 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+    # Repository Actions secrets were empty; GEMINI_API_KEY lives on environment "Env".
+    environment: Env
     defaults:
       run:
         working-directory: backend
