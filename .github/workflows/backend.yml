@@ -71,7 +71,7 @@ jobs:
         working-directory: .
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libgl1 libglib2.0-0 libgomp1
+          sudo apt-get install -y --no-install-recommends libgl1 libegl1 libgles2 libglib2.0-0 libgomp1
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
