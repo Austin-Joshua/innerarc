@@ -1,4 +1,13 @@
+import os
+
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def _default_object_storage_path() -> str:
+    if os.environ.get("RENDER"):
+        return "/tmp/innerarc/photos"
+    return "../data/photos"
 
 
 class Settings(BaseSettings):
@@ -9,7 +18,7 @@ class Settings(BaseSettings):
     )
 
     database_url: str = "postgresql+psycopg://innerarc:innerarc@localhost:5432/innerarc"
-    object_storage_path: str = "../data/photos"
+    object_storage_path: str = Field(default_factory=_default_object_storage_path)
     cors_origins: str = "http://localhost:8081,http://localhost:19006"
     # AI coach + plate vision. Off by default — set GEMINI_ENABLED=true and GEMINI_API_KEY to enable.
     gemini_enabled: bool = False
