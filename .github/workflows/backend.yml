@@ -141,8 +141,14 @@ jobs:
             "https://commons.wikimedia.org/wiki/Special:FilePath/Indian_Thali.jpg"
           ls -la backend/scripts/fixtures/plates/*.jpg
 
-      - name: Run smoke_coach
-        run: python -u scripts/smoke_coach.py
+      - name: Run smoke_wearable
+        run: python -u scripts/smoke_wearable.py
+
+      - name: Run smoke_usability
+        run: python -u scripts/smoke_usability.py
+
+      - name: Run smoke_proactive
+        run: python -u scripts/smoke_proactive.py
 
       - name: Run smoke_gamification
         run: python -u scripts/smoke_gamification.py
@@ -150,14 +156,26 @@ jobs:
       - name: Run smoke_progress_pose
         run: python -u scripts/smoke_progress_pose.py
 
-      - name: Run smoke_wearable
-        run: python -u scripts/smoke_wearable.py
-
-      - name: Run smoke_proactive
-        run: python -u scripts/smoke_proactive.py
+      - name: Run smoke_coach
+        run: |
+          # Live Gemini — retry transient provider errors (429/503).
+          n=0
+          until [ "$n" -ge 3 ]; do
+            python -u scripts/smoke_coach.py && exit 0
+            n=$((n+1))
+            echo "smoke_coach failed (attempt $n/3); retrying in 25s"
+            sleep 25
+          done
+          exit 1
 
       - name: Run smoke_plate
-        run: python -u scripts/smoke_plate.py
-
-      - name: Run smoke_usability
-        run: python -u scripts/smoke_usability.py
+        run: |
+          # Live Gemini Vision — retry transient provider errors (429/503).
+          n=0
+          until [ "$n" -ge 3 ]; do
+            python -u scripts/smoke_plate.py && exit 0
+            n=$((n+1))
+            echo "smoke_plate failed (attempt $n/3); retrying in 25s"
+            sleep 25
+          done
+          exit 1
