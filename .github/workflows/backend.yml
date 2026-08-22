@@ -21,7 +21,7 @@ name: backend
 
 on:
   push:
-    branches: [master]
+    branches: [master, module-16-ci-proof]
   pull_request:
     branches: [master]
 
