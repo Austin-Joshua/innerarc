@@ -43,7 +43,7 @@ function resolveIsDark(
 
 export function ThemeProvider({ children }: PropsWithChildren) {
   const rnScheme = useColorScheme();
-  const [webScheme, setWebScheme] = useState<ColorSchemeName>(null);
+  const [webScheme, setWebScheme] = useState<ColorSchemeName | null>(null);
   const [preference, setPreferenceState] = useState<ThemePreference>("system");
   const [ready, setReady] = useState(false);
 

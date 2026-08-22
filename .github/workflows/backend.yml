@@ -1,0 +1,184 @@
+# Backend CI: Postgres + migrate + seed + all seven smoke scripts.
+#
+# Required secret (Settings → Environments → Env → Environment secrets):
+#   GEMINI_API_KEY  — required for:
+#     • smoke_coach.py     — live Gemini chat (grounded + model-only decline paths)
+#     • smoke_plate.py     — live Gemini Vision on genuine multi-item plate photos
+#                           (section 1 of the script posts to /food/classify-plate
+#                           with no mock; a later section only mocks identify_plate_items
+#                           to force an unmatched label for matching logic — that does
+#                           not replace the live Vision path)
+#   smoke_proactive.py patches generate_coach_reply (no live model for nudge paths);
+#   it does not need Gemini for those exercises, but sharing the same secret in CI
+#   is fine and keeps app config consistent with .env.example.
+#
+# JWT_SECRET / DB creds use the same defaults as .env.example (CI-only; not production).
+#
+# Live pass/fail in Actions is proven only after this workflow is pushed to a
+# branch GitHub can run — YAML review alone does not prove CI.
+
+name: backend
+
+on:
+  push:
+    branches: [master, module-16-ci-proof]
+  pull_request:
+    branches: [master]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    # Repository Actions secrets were empty; GEMINI_API_KEY lives on environment "Env".
+    environment: Env
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: innerarc
+          POSTGRES_PASSWORD: innerarc
+          POSTGRES_DB: innerarc
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U innerarc -d innerarc"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql+psycopg://innerarc:innerarc@localhost:5432/innerarc
+      OBJECT_STORAGE_PATH: ../data/photos
+      JWT_SECRET: innerarc-dev-secret-change-me-32b+
+      JWT_EXPIRE_MINUTES: "10080"
+      CLASSIFIER_CHECKPOINT: ../ml/checkpoints/best.pt
+      CLASSIFIER_STUB_MODE: "true"
+      POSE_LANDMARKER_MODEL: ../ml/checkpoints/pose_landmarker_lite.task
+      CORS_ORIGINS: http://localhost:8081,http://localhost:19006
+      GEMINI_MODEL: gemini-3.5-flash
+      # From repo secret — see header comment.
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      PYTHONPATH: .
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MediaPipe/OpenCV system libraries
+        working-directory: .
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libgl1 libegl1 libgles2 libglib2.0-0 libgomp1
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write root .env for pydantic-settings
+        working-directory: .
+        run: |
+          # Job env already exports these for the process; .env mirrors them for
+          # pydantic-settings env_file loading (no duplicate keys).
+          {
+            echo "POSTGRES_USER=innerarc"
+            echo "POSTGRES_PASSWORD=innerarc"
+            echo "POSTGRES_DB=innerarc"
+            echo "POSTGRES_PORT=5432"
+            echo "DATABASE_URL=${DATABASE_URL}"
+            echo "OBJECT_STORAGE_PATH=${OBJECT_STORAGE_PATH}"
+            echo "JWT_SECRET=${JWT_SECRET}"
+            echo "JWT_EXPIRE_MINUTES=${JWT_EXPIRE_MINUTES}"
+            echo "CLASSIFIER_CHECKPOINT=${CLASSIFIER_CHECKPOINT}"
+            echo "CLASSIFIER_STUB_MODE=${CLASSIFIER_STUB_MODE}"
+            echo "POSE_LANDMARKER_MODEL=${POSE_LANDMARKER_MODEL}"
+            echo "CORS_ORIGINS=${CORS_ORIGINS}"
+            echo "GEMINI_MODEL=${GEMINI_MODEL}"
+            echo "GEMINI_API_KEY=${GEMINI_API_KEY}"
+          } > .env
+
+      - name: Migrate database
+        run: alembic upgrade head
+
+      - name: Confirm GEMINI_API_KEY is non-empty
+        run: |
+          python -c "import os,sys; k=(os.environ.get('GEMINI_API_KEY') or '').strip(); print('GEMINI_API_KEY length', len(k)); sys.exit(0 if k else 1)"
+        # Fails immediately if the secret is missing/empty so later smokes are not skipped.
+
+      - name: Seed food and workouts
+        run: |
+          python -u scripts/seed_food.py
+          python -u scripts/seed_workouts.py
+
+      - name: Download MediaPipe pose landmarker
+        working-directory: .
+        run: |
+          mkdir -p ml/checkpoints
+          curl -fsSL -o ml/checkpoints/pose_landmarker_lite.task \
+            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"
+          python -c "import os; n=os.path.getsize('ml/checkpoints/pose_landmarker_lite.task'); print('pose_model_bytes', n); raise SystemExit(0 if n>1_000_000 else 1)"
+
+      - name: Sanity-check pose on progress fixture
+        run: python -u scripts/ci_pose_sanity.py
+
+      - name: Download plate smoke fixtures (Wikimedia Commons)
+        working-directory: .
+        run: |
+          # URLs from backend/scripts/fixtures/plates/SOURCES.md (gitignored *.jpg).
+          mkdir -p backend/scripts/fixtures/plates
+          curl -fsSL -o backend/scripts/fixtures/plates/01_vegetarian_thali.jpg \
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Vegetarian_Thali.jpg"
+          curl -fsSL -o backend/scripts/fixtures/plates/02_north_indian_thali.jpg \
+            "https://commons.wikimedia.org/wiki/Special:FilePath/A_Tipical_Veg_North_Indian_Thali.jpg"
+          curl -fsSL -o backend/scripts/fixtures/plates/03_south_indian_thali.jpg \
+            "https://commons.wikimedia.org/wiki/Special:FilePath/An_ideal_South_Indian_Thali.jpg"
+          curl -fsSL -o backend/scripts/fixtures/plates/04_indian_thali.jpg \
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Indian_Thali.jpg"
+          ls -la backend/scripts/fixtures/plates/*.jpg
+
+      - name: Run smoke_wearable
+        run: python -u scripts/smoke_wearable.py
+
+      - name: Run smoke_usability
+        run: python -u scripts/smoke_usability.py
+
+      - name: Run smoke_proactive
+        run: python -u scripts/smoke_proactive.py
+
+      - name: Run smoke_gamification
+        run: python -u scripts/smoke_gamification.py
+
+      - name: Run smoke_progress_pose
+        run: python -u scripts/smoke_progress_pose.py
+
+      - name: Run smoke_coach
+        run: |
+          # Live Gemini — retry transient provider errors (429/503).
+          n=0
+          until [ "$n" -ge 3 ]; do
+            python -u scripts/smoke_coach.py && exit 0
+            n=$((n+1))
+            echo "smoke_coach failed (attempt $n/3); retrying in 25s"
+            sleep 25
+          done
+          exit 1
+
+      - name: Run smoke_plate
+        run: |
+          # Live Gemini Vision — retry transient provider errors (429/503).
+          n=0
+          until [ "$n" -ge 3 ]; do
+            python -u scripts/smoke_plate.py && exit 0
+            n=$((n+1))
+            echo "smoke_plate failed (attempt $n/3); retrying in 25s"
+            sleep 25
+          done
+          exit 1
