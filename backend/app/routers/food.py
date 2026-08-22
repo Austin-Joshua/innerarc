@@ -1,7 +1,8 @@
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
@@ -9,6 +10,7 @@ from app.config import settings
 from app.db import get_db
 from app.models.food import Dish, DishIngredient, FoodLog
 from app.models.user import User
+from app.rate_limit import limiter
 from app.schemas.food import (
     ClassifyResponse,
     DishOut,
@@ -21,6 +23,7 @@ from app.schemas.food import (
 from app.security import get_current_user
 from app.services.classifier import classify_image
 from app.services.gamification import apply_event, state_dict
+from app.services.photo_crypto import write_encrypted
 from app.services.plate_vision import (
     identify_plate_items,
     normalize_label,
@@ -139,13 +142,20 @@ def classify(
     photo_root.mkdir(parents=True, exist_ok=True)
     suffix = Path(file.filename or "meal.jpg").suffix or ".jpg"
     stored = photo_root / f"{uuid4()}{suffix}"
-    stored.write_bytes(file.file.read())
+    plaintext = file.file.read()
+    with NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        tmp.write(plaintext)
     try:
-        class_name, confidence = classify_image(str(stored))
-    except FileNotFoundError as exc:
-        raise HTTPException(
-            status_code=503, detail="Classifier is not trained yet"
-        ) from exc
+        try:
+            class_name, confidence = classify_image(str(tmp_path))
+        except FileNotFoundError as exc:
+            raise HTTPException(
+                status_code=503, detail="Classifier is not trained yet"
+            ) from exc
+        write_encrypted(stored, plaintext)
+    finally:
+        tmp_path.unlink(missing_ok=True)
     display_name = CLASS_TO_NAME.get(class_name, class_name.replace("_", " ").title())
     dish = db.scalar(
         select(Dish)
@@ -167,7 +177,9 @@ def classify(
 
 
 @router.post("/classify-plate", response_model=PlateClassifyResponse)
+@limiter.limit("10/hour")
 def classify_plate(
+    request: Request,
     file: UploadFile = File(...),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -176,7 +188,10 @@ def classify_plate(
     photo_root.mkdir(parents=True, exist_ok=True)
     suffix = Path(file.filename or "plate.jpg").suffix or ".jpg"
     stored = photo_root / f"{uuid4()}{suffix}"
-    stored.write_bytes(file.file.read())
+    plaintext = file.file.read()
+    with NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        tmp.write(plaintext)
 
     dishes = list(
         db.scalars(
@@ -191,13 +206,17 @@ def classify_plate(
     )
     catalog = [d.name for d in dishes] + list(CLASS_TO_NAME.keys())
     try:
-        vision_items = identify_plate_items(str(stored), catalog)
-    except RuntimeError as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:  # noqa: BLE001
-        raise HTTPException(
-            status_code=502, detail=f"Plate vision error: {exc}"
-        ) from exc
+        try:
+            vision_items = identify_plate_items(str(tmp_path), catalog)
+        except RuntimeError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(
+                status_code=502, detail=f"Plate vision error: {exc}"
+            ) from exc
+        write_encrypted(stored, plaintext)
+    finally:
+        tmp_path.unlink(missing_ok=True)
 
     items: list[PlateItemOut] = []
     for vis in vision_items:

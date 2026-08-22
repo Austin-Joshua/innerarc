@@ -10,7 +10,7 @@ name: frontend
 
 on:
   push:
-    branches: [master, module-16-ci-proof]
+    branches: [master]
   pull_request:
     branches: [master]
 

@@ -121,6 +121,8 @@ def parse_vision_payload(payload: dict[str, Any] | list[Any]) -> list[VisionItem
 
 def identify_plate_items(image_path: str, catalog_names: list[str]) -> list[VisionItem]:
     """Call Gemini Vision; return structured items (labels + portions only)."""
+    if not settings.gemini_enabled:
+        raise RuntimeError("Plate vision is disabled (GEMINI_ENABLED=false)")
     api_key = (settings.gemini_api_key or "").strip()
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not configured")

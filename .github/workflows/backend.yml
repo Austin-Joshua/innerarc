@@ -1,35 +1,20 @@
 # Backend CI: Postgres + migrate + seed + all seven smoke scripts.
-#
-# Required secret (Settings → Environments → Env → Environment secrets):
-#   GEMINI_API_KEY  — required for:
-#     • smoke_coach.py     — live Gemini chat (grounded + model-only decline paths)
-#     • smoke_plate.py     — live Gemini Vision on genuine multi-item plate photos
-#                           (section 1 of the script posts to /food/classify-plate
-#                           with no mock; a later section only mocks identify_plate_items
-#                           to force an unmatched label for matching logic — that does
-#                           not replace the live Vision path)
-#   smoke_proactive.py patches generate_coach_reply (no live model for nudge paths);
-#   it does not need Gemini for those exercises, but sharing the same secret in CI
-#   is fine and keeps app config consistent with .env.example.
+# AI (Gemini) is off by default — no GEMINI_API_KEY or GitHub Env secret required.
+# smoke_coach.py and smoke_plate.py mock live model paths when GEMINI_ENABLED=false.
 #
 # JWT_SECRET / DB creds use the same defaults as .env.example (CI-only; not production).
-#
-# Live pass/fail in Actions is proven only after this workflow is pushed to a
-# branch GitHub can run — YAML review alone does not prove CI.
 
 name: backend
 
 on:
   push:
-    branches: [master, module-16-ci-proof]
+    branches: [master]
   pull_request:
     branches: [master]
 
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    # Repository Actions secrets were empty; GEMINI_API_KEY lives on environment "Env".
-    environment: Env
     defaults:
       run:
         working-directory: backend
@@ -58,9 +43,9 @@ jobs:
       CLASSIFIER_STUB_MODE: "true"
       POSE_LANDMARKER_MODEL: ../ml/checkpoints/pose_landmarker_lite.task
       CORS_ORIGINS: http://localhost:8081,http://localhost:19006
+      GEMINI_ENABLED: "false"
       GEMINI_MODEL: gemini-3.5-flash
-      # From repo secret — see header comment.
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      PHOTO_ENCRYPTION_KEY: ""
       PYTHONPATH: .
 
     steps:
@@ -86,8 +71,7 @@ jobs:
       - name: Write root .env for pydantic-settings
         working-directory: .
         run: |
-          # Job env already exports these for the process; .env mirrors them for
-          # pydantic-settings env_file loading (no duplicate keys).
+          PHOTO_ENCRYPTION_KEY="$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')"
           {
             echo "POSTGRES_USER=innerarc"
             echo "POSTGRES_PASSWORD=innerarc"
@@ -101,17 +85,14 @@ jobs:
             echo "CLASSIFIER_STUB_MODE=${CLASSIFIER_STUB_MODE}"
             echo "POSE_LANDMARKER_MODEL=${POSE_LANDMARKER_MODEL}"
             echo "CORS_ORIGINS=${CORS_ORIGINS}"
+            echo "GEMINI_ENABLED=${GEMINI_ENABLED}"
             echo "GEMINI_MODEL=${GEMINI_MODEL}"
-            echo "GEMINI_API_KEY=${GEMINI_API_KEY}"
+            echo "PHOTO_ENCRYPTION_KEY=${PHOTO_ENCRYPTION_KEY}"
           } > .env
+          echo "PHOTO_ENCRYPTION_KEY=${PHOTO_ENCRYPTION_KEY}" >> "$GITHUB_ENV"
 
       - name: Migrate database
         run: alembic upgrade head
-
-      - name: Confirm GEMINI_API_KEY is non-empty
-        run: |
-          python -c "import os,sys; k=(os.environ.get('GEMINI_API_KEY') or '').strip(); print('GEMINI_API_KEY length', len(k)); sys.exit(0 if k else 1)"
-        # Fails immediately if the secret is missing/empty so later smokes are not skipped.
 
       - name: Seed food and workouts
         run: |
@@ -132,7 +113,6 @@ jobs:
       - name: Download plate smoke fixtures (Wikimedia Commons)
         working-directory: .
         run: |
-          # URLs from backend/scripts/fixtures/plates/SOURCES.md (gitignored *.jpg).
           mkdir -p backend/scripts/fixtures/plates
           curl -fsSL -o backend/scripts/fixtures/plates/01_vegetarian_thali.jpg \
             "https://commons.wikimedia.org/wiki/Special:FilePath/Vegetarian_Thali.jpg"
@@ -160,25 +140,7 @@ jobs:
         run: python -u scripts/smoke_progress_pose.py
 
       - name: Run smoke_coach
-        run: |
-          # Live Gemini — retry transient provider errors (429/503).
-          n=0
-          until [ "$n" -ge 3 ]; do
-            python -u scripts/smoke_coach.py && exit 0
-            n=$((n+1))
-            echo "smoke_coach failed (attempt $n/3); retrying in 25s"
-            sleep 25
-          done
-          exit 1
+        run: python -u scripts/smoke_coach.py
 
       - name: Run smoke_plate
-        run: |
-          # Live Gemini Vision — retry transient provider errors (429/503).
-          n=0
-          until [ "$n" -ge 3 ]; do
-            python -u scripts/smoke_plate.py && exit 0
-            n=$((n+1))
-            echo "smoke_plate failed (attempt $n/3); retrying in 25s"
-            sleep 25
-          done
-          exit 1
+        run: python -u scripts/smoke_plate.py

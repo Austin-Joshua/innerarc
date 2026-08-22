@@ -56,7 +56,7 @@ data/photos/    Local object storage for meal/progress images (created at runtim
 cp .env.example .env
 ```
 
-Set at least `GEMINI_API_KEY` for the coach. Optionally set `CLASSIFIER_STUB_MODE=false` after you have `ml/checkpoints/best.pt` and checked `ml/reports/test_metrics.json`.
+Set `GEMINI_ENABLED=true` and `GEMINI_API_KEY` only if you want live AI coach / plate vision. With AI off (default), coach and classify-plate return 503 and CI runs without Gemini. Optionally set `CLASSIFIER_STUB_MODE=false` after you have `ml/checkpoints/best.pt` and checked `ml/reports/test_metrics.json`.
 
 ### 2. Database
 

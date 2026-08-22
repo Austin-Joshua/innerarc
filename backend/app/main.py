@@ -3,11 +3,14 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from sqlalchemy import text
 
 from app.config import settings
 from app.db import engine
 from app.models import *  # noqa: F403 — register metadata for Alembic and runtime
+from app.rate_limit import limiter, rate_limit_exceeded_handler
 from app.routers.auth import router as auth_router
 from app.routers.coach import router as coach_router
 from app.routers.dashboard import router as dashboard_router
@@ -33,6 +36,9 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

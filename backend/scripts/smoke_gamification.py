@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from uuid import UUID
+
+if not (os.environ.get("PHOTO_ENCRYPTION_KEY") or "").strip():
+    from cryptography.fernet import Fernet
+
+    os.environ["PHOTO_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select

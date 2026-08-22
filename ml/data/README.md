@@ -2,6 +2,8 @@
 
 This folder holds dataset notes and the curated dish list. **Do not download large datasets as part of Module 1.** Training starts in the Food and Nutrition module.
 
+**Gitignore / distribution:** `ml/data/raw/` and `ml/checkpoints/*.pt` are **gitignored**. Do not commit or redistribute those paths (training images, downloaded archives, or trained weights). That remains the mitigating fact regardless of any dataset license ambiguity.
+
 ## Curated dish list
 
 [`curated_dishes.json`](curated_dishes.json) is a proposed 30-class Core list mixing Indian dishes (IFCT 2017) and international dishes (Food-101 / USDA). Treat it as a placeholder until the Food module locks class names to recipes.
@@ -14,15 +16,13 @@ Target: ≥ 85% top-1 accuracy on this list (PRD / TRD).
 - Paper: Bossard, Guillaumin, Van Gool, ECCV 2014
 - When you are ready to train, download into `ml/data/raw/food-101/` (gitignored).
 - Use only the subset of classes that appear in `curated_dishes.json`.
+- **License / ownership:** Images belong to Foodspotting. Use beyond scientific fair use needs owner permission.
 
-## Indian food dataset
+## Indian food images (Kaggle)
 
-Use an Indian food image dataset whose labels overlap the Indian names in `curated_dishes.json`, for example:
-
-- [Indian Food Classification (Kaggle)](https://www.kaggle.com/datasets/iamsouravbanerjee/indian-food-images-dataset)
-- Or a similarly licensed set with dish-level (not ingredient-level) labels
-
-Download into `ml/data/raw/indian-food/` when training starts. Do not attempt pixel-level ingredient detection; labels are dish classes only.
+- Dataset: [Indian Food Images Dataset (Sourav Banerjee)](https://www.kaggle.com/datasets/iamsouravbanerjee/indian-food-images-dataset)
+- License: Other (Kaggle) — no terms specified by the uploader. No description text on the dataset page explains what "Other" refers to.
+- Download into `ml/data/raw/indian-food/` when training starts (gitignored — see above; never commit or distribute). Do not attempt pixel-level ingredient detection; labels are dish classes only.
 
 ## Nutrition sources (Food module, not this folder)
 

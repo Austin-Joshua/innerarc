@@ -2,9 +2,16 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+# Ensure Fernet key before app/settings import (CI generates one; local may use .env).
+if not (os.environ.get("PHOTO_ENCRYPTION_KEY") or "").strip():
+    from cryptography.fernet import Fernet
+
+    os.environ["PHOTO_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -16,6 +23,7 @@ from app.db import SessionLocal  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models.progress import ProgressPhoto  # noqa: E402
 from app.models.workout import Workout, WorkoutLog  # noqa: E402
+from app.services.photo_crypto import looks_like_image  # noqa: E402
 from app.services.pose import PoseFailure, PoseSuccess, estimate_pose  # noqa: E402
 
 SAMPLES = Path(__file__).resolve().parents[1] / "scripts" / "fixtures" / "progress"
@@ -161,11 +169,35 @@ def main() -> None:
     print("OK consistency metrics present: workouts_logged + days_active")
 
     photo_id = body2["current"]["id"]
-    print("=== Owner image fetch ===")
+    print("=== Disk ciphertext (not a viewable JPEG) ===")
+    db = SessionLocal()
+    try:
+        me = client.get("/auth/me", headers=headers_a).json()
+        from uuid import UUID
+
+        from app.routers.progress import _resolve_storage_path
+
+        row = db.scalar(
+            select(ProgressPhoto).where(
+                ProgressPhoto.id == UUID(photo_id),
+                ProgressPhoto.user_id == UUID(me["id"]),
+            )
+        )
+        assert row is not None
+        disk = _resolve_storage_path(row.image_url)
+        assert disk.is_file(), f"missing stored file {disk}"
+        blob = disk.read_bytes()
+        assert not looks_like_image(blob), "stored file must be Fernet ciphertext, not JPEG/PNG"
+        print("disk path", disk, "bytes", len(blob), "prefix", blob[:8])
+    finally:
+        db.close()
+
+    print("=== Owner image fetch (decrypt round-trip) ===")
     img_ok = client.get(f"/progress/photos/{photo_id}/image", headers=headers_a)
     assert img_ok.status_code == 200, img_ok.status_code
     assert img_ok.headers["content-type"].startswith("image/")
     assert len(img_ok.content) > 100
+    assert looks_like_image(img_ok.content), "GET must return decrypted image bytes"
     print("owner bytes", len(img_ok.content))
 
     print("=== Cross-user image fetch -> 404 ===")

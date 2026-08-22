@@ -44,6 +44,7 @@ export default function RootNavigator() {
         __DEV__
           ? {
               prefixes: [
+    "http://localhost:8095",
                 "http://localhost:8094",
                 "http://localhost:8093",
                 "http://localhost:8092",
@@ -58,6 +59,7 @@ export default function RootNavigator() {
                 "http://localhost:8083",
                 "http://localhost:8082",
                 "http://localhost:8081",
+                "http://127.0.0.1:8095",
                 "http://127.0.0.1:8094",
                 "http://127.0.0.1:8093",
                 "http://127.0.0.1:8092",
