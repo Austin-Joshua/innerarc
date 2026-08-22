@@ -100,6 +100,11 @@ jobs:
       - name: Migrate database
         run: alembic upgrade head
 
+      - name: Confirm GEMINI_API_KEY is non-empty
+        run: |
+          python -c "import os,sys; k=(os.environ.get('GEMINI_API_KEY') or '').strip(); print('GEMINI_API_KEY length', len(k)); sys.exit(0 if k else 1)"
+        # Fails immediately if the secret is missing/empty so later smokes are not skipped.
+
       - name: Seed food and workouts
         run: |
           python -u scripts/seed_food.py
