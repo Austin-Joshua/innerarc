@@ -1,12 +1,6 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
-import {
-  LogMealStackParamList,
-  MainTabParamList,
-  ProgressStackParamList,
-  RootStackParamList,
-  WorkoutStackParamList,
-} from "./types";
+import { RootStackParamList, WorkoutStackParamList } from "./types";
 
 type NavLike = {
   getParent?: () => NavLike | undefined;
@@ -40,16 +34,6 @@ export function navigateDrawer(
   getRootNavigation(navigation).navigate("Main", { screen });
 }
 
-export function navigateMainTab(
-  navigation: NavLike,
-  screen: Exclude<keyof MainTabParamList, "Workouts">,
-) {
-  getRootNavigation(navigation).navigate("Main", {
-    screen: "Tabs",
-    params: { screen },
-  });
-}
-
 export function navigateWorkoutStack(
   navigation: NavLike,
   screen: keyof WorkoutStackParamList,
@@ -60,32 +44,6 @@ export function navigateWorkoutStack(
     params: {
       screen: "Workouts",
       params: { screen, params } as never,
-    },
-  });
-}
-
-export function navigateLogMeal(
-  navigation: NavLike,
-  screen: keyof LogMealStackParamList = "FoodCapture",
-) {
-  getRootNavigation(navigation).navigate("Main", {
-    screen: "Tabs",
-    params: {
-      screen: "LogMeal",
-      params: { screen },
-    },
-  });
-}
-
-export function navigateProgress(
-  navigation: NavLike,
-  screen: keyof ProgressStackParamList = "ProgressCapture",
-) {
-  getRootNavigation(navigation).navigate("Main", {
-    screen: "Tabs",
-    params: {
-      screen: "Progress",
-      params: { screen },
     },
   });
 }

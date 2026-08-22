@@ -1,4 +1,4 @@
-import { Dish } from "./api";
+import { ClassifyResult, Dish, GamificationState } from "./api";
 import { getFoodDraft, setFoodDraft } from "./foodDraft";
 
 export const PREVIEW_DISH: Dish = {
@@ -117,4 +117,22 @@ export function seedFoodPreviewDraft() {
     image_url: "",
     local_uri: "",
   });
+}
+
+export function previewClassifyResult(_localUri: string): ClassifyResult {
+  return {
+    ...PREVIEW_DISH,
+    confidence_score: 0.87,
+    image_url: "/preview/meal.jpg",
+  };
+}
+
+export function previewLogMealGamification(): GamificationState {
+  return {
+    streak_count: 5,
+    points: 420,
+    badges_earned: [],
+    last_activity_date: new Date().toISOString(),
+    new_badges: [],
+  };
 }

@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { DrawerActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
@@ -46,7 +45,7 @@ const ACTIVITY_TYPES = ["bodyweight", "home_gym", "weighted", "yoga", "aerobics"
 
 export default function WorkoutLibraryScreen() {
   const navigation = useNavigation<Nav>();
-  const { tier, isDesktop } = useBreakpoint();
+  const { tier } = useBreakpoint();
   const tokens = fitnessTokens(tier);
 
   const [workouts, setWorkouts] = useState<WorkoutSummary[]>(() =>
@@ -87,10 +86,6 @@ export default function WorkoutLibraryScreen() {
     navigation.navigate("WorkoutDetail", { workoutId });
   };
 
-  const openDrawer = () => {
-    navigation.getParent()?.dispatch(DrawerActions.openDrawer());
-  };
-
   const visibleWorkouts = modalityFilter
     ? workouts.filter((w) => w.modality === modalityFilter)
     : workouts;
@@ -100,11 +95,7 @@ export default function WorkoutLibraryScreen() {
   return (
     <Screen>
       <PageShell centeredMobile={false}>
-        <FitnessScreenTitle
-          title="Workout"
-          tier={tier}
-          onMenu={!isDesktop ? openDrawer : undefined}
-        />
+        <FitnessScreenTitle title="Workout" tier={tier} />
 
         {error ? (
           <AppText variant="caption" className="mb-sm text-danger">

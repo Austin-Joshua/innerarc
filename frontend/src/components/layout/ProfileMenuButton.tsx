@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 
 import { useTheme } from "../../ThemeProvider";
 import { MainDrawerParamList } from "../../navigation/types";

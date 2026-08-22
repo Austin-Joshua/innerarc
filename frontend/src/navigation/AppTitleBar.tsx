@@ -4,10 +4,7 @@ import { DrawerActions } from "@react-navigation/native";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { NotificationBellButton } from "../components/layout/NotificationBellButton";
-import { ProfileMenuButton } from "../components/layout/ProfileMenuButton";
-import { SyncDevicesButton } from "../components/layout/SyncDevicesButton";
-import { AppearanceToggle } from "../components/ui";
+import { ShellActionButtons } from "../components/layout/ShellActionButtons";
 import { AppText } from "../components/ui/AppText";
 import { INTERACTIVE_NAV } from "../components/ui/interactiveStyles";
 import { useTheme } from "../ThemeProvider";
@@ -17,7 +14,7 @@ import { goToHome } from "./navHelpers";
 export function AppTitleBar({ navigation }: DrawerHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
-  const { isMobile, isAtLeastMd } = useBreakpoint();
+  const { isDesktop } = useBreakpoint();
 
   const onTitlePress = () => {
     goToHome(navigation);
@@ -29,12 +26,12 @@ export function AppTitleBar({ navigation }: DrawerHeaderProps) {
 
   return (
     <View
-      className="border-b border-border bg-elevated px-md pb-sm"
+      className="border-b border-border bg-elevated px-md pb-sm md:px-lg"
       style={{ paddingTop: insets.top + 8 }}
     >
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center gap-sm">
-          {isMobile ? (
+      <View className="flex-row items-center justify-between gap-md">
+        <View className="min-w-0 flex-1 flex-row items-center gap-sm">
+          {!isDesktop ? (
             <Pressable
               onPress={openDrawer}
               accessibilityRole="button"
@@ -56,16 +53,7 @@ export function AppTitleBar({ navigation }: DrawerHeaderProps) {
           </Pressable>
         </View>
 
-        <View className="flex-row items-center gap-sm">
-          <SyncDevicesButton />
-          {isAtLeastMd ? (
-            <>
-              <NotificationBellButton />
-              <AppearanceToggle icon />
-            </>
-          ) : null}
-          <ProfileMenuButton />
-        </View>
+        <ShellActionButtons />
       </View>
     </View>
   );

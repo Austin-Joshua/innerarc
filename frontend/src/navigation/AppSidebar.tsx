@@ -83,6 +83,22 @@ const SECONDARY: NavItem[] = [
       navigation.dispatch(DrawerActions.closeDrawer());
     },
   },
+  {
+    label: "Profile",
+    icon: "person-outline",
+    onPress: ({ navigation }) => {
+      navigation.navigate("Profile");
+      navigation.dispatch(DrawerActions.closeDrawer());
+    },
+  },
+  {
+    label: "Settings",
+    icon: "settings-outline",
+    onPress: ({ navigation }) => {
+      navigation.navigate("Settings");
+      navigation.dispatch(DrawerActions.closeDrawer());
+    },
+  },
 ];
 
 function SidebarItem({

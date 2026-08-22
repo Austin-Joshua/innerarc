@@ -37,9 +37,15 @@ export default function FoodResultScreen() {
     return (
       <Screen>
         <ContentContainer width="content">
-        <Text className="text-caption text-muted">
-          No prediction yet. Go back and add a photo.
-        </Text>
+          <Text className="text-caption text-muted">
+            No prediction yet. Go back and add a photo.
+          </Text>
+          <Button
+            label="Back to capture"
+            variant="secondary"
+            className="mt-lg"
+            onPress={() => navigation.navigate("FoodCapture")}
+          />
         </ContentContainer>
       </Screen>
     );

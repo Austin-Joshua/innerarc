@@ -2,6 +2,7 @@ import {
   ProgramDetail,
   ProgramSummary,
   WorkoutDetail,
+  WorkoutLog,
   WorkoutSummary,
 } from "./api";
 
@@ -174,4 +175,20 @@ export const PREVIEW_PROGRAM_DETAIL: ProgramDetail = {
 
 export function isWorkoutPreview() {
   return process.env.EXPO_PUBLIC_WORKOUT_PREVIEW === "1";
+}
+
+export function previewWorkoutLog(workoutId: string, durationMin: number): WorkoutLog {
+  return {
+    id: "preview-workout-log",
+    workout_id: workoutId,
+    duration_min: durationMin,
+    calories_burned_est: Math.round(durationMin * 7.2),
+    gamification: {
+      streak_count: 5,
+      points: 480,
+      badges_earned: [],
+      last_activity_date: new Date().toISOString(),
+      new_badges: [],
+    },
+  };
 }

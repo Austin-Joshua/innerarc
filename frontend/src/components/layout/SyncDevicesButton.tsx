@@ -12,7 +12,7 @@ import { useTheme } from "../../ThemeProvider";
 import { AppText, Button } from "../ui";
 import { INTERACTIVE_NAV } from "../ui/interactiveStyles";
 import { TitleBarDropdown } from "./TitleBarDropdown";
-import { LAST_SYNC_KEY } from "../../screens/WearableConnectScreen";
+import { LAST_SYNC_KEY } from "../../wearableKeys";
 
 function formatLastSync(iso: string | null) {
   if (!iso) return "Not synced yet";

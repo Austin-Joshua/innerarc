@@ -16,7 +16,7 @@ export function PageShell({
   centeredMobile = true,
 }: PageShellProps) {
   const { isDesktop, isTablet } = useBreakpoint();
-  const width = isDesktop ? "wide" : isTablet ? "wide" : "content";
+  const width = isDesktop ? "full" : isTablet ? "wide" : "content";
   const align = isDesktop ? "start" : centeredMobile ? "center" : "start";
 
   return (

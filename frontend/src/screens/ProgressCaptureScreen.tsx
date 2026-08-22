@@ -1,6 +1,6 @@
-import { DrawerActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback } from "react";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -16,6 +16,11 @@ import { FitnessListSection } from "../components/fitness/FitnessListSection";
 import { AppText, Button, Card, PageTitle, Screen } from "../components/ui";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { setProgressDraft } from "../progressDraft";
+import {
+  isProgressPreview,
+  PREVIEW_PROGRESS,
+  seedProgressPreviewDraft,
+} from "../progressPreviewSeed";
 import { ProgressStackParamList } from "../navigation/types";
 import { useTheme } from "../ThemeProvider";
 import { usePhotoCapture } from "../usePhotoCapture";
@@ -83,14 +88,26 @@ function ProgressInfoPanel() {
 
 export default function ProgressCaptureScreen() {
   const navigation = useNavigation<Nav>();
-  const { isDesktop, isMobile, isTablet, tier } = useBreakpoint();
+  const { isDesktop, tier } = useBreakpoint();
+
+  useFocusEffect(
+    useCallback(() => {
+      seedProgressPreviewDraft();
+    }, []),
+  );
+
   const { pick, busy, error } = usePhotoCapture({
     task: "progress_photo",
     screen: "ProgressCapture",
     quality: 0.8,
     permissionDeniedMessage: "Allow camera access to add a photo.",
     failureMessage: "Could not estimate pose. Stand in frame with even light.",
-    capture: (uri) => api.uploadProgressPhoto(uri),
+    capture: async (uri) => {
+      if (isProgressPreview()) {
+        return { ...PREVIEW_PROGRESS, local_uri: uri };
+      }
+      return api.uploadProgressPhoto(uri);
+    },
     onCaptured: (uploaded, uri) => {
       setProgressDraft({ ...uploaded, local_uri: uri });
       api.logEvent({
@@ -102,17 +119,14 @@ export default function ProgressCaptureScreen() {
     },
   });
 
-  const openDrawer = () => {
-    navigation.getParent()?.dispatch(DrawerActions.openDrawer());
+  const openCompare = () => {
+    seedProgressPreviewDraft();
+    navigation.navigate("ProgressCompare");
   };
 
   const mobileCapture = (
     <View className="w-full">
-      <FitnessScreenTitle
-        title="Progress"
-        tier={tier}
-        onMenu={!isDesktop ? openDrawer : undefined}
-      />
+      <FitnessScreenTitle title="Progress" tier={tier} />
 
       {busy ? (
         <AppText variant="bodyStrong" className="mb-md w-full text-center">
@@ -150,6 +164,14 @@ export default function ProgressCaptureScreen() {
         <FitnessListRow icon="sunny-outline" label="Use even lighting, same spot" />
         <FitnessListRow icon="analytics-outline" label="First photo is your baseline" />
       </FitnessListSection>
+      {isProgressPreview() ? (
+        <Button
+          label="View sample compare"
+          variant="secondary"
+          className="mt-md w-full"
+          onPress={openCompare}
+        />
+      ) : null}
     </View>
   );
 
@@ -181,6 +203,14 @@ export default function ProgressCaptureScreen() {
           disabled={busy}
           className="mt-sm w-full"
         />
+        {isProgressPreview() ? (
+          <Button
+            label="View sample compare"
+            variant="secondary"
+            onPress={openCompare}
+            className="mt-sm w-full"
+          />
+        ) : null}
       </ActionStack>
     </View>
   );

@@ -26,7 +26,6 @@ function AppDrawerNavigatorInner() {
   const { colors } = useTheme();
   const { isMobile, isTablet, isDesktop } = useBreakpoint();
   const { collapsed } = useSidebarLayout();
-  const useFitnessShell = !isDesktop;
 
   const drawerWidth = isMobile
     ? SIDEBAR_WIDTH_EXPANDED
@@ -38,11 +37,8 @@ function AppDrawerNavigatorInner() {
     <Drawer.Navigator
       drawerContent={(props) => <AppSidebar {...props} />}
       screenOptions={({ route }) => ({
-        header:
-          useFitnessShell && FITNESS_SHELL_ROUTES.has(route.name)
-            ? undefined
-            : (props) => <AppTitleBar {...props} />,
-        headerShown: !(useFitnessShell && FITNESS_SHELL_ROUTES.has(route.name)),
+        header: (props) => <AppTitleBar {...props} />,
+        headerShown: FITNESS_SHELL_ROUTES.has(route.name),
         drawerType: isDesktop ? "permanent" : "front",
         swipeEnabled: !isDesktop,
         swipeEdgeWidth: isMobile || isTablet ? 48 : 0,

@@ -19,7 +19,11 @@ import {
   FoodDraftSingle,
   getFoodDraft,
 } from "../foodDraft";
-import { seedFoodPreviewDraft } from "../foodPreviewSeed";
+import {
+  isFoodPreview,
+  previewLogMealGamification,
+  seedFoodPreviewDraft,
+} from "../foodPreviewSeed";
 import { LogMealStackParamList } from "../navigation/types";
 import { goToHome } from "../navigation/navHelpers";
 
@@ -67,13 +71,20 @@ function plateSourceKey(draft: FoodDraftMulti): string {
 }
 
 export default function FoodNutritionScreen() {
+  const navigation = useNavigation<Nav>();
   seedFoodPreviewDraft();
   const draft = getFoodDraft();
   if (!draft) {
     return (
       <Screen>
         <ContentContainer width="content">
-        <Text className="text-caption text-muted">No dish selected.</Text>
+          <Text className="text-caption text-muted">No dish selected.</Text>
+          <Button
+            label="Back to capture"
+            variant="secondary"
+            className="mt-lg"
+            onPress={() => navigation.navigate("FoodCapture")}
+          />
         </ContentContainer>
       </Screen>
     );
@@ -106,6 +117,11 @@ function SingleFoodNutrition({ draft }: { draft: FoodDraftSingle }) {
     setBusy(true);
     setError(null);
     try {
+      if (isFoodPreview()) {
+        setBadges(previewLogMealGamification().new_badges);
+        setDone(true);
+        return;
+      }
       const logged = await api.logMeal({
         dish_id: draft.dish.id,
         confidence_score: draft.confidence_score,
@@ -233,6 +249,11 @@ function MultiFoodNutrition({ draft }: { draft: FoodDraftMulti }) {
     setBusy(true);
     setError(null);
     try {
+      if (isFoodPreview()) {
+        setBadges(previewLogMealGamification().new_badges);
+        setDone(true);
+        return;
+      }
       const loggedAt = new Date().toISOString();
       let earned: BadgeEarned[] = [];
       for (let i = 0; i < multiReady.length; i += 1) {
@@ -264,10 +285,16 @@ function MultiFoodNutrition({ draft }: { draft: FoodDraftMulti }) {
     return (
       <Screen>
         <ContentContainer width="content">
-        <Text className="text-caption text-muted">
-          No matched plate items yet. Go back and pick dishes for unmatched
-          items.
-        </Text>
+          <Text className="text-caption text-muted">
+            No matched plate items yet. Go back and pick dishes for unmatched
+            items.
+          </Text>
+          <Button
+            label="Back to result"
+            variant="secondary"
+            className="mt-lg"
+            onPress={() => navigation.navigate("FoodResult")}
+          />
         </ContentContainer>
       </Screen>
     );

@@ -4,6 +4,7 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -11,7 +12,7 @@ import { api, WearableReading } from "../api";
 import { healthConnect } from "../healthConnect";
 import { mergeWearablePreview } from "../wearablePreviewSeed";
 import { isAndroid, isWeb } from "../platform";
-import { LAST_SYNC_KEY } from "../screens/WearableConnectScreen";
+import { LAST_SYNC_KEY } from "../wearableKeys";
 
 type WearableSyncContextValue = {
   readings: WearableReading[];
@@ -32,6 +33,24 @@ export function WearableSyncProvider({ children }: PropsWithChildren) {
   const [syncMsg, setSyncMsg] = useState<string | null>(null);
   const [needsConnect, setNeedsConnect] = useState(false);
   const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void AsyncStorage.getItem(LAST_SYNC_KEY).then((iso) => {
+      if (active && iso) setLastSyncedAt(iso);
+    });
+    void api
+      .wearableRecent()
+      .then((res) => {
+        if (active && res.readings.length > 0) setReadings(res.readings);
+      })
+      .catch(() => {
+        /* offline or logged out */
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const syncNow = useCallback(async (): Promise<boolean> => {
     setNeedsConnect(false);

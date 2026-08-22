@@ -1,5 +1,5 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { View } from "react-native";
 
 import {
@@ -26,16 +26,12 @@ import { MainDrawerParamList } from "../navigation/types";
 
 export default function SettingsScreen() {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
-  const { isMobile, isTablet, tier, isDesktop } = useBreakpoint();
+  const { tier, isDesktop } = useBreakpoint();
   const { settings, ready, updatePersonal, updateNotifications, updateReminderTime } =
     useAppSettings();
 
   const { personal, notifications, reminderTimes } = settings;
   const remindersOn = notifications.mealReminders || notifications.workoutReminders;
-
-  const openDrawer = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
-  };
 
   const personalFields = (
     <>
@@ -142,7 +138,7 @@ export default function SettingsScreen() {
     return (
       <Screen hideAppName scroll>
         <PageShell centeredMobile={false}>
-          <FitnessScreenTitle title="Settings" tier={tier} onMenu={openDrawer} />
+          <FitnessScreenTitle title="Settings" tier={tier} />
 
           {!ready ? (
             <AppText variant="caption" muted className="mb-md">

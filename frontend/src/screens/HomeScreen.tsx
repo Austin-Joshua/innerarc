@@ -1,7 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CompositeNavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
 
 import {
@@ -21,18 +19,11 @@ import {
   mergeGamificationPreview,
   PREVIEW_RECENT_ACTIVITY,
 } from "../homePreviewSeed";
-import { MainDrawerParamList, MainTabParamList } from "../navigation/types";
-
-type Nav = CompositeNavigationProp<
-  BottomTabNavigationProp<MainTabParamList, "Home">,
-  DrawerNavigationProp<MainDrawerParamList>
->;
 
 const nudgeDismissKey = (nudgeId: string, day: string) =>
   `coach_nudge_dismissed:${day}:${nudgeId}`;
 
 export default function HomeScreen() {
-  const navigation = useNavigation<Nav>();
   const { readings, setReadings } = useWearableSync();
   const [activeReport, setActiveReport] = useState<HomeReport | null>(null);
   const [data, setData] = useState<Dashboard | null>(

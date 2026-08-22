@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Pressable, View } from "react-native";
 
 import { useBreakpoint } from "../../hooks/useBreakpoint";
-import { BRAND } from "../../marketing/landingAssets";
 import { useTheme } from "../../ThemeProvider";
 import { RootStackParamList } from "../../navigation/types";
 import { AppText, Button } from "../ui";

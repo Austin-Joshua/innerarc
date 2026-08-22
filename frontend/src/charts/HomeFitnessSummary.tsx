@@ -1,4 +1,3 @@
-import { DrawerActions } from "@react-navigation/native";
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -25,6 +24,9 @@ import { useTheme } from "../ThemeProvider";
 import { RecentActivityItem } from "../homePreviewSeed";
 import { MainDrawerParamList, MainTabParamList } from "../navigation/types";
 import { navigateWorkoutStack } from "../navigation/navHelpers";
+import { HomeInsightsPanel } from "./HomeInsightsPanel";
+import { HomeMacroPanel } from "./HomeMacroPanel";
+import { HomeVitalsCharts } from "./HomeVitalsCharts";
 import {
   dayCalorieReport,
   heartRateReport,
@@ -83,11 +85,12 @@ function FitnessInlineBars({
   });
 
   const barCount = WEEK_LABELS.length;
-  const spacing = width > 0 ? Math.max(4, Math.floor((width * 0.18) / (barCount - 1))) : 8;
+  const spacing =
+    width > 0 ? Math.max(2, Math.floor((width * 0.1) / Math.max(1, barCount - 1))) : 6;
   const barWidth =
     width > 0
-      ? Math.max(10, Math.floor((width - spacing * (barCount - 1)) / barCount))
-      : 14;
+      ? Math.max(8, Math.floor((width - spacing * (barCount - 1)) / barCount))
+      : 12;
 
   const data = values.map((v, i) => ({
     value: v,
@@ -97,18 +100,22 @@ function FitnessInlineBars({
 
   const onLayout = (e: LayoutChangeEvent) => {
     const w = e.nativeEvent.layout.width;
-    if (w > 0) setWidth(w);
+    if (w > 0 && Math.abs(w - width) > 1) setWidth(w);
   };
 
+  const chartWidth = width > 0 ? width : undefined;
+
   return (
-    <View className="mb-lg w-full" onLayout={onLayout}>
-      {width > 0 ? (
+    <View className="mb-lg w-full overflow-hidden" onLayout={onLayout}>
+      {chartWidth ? (
         <BarChart
           data={data}
-          width={width}
+          width={chartWidth}
           height={height}
           barWidth={barWidth}
           spacing={spacing}
+          initialSpacing={0}
+          endSpacing={0}
           roundedTop
           roundedBottom
           hideRules
@@ -122,16 +129,13 @@ function FitnessInlineBars({
       ) : (
         <View style={{ height }} />
       )}
-      <View className="mt-xs flex-row justify-between px-xxs">
+      <View className="mt-xs flex-row">
         {WEEK_LABELS.map((label, i) => (
-          <AppText
-            key={`${label}-${i}`}
-            variant="overline"
-            muted
-            style={{ width: barWidth, textAlign: "center", fontSize: 9 }}
-          >
-            {label}
-          </AppText>
+          <View key={`${label}-${i}`} className="min-w-0 flex-1 items-center">
+            <AppText variant="overline" muted style={{ fontSize: 9 }}>
+              {label}
+            </AppText>
+          </View>
         ))}
       </View>
     </View>
@@ -271,7 +275,7 @@ function AwardsSection({
 }
 
 export function HomeFitnessSummary(props: Props) {
-  const { tier, isDesktop } = useBreakpoint();
+  const { tier } = useBreakpoint();
   const navigation = useNavigation<Nav>();
   const tokens = fitnessTokens(tier);
   const {
@@ -305,9 +309,6 @@ export function HomeFitnessSummary(props: Props) {
     Math.round(gamification.points * 42);
   const heartRate = merged.find((r) => r.metric_type === "heart_rate")?.value;
 
-  const openDrawer = () => navigation.dispatch(DrawerActions.openDrawer());
-  const showMenu = !isDesktop;
-
   const statItems = [
     { label: "Steps", value: steps.toLocaleString() },
     { label: "Protein", value: `${Math.round(dashboard.logged.protein_g)} g` },
@@ -339,6 +340,7 @@ export function HomeFitnessSummary(props: Props) {
         )
       }
       accessibilityRole="button"
+      className="w-full"
     >
       <FitnessMoveRing
         progress={calorieProgress}
@@ -348,6 +350,15 @@ export function HomeFitnessSummary(props: Props) {
         stroke={tokens.ringStroke}
       />
     </Pressable>
+  );
+
+  const barsBlock = (
+    <FitnessInlineBars
+      todayCalories={dashboard.logged.calories}
+      targetCalories={dashboard.target.calories}
+      onDayPress={onDayPress}
+      height={tier === "desktop" ? 120 : tier === "tablet" ? 96 : 72}
+    />
   );
 
   const healthBlock =
@@ -370,13 +381,11 @@ export function HomeFitnessSummary(props: Props) {
       </FitnessListSection>
     ) : null;
 
+  const showMore = () => navigateWorkoutStack(navigation, "WorkoutLibrary");
+
   return (
     <View className="w-full">
-      <FitnessScreenTitle
-        title="Summary"
-        tier={tier}
-        onMenu={showMenu ? openDrawer : undefined}
-      />
+      <FitnessScreenTitle title="Summary" tier={tier} />
 
       {nudge ? <NudgeCard nudge={nudge} onDismiss={onDismissNudge} /> : null}
 
@@ -385,19 +394,16 @@ export function HomeFitnessSummary(props: Props) {
       {tier === "mobile" ? (
         <>
           {ringBlock}
-          <FitnessInlineBars
-            todayCalories={dashboard.logged.calories}
-            targetCalories={dashboard.target.calories}
-            onDayPress={onDayPress}
-          />
+          {barsBlock}
           <FitnessStatGrid items={statItems} />
           <HistorySection
             items={recentItems}
             onReport={onReport}
-            onShowMore={() => navigateWorkoutStack(navigation, "WorkoutLibrary")}
+            onShowMore={showMore}
             maxItems={4}
           />
           <TrendsSection dashboard={dashboard} onReport={onReport} />
+          <AwardsSection gamification={gamification} onReport={onReport} />
           {healthBlock}
         </>
       ) : null}
@@ -407,14 +413,9 @@ export function HomeFitnessSummary(props: Props) {
           <DesktopColumns
             left={ringBlock}
             right={
-              <View>
+              <View className="min-w-0 w-full">
                 <FitnessStatGrid items={statItems} />
-                <FitnessInlineBars
-                  todayCalories={dashboard.logged.calories}
-                  targetCalories={dashboard.target.calories}
-                  onDayPress={onDayPress}
-                  height={96}
-                />
+                {barsBlock}
               </View>
             }
             leftFlex={1}
@@ -427,47 +428,52 @@ export function HomeFitnessSummary(props: Props) {
               <HistorySection
                 items={recentItems}
                 onReport={onReport}
-                onShowMore={() => navigateWorkoutStack(navigation, "WorkoutLibrary")}
+                onShowMore={showMore}
                 maxItems={5}
               />
             }
-            right={<TrendsSection dashboard={dashboard} onReport={onReport} />}
+            right={
+              <View className="min-w-0 w-full">
+                <TrendsSection dashboard={dashboard} onReport={onReport} />
+                {healthBlock}
+              </View>
+            }
             leftFlex={1}
             rightFlex={1}
             className="mb-lg"
           />
-          {healthBlock}
         </>
       ) : null}
 
       {tier === "desktop" ? (
         <>
-          <DesktopColumns
-            left={ringBlock}
-            right={
-              <View>
-                <FitnessStatGrid items={statItems} />
-                <FitnessInlineBars
-                  todayCalories={dashboard.logged.calories}
-                  targetCalories={dashboard.target.calories}
-                  onDayPress={onDayPress}
-                  height={120}
-                />
-              </View>
-            }
-            leftFlex={1}
-            rightFlex={1}
-            className="mb-xl"
-          />
+          <View className="mb-xl w-full flex-row gap-xl">
+            <View className="min-w-0 flex-1">{ringBlock}</View>
+            <View className="min-w-0 flex-[1.15]">
+              <FitnessStatGrid items={statItems} />
+              {barsBlock}
+              <HomeInsightsPanel
+                gamification={gamification}
+                mealCount={dashboard.entries.length}
+                onReport={onReport}
+              />
+            </View>
+            <View className="min-w-0 flex-1">
+              <HomeMacroPanel data={dashboard} onReport={onReport} />
+              <HomeVitalsCharts readings={readings} onReport={onReport} />
+            </View>
+          </View>
+
           <AwardsSection gamification={gamification} onReport={onReport} />
+
           <ResponsiveGrid desktopCols={2} className="mb-xl w-full gap-lg">
             <HistorySection
               items={recentItems}
               onReport={onReport}
-              onShowMore={() => navigateWorkoutStack(navigation, "WorkoutLibrary")}
-              maxItems={6}
+              onShowMore={showMore}
+              maxItems={8}
             />
-            <View>
+            <View className="min-w-0 w-full">
               <TrendsSection dashboard={dashboard} onReport={onReport} />
               {healthBlock}
             </View>
@@ -477,6 +483,3 @@ export function HomeFitnessSummary(props: Props) {
     </View>
   );
 }
-
-/** @deprecated use HomeFitnessSummary */
-export const HomeMobileSummary = HomeFitnessSummary;

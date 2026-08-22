@@ -32,12 +32,14 @@ function MiniRing({
   const c = 2 * Math.PI * r;
   const offset = c * (1 - Math.min(1, progress));
 
+  const center = size / 2;
+
   return (
     <Svg width={size} height={size}>
-      <G rotation="-90" origin={`${size / 2}, ${size / 2}`}>
+      <G transform={`rotate(-90 ${center} ${center})`}>
         <Circle
-          cx={size / 2}
-          cy={size / 2}
+          cx={center}
+          cy={center}
           r={r}
           stroke={track}
           strokeWidth={stroke}
@@ -45,8 +47,8 @@ function MiniRing({
           opacity={0.4}
         />
         <Circle
-          cx={size / 2}
-          cy={size / 2}
+          cx={center}
+          cy={center}
           r={r}
           stroke={fill}
           strokeWidth={stroke}
@@ -58,8 +60,8 @@ function MiniRing({
       </G>
       {selected ? (
         <Circle
-          cx={size / 2}
-          cy={size / 2}
+          cx={center}
+          cy={center}
           r={size / 2 - 1}
           stroke="#FFFFFF"
           strokeWidth={1.5}
@@ -79,7 +81,7 @@ export function FitnessWeekStrip({
   const ringSize = 28;
 
   return (
-    <View className="mb-lg flex-row justify-between px-xs">
+    <View className="mb-lg flex-row px-xs">
       {WEEK_DAYS.map((label, i) => {
         const selected = i === selectedIndex;
         return (
@@ -87,8 +89,7 @@ export function FitnessWeekStrip({
             key={`${label}-${i}`}
             onPress={() => onSelectDay?.(i)}
             accessibilityRole="button"
-            className="items-center"
-            style={{ width: `${100 / 7}%` }}
+            className="min-w-0 flex-1 items-center"
           >
             <AppText
               variant="caption"
@@ -131,14 +132,16 @@ export function FitnessMoveRing({
   const c = 2 * Math.PI * r;
   const offset = c * (1 - Math.min(1, progress));
 
+  const center = size / 2;
+
   return (
     <View className="my-md items-center">
       <View style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
         <Svg width={size} height={size}>
-          <G rotation="-90" origin={`${size / 2}, ${size / 2}`}>
+          <G transform={`rotate(-90 ${center} ${center})`}>
             <Circle
-              cx={size / 2}
-              cy={size / 2}
+              cx={center}
+              cy={center}
               r={r}
               stroke={colors.ringTrack}
               strokeWidth={stroke}
@@ -146,8 +149,8 @@ export function FitnessMoveRing({
               opacity={0.35}
             />
             <Circle
-              cx={size / 2}
-              cy={size / 2}
+              cx={center}
+              cy={center}
               r={r}
               stroke={colors.accentBright}
               strokeWidth={stroke}

@@ -10,10 +10,9 @@ import { healthConnect } from "../healthConnect";
 import { goToHome } from "../navigation/navHelpers";
 import { MainDrawerParamList } from "../navigation/types";
 import { isAndroid, isIOS, isWeb } from "../platform";
+import { LAST_SYNC_KEY } from "../wearableKeys";
 
 type Nav = DrawerNavigationProp<MainDrawerParamList, "WearableConnect">;
-
-export const LAST_SYNC_KEY = "wearable_last_synced_at";
 
 function UnavailablePanel({
   title,

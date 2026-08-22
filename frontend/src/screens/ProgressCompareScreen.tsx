@@ -1,4 +1,3 @@
-import { DrawerActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -80,16 +79,12 @@ export default function ProgressCompareScreen() {
   }, [draft]);
 
   if (!draft) {
-    const openDrawer = () => {
-      navigation.getParent()?.dispatch(DrawerActions.openDrawer());
-    };
-
     return (
       <Screen>
         <PageShell centeredMobile={false}>
           {!isDesktop ? (
             <>
-              <FitnessScreenTitle title="Progress" tier={tier} onMenu={openDrawer} />
+              <FitnessScreenTitle title="Progress" tier={tier} />
               <AppText variant="body" muted className="mb-lg w-full text-center">
                 No progress photo yet.
               </AppText>
@@ -250,13 +245,9 @@ export default function ProgressCompareScreen() {
     </View>
   );
 
-  const openDrawer = () => {
-    navigation.getParent()?.dispatch(DrawerActions.openDrawer());
-  };
-
   const mobileBody = (
     <>
-      <FitnessScreenTitle title="Progress" tier={tier} onMenu={openDrawer} />
+      <FitnessScreenTitle title="Progress" tier={tier} />
       <BadgeBanner badges={gamification?.new_badges ?? []} />
 
       {milestone.streak_count > 0 ? (

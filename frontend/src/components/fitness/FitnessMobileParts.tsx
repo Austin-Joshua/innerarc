@@ -1,8 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 
-import { NotificationBellButton } from "../layout/NotificationBellButton";
-import { AppearanceToggle } from "../ui/AppearanceToggle";
 import { AppText } from "../ui/AppText";
 import { useTheme } from "../../ThemeProvider";
 import { BreakpointTier } from "../../hooks/useBreakpoint";
@@ -12,67 +10,43 @@ import { FITNESS_MOBILE } from "./fitnessMobileTheme";
 type FitnessScreenTitleProps = {
   title: string;
   tier?: BreakpointTier;
-  onMenu?: () => void;
-  /** Dark mode + notifications in title card (mobile shell). */
-  showActions?: boolean;
   rightAction?: React.ReactNode;
 };
 
+/** In-content screen heading — chrome actions live in AppTitleBar only. */
 export function FitnessScreenTitle({
   title,
   tier = "mobile",
-  onMenu,
-  showActions = true,
   rightAction,
 }: FitnessScreenTitleProps) {
   const { colors } = useTheme();
   const tokens = fitnessTokens(tier);
   const isCard = tier === "mobile";
 
-  const inner = (
+  const heading = (
     <View className="flex-row items-center justify-between gap-sm">
-      <View className="min-w-0 flex-1 flex-row items-center gap-sm">
-        {onMenu ? (
-          <Pressable
-            onPress={onMenu}
-            hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel="Open menu"
-          >
-            <Ionicons name="menu" size={tier === "desktop" ? 28 : 26} color={colors.text} />
-          </Pressable>
-        ) : null}
-        <AppText
-          variant="display"
-          className="font-extrabold"
-          style={{ fontSize: tokens.titleSize }}
-          numberOfLines={1}
-        >
-          {title}
-        </AppText>
-      </View>
-      <View className="flex-row items-center gap-xxs">
-        {rightAction}
-        {showActions ? (
-          <>
-            <AppearanceToggle icon fitness />
-            <NotificationBellButton variant="fitness" />
-          </>
-        ) : null}
-      </View>
+      <AppText
+        variant="display"
+        className="flex-1 font-extrabold"
+        style={{ fontSize: tokens.titleSize }}
+        numberOfLines={1}
+      >
+        {title}
+      </AppText>
+      {rightAction}
     </View>
   );
 
   if (!isCard) {
-    return <View className="mb-lg w-full">{inner}</View>;
+    return <View className="mb-md w-full">{heading}</View>;
   }
 
   return (
     <View
-      className="mb-md rounded-xl border border-border px-md py-sm"
+      className="mb-md w-full rounded-xl border border-border px-md py-sm"
       style={{ backgroundColor: `${colors.surface}CC` }}
     >
-      {inner}
+      {heading}
     </View>
   );
 }

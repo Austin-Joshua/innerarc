@@ -110,11 +110,10 @@ export function Screen({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
   const routeName = route.name;
-  const { tier, isDesktop } = useBreakpoint();
+  const { tier } = useBreakpoint();
   const shellChrome = SHELL_COVERED.has(routeName);
   const hPad = shellChrome ? fitnessHPadding(tier) : "px-xl";
-  const needsTopInset =
-    routeName !== "Splash" && (!shellChrome || (!isDesktop && shellChrome));
+  const needsTopInset = routeName !== "Splash" && !shellChrome;
   const [leaveOpen, setLeaveOpen] = useState(false);
 
   const body = scroll ? (

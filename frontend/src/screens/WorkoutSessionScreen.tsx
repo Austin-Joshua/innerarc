@@ -14,6 +14,7 @@ import {
   isWorkoutPreview,
   PREVIEW_WORKOUT_DETAIL,
   PREVIEW_WORKOUT_ID,
+  previewWorkoutLog,
 } from "../workoutPreviewSeed";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutSession">;
@@ -84,6 +85,17 @@ export default function WorkoutSessionScreen() {
     setLogging(true);
     const durationMin = Math.max(1, (Date.now() - startedAt.current) / 60000);
     try {
+      if (isWorkoutPreview()) {
+        const log = previewWorkoutLog(workout.id, Math.round(durationMin * 10) / 10);
+        setBadges(log.gamification?.new_badges ?? []);
+        setDoneMessage(`Logged · ${log.calories_burned_est} kcal est.`);
+        api.logEvent({
+          event_type: "task_completed",
+          task: "workout_session",
+          screen: "WorkoutSession",
+        });
+        return;
+      }
       const log = await api.logWorkout({
         workout_id: workout.id,
         duration_min: Math.round(durationMin * 10) / 10,
@@ -143,6 +155,12 @@ export default function WorkoutSessionScreen() {
       <Screen scroll={false} confirmLeaveHome={false}>
         <SessionColumn>
           <Text className="text-caption text-muted">{error}</Text>
+          <Button
+            label="Back to workouts"
+            variant="secondary"
+            className="mt-lg"
+            onPress={() => navigation.goBack()}
+          />
         </SessionColumn>
       </Screen>
     );

@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { DrawerActions } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback } from "react";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -8,10 +8,15 @@ import { api } from "../api";
 import { FitnessScreenTitle } from "../components/fitness/FitnessMobileParts";
 import { ActionStack } from "../components/layout/ActionStack";
 import { DesktopColumns, PageShell } from "../components/layout";
-import { AppText, Button, Card, PageTitle, Screen } from "../components/ui";
+import { AppText, Button, Card, Screen } from "../components/ui";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import { PREVIEW_DASHBOARD } from "../homePreviewSeed";
 import { setFoodDraft, singleFromClassify } from "../foodDraft";
+import {
+  isFoodPreview,
+  previewClassifyResult,
+  seedFoodPreviewDraft,
+} from "../foodPreviewSeed";
 import { LogMealStackParamList } from "../navigation/types";
 import { useTheme } from "../ThemeProvider";
 import { usePhotoCapture } from "../usePhotoCapture";
@@ -75,30 +80,39 @@ function LogMealInfoPanel() {
 export default function FoodCaptureScreen() {
   const navigation = useNavigation<Nav>();
   const { isDesktop, tier } = useBreakpoint();
+
+  useFocusEffect(
+    useCallback(() => {
+      seedFoodPreviewDraft();
+    }, []),
+  );
+
   const { pick, busy, error } = usePhotoCapture({
     task: "food_log",
     screen: "FoodCapture",
     quality: 0.7,
     permissionDeniedMessage: "Allow camera access to log a meal.",
     failureMessage: "Could not classify photo",
-    capture: (uri) => api.classify(uri),
+    capture: async (uri) => {
+      if (isFoodPreview()) {
+        return previewClassifyResult(uri);
+      }
+      return api.classify(uri);
+    },
     onCaptured: (classified, uri) => {
       setFoodDraft(singleFromClassify(classified, uri));
       navigation.navigate("FoodResult");
     },
   });
 
+  const openSampleResult = () => {
+    seedFoodPreviewDraft();
+    navigation.navigate("FoodResult");
+  };
+
   const capture = (
     <View className="w-full items-center justify-center">
-      {!isDesktop ? (
-        <FitnessScreenTitle
-          title="Nutrition"
-          tier={tier}
-          onMenu={() => navigation.getParent()?.dispatch(DrawerActions.openDrawer())}
-        />
-      ) : (
-        <PageTitle className="mb-lg">Log meal</PageTitle>
-      )}
+      <FitnessScreenTitle title="Nutrition" tier={tier} />
       {error ? (
         <AppText variant="caption" className="mb-md w-full text-center text-danger">
           {error}
@@ -119,6 +133,15 @@ export default function FoodCaptureScreen() {
           disabled={busy}
           className="mt-sm w-full"
         />
+        {isFoodPreview() ? (
+          <Button
+            label="Use sample meal"
+            variant="secondary"
+            onPress={openSampleResult}
+            disabled={busy}
+            className="mt-sm w-full"
+          />
+        ) : null}
       </ActionStack>
     </View>
   );

@@ -1,5 +1,5 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { DrawerActions, useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { View } from "react-native";
 
@@ -22,7 +22,7 @@ type Nav = DrawerNavigationProp<MainDrawerParamList, "Profile">;
 
 export default function ProfileScreen() {
   const navigation = useNavigation<Nav>();
-  const { isMobile, isTablet, tier, isDesktop } = useBreakpoint();
+  const { tier, isDesktop } = useBreakpoint();
   const [email, setEmail] = useState("");
   const [form, setForm] = useState<ProfileFormState>(defaultProfileForm());
   const [error, setError] = useState<string | null>(null);
@@ -65,10 +65,6 @@ export default function ProfileScreen() {
     }
   }
 
-  const openDrawer = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
-  };
-
   const formBlock = (
     <>
       {!loaded && !error ? (
@@ -97,7 +93,7 @@ export default function ProfileScreen() {
     return (
       <Screen hideAppName scroll>
         <PageShell centeredMobile={false}>
-          <FitnessScreenTitle title="Profile" tier={tier} onMenu={openDrawer} />
+          <FitnessScreenTitle title="Profile" tier={tier} />
 
           {email ? (
             <FitnessStatGrid
