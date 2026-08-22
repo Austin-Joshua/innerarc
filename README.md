@@ -58,6 +58,8 @@ cp .env.example .env
 
 Set `GEMINI_ENABLED=true` and `GEMINI_API_KEY` only if you want live AI coach / plate vision. With AI off (default), coach and classify-plate return 503 and CI runs without Gemini. Optionally set `CLASSIFIER_STUB_MODE=false` after you have `ml/checkpoints/best.pt` and checked `ml/reports/test_metrics.json`.
 
+**CI:** GitHub Actions runs two separate backend workflows — `backend (deterministic)` (always; mocked coach/plate) and `backend (live Gemini)` (optional; real API when `GEMINI_API_KEY` is set on Environment `Env`; skipped otherwise). A green deterministic run does not prove live Gemini.
+
 ### 2. Database
 
 ```bash

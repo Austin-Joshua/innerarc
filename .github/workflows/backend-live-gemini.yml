@@ -1,10 +1,11 @@
-# Backend CI (deterministic): Postgres + migrate + seed + all seven smoke scripts.
-# GEMINI_ENABLED=false — coach/plate smokes use mocks. No API key required.
-# Live Gemini verification: see backend-live-gemini.yml (optional, separate workflow).
+# Optional live Gemini CI: real API calls for coach + plate vision.
+# Skipped entirely when GEMINI_API_KEY is not configured (no failure).
+# Red on this workflow = live Gemini path failed (quota, billing, API) — not deterministic logic.
 #
-# JWT_SECRET / DB creds use the same defaults as .env.example (CI-only; not production).
+# Secret: repository secret GEMINI_API_KEY, or Environment "Env" (gate job uses Env).
+# Does not block pushes when skipped; deterministic workflow always runs separately.
 
-name: backend (deterministic)
+name: backend (live Gemini)
 
 on:
   push:
@@ -13,9 +14,31 @@ on:
     branches: [master]
 
 jobs:
-  deterministic-smokes:
-    name: deterministic smokes
+  gate:
+    name: check GEMINI_API_KEY present
     runs-on: ubuntu-latest
+    environment: Env
+    outputs:
+      gemini_key_configured: ${{ steps.check.outputs.configured }}
+    steps:
+      - id: check
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -n "${GEMINI_API_KEY}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "GEMINI_API_KEY is set (length ${#GEMINI_API_KEY})"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "GEMINI_API_KEY not set — skipping live Gemini smokes"
+          fi
+
+  live-gemini-smokes:
+    name: live Gemini smokes
+    needs: gate
+    if: needs.gate.outputs.gemini_key_configured == 'true'
+    runs-on: ubuntu-latest
+    environment: Env
     defaults:
       run:
         working-directory: backend
@@ -44,20 +67,15 @@ jobs:
       CLASSIFIER_STUB_MODE: "true"
       POSE_LANDMARKER_MODEL: ../ml/checkpoints/pose_landmarker_lite.task
       CORS_ORIGINS: http://localhost:8081,http://localhost:19006
-      GEMINI_ENABLED: "false"
+      GEMINI_ENABLED: "true"
       GEMINI_MODEL: gemini-3.5-flash
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       PHOTO_ENCRYPTION_KEY: ""
       PYTHONPATH: .
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install MediaPipe/OpenCV system libraries
-        working-directory: .
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libgl1 libegl1 libgles2 libglib2.0-0 libgomp1
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -88,6 +106,7 @@ jobs:
             echo "CORS_ORIGINS=${CORS_ORIGINS}"
             echo "GEMINI_ENABLED=${GEMINI_ENABLED}"
             echo "GEMINI_MODEL=${GEMINI_MODEL}"
+            echo "GEMINI_API_KEY=${GEMINI_API_KEY}"
             echo "PHOTO_ENCRYPTION_KEY=${PHOTO_ENCRYPTION_KEY}"
           } > .env
           echo "PHOTO_ENCRYPTION_KEY=${PHOTO_ENCRYPTION_KEY}" >> "$GITHUB_ENV"
@@ -99,17 +118,6 @@ jobs:
         run: |
           python -u scripts/seed_food.py
           python -u scripts/seed_workouts.py
-
-      - name: Download MediaPipe pose landmarker
-        working-directory: .
-        run: |
-          mkdir -p ml/checkpoints
-          curl -fsSL -o ml/checkpoints/pose_landmarker_lite.task \
-            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"
-          python -c "import os; n=os.path.getsize('ml/checkpoints/pose_landmarker_lite.task'); print('pose_model_bytes', n); raise SystemExit(0 if n>1_000_000 else 1)"
-
-      - name: Sanity-check pose on progress fixture
-        run: python -u scripts/ci_pose_sanity.py
 
       - name: Download plate smoke fixtures (Wikimedia Commons)
         working-directory: .
@@ -125,23 +133,8 @@ jobs:
             "https://commons.wikimedia.org/wiki/Special:FilePath/Indian_Thali.jpg"
           ls -la backend/scripts/fixtures/plates/*.jpg
 
-      - name: Run smoke_wearable
-        run: python -u scripts/smoke_wearable.py
-
-      - name: Run smoke_usability
-        run: python -u scripts/smoke_usability.py
-
-      - name: Run smoke_proactive
-        run: python -u scripts/smoke_proactive.py
-
-      - name: Run smoke_gamification
-        run: python -u scripts/smoke_gamification.py
-
-      - name: Run smoke_progress_pose
-        run: python -u scripts/smoke_progress_pose.py
-
-      - name: Run smoke_coach
+      - name: Run smoke_coach (live Gemini)
         run: python -u scripts/smoke_coach.py
 
-      - name: Run smoke_plate
+      - name: Run smoke_plate (live Gemini Vision)
         run: python -u scripts/smoke_plate.py
