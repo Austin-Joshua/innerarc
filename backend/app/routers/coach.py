@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.models.engagement import AIConversation
 from app.models.user import User
+from app.rate_limit import limiter
 from app.schemas.coach import (
     CoachChatRequest,
     CoachChatResponse,
@@ -27,7 +28,9 @@ router = APIRouter(prefix="/coach", tags=["coach"])
 
 
 @router.post("/chat", response_model=CoachChatResponse)
+@limiter.limit("20/hour")
 def coach_chat(
+    request: Request,
     body: CoachChatRequest,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -104,7 +107,9 @@ def coach_history(
 
 
 @router.get("/nudge", response_model=CoachNudgeResponse)
+@limiter.limit("6/hour")
 def coach_nudge(
+    request: Request,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> CoachNudgeResponse:

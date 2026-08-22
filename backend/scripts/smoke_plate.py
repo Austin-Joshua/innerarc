@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
+from contextlib import nullcontext
 from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
+
+if not (os.environ.get("PHOTO_ENCRYPTION_KEY") or "").strip():
+    from cryptography.fernet import Fernet
+
+    os.environ["PHOTO_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -14,6 +21,7 @@ from sqlalchemy import select
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from app.config import settings  # noqa: E402
 from app.db import SessionLocal  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models.food import Dish  # noqa: E402
@@ -21,6 +29,15 @@ from app.services.plate_vision import VisionItem  # noqa: E402
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures" / "plates"
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG"}
+
+_STUB_VISION = [
+    VisionItem(label="Butter chicken", portion="medium", confidence=0.85),
+    VisionItem(label="Dal", portion="small", confidence=0.8),
+]
+
+
+def _gemini_live() -> bool:
+    return settings.gemini_available
 
 
 def _auth(client: TestClient, email: str) -> dict[str, str]:
@@ -68,41 +85,49 @@ def main() -> None:
     client = TestClient(app)
     headers = _auth(client, f"m10_plate_{stamp}@example.com")
 
-    print("=== 1: Gemini plate classify on genuine multi-item photos ===")
+    print("=== 1: plate classify on genuine multi-item photos ===")
+    if not _gemini_live():
+        print("AI disabled — mocking identify_plate_items for classify-plate uploads")
     any_unmatched_from_vision = False
     photos_ok = 0
-    for photo in photos:
-        with photo.open("rb") as fh:
-            resp = client.post(
-                "/food/classify-plate",
-                headers=headers,
-                files={"file": (photo.name, fh, "image/jpeg")},
-            )
-        if resp.status_code != 200:
+    vision_ctx = (
+        patch("app.routers.food.identify_plate_items", return_value=_STUB_VISION)
+        if not _gemini_live()
+        else nullcontext()
+    )
+    with vision_ctx:
+        for photo in photos:
+            with photo.open("rb") as fh:
+                resp = client.post(
+                    "/food/classify-plate",
+                    headers=headers,
+                    files={"file": (photo.name, fh, "image/jpeg")},
+                )
+            if resp.status_code != 200:
+                print(f"\nPHOTO: {photo.name}")
+                print(
+                    f"LIMITATION: classify-plate failed ({resp.status_code}): {resp.text[:300]}"
+                )
+                continue
+            body = resp.json()
+            photos_ok += 1
             print(f"\nPHOTO: {photo.name}")
-            print(
-                f"LIMITATION: classify-plate failed ({resp.status_code}): {resp.text[:300]}"
-            )
-            continue
-        body = resp.json()
-        photos_ok += 1
-        print(f"\nPHOTO: {photo.name}")
-        print("image_url:", body["image_url"])
-        assert body["items"], f"{photo.name}: expected at least one item"
-        for i, item in enumerate(body["items"], start=1):
-            print(
-                f"  item[{i}] label={item['suggested_label']!r} portion={item['portion']!r} "
-                f"matched={item['matched']} dish={None if not item['dish'] else item['dish']['name']} "
-                f"serving_g={item['serving_size_g']} conf={item['confidence_score']}"
-            )
-            if item["matched"]:
-                assert item["dish"] is not None
-                assert "nutrition_per_100g" in item["dish"]
-                assert "calories" in item["dish"]["nutrition_per_100g"]
-            else:
-                any_unmatched_from_vision = True
-                assert item["dish"] is None
-                assert item["serving_size_g"] is None
+            print("image_url:", body["image_url"])
+            assert body["items"], f"{photo.name}: expected at least one item"
+            for i, item in enumerate(body["items"], start=1):
+                print(
+                    f"  item[{i}] label={item['suggested_label']!r} portion={item['portion']!r} "
+                    f"matched={item['matched']} dish={None if not item['dish'] else item['dish']['name']} "
+                    f"serving_g={item['serving_size_g']} conf={item['confidence_score']}"
+                )
+                if item["matched"]:
+                    assert item["dish"] is not None
+                    assert "nutrition_per_100g" in item["dish"]
+                    assert "calories" in item["dish"]["nutrition_per_100g"]
+                else:
+                    any_unmatched_from_vision = True
+                    assert item["dish"] is None
+                    assert item["serving_size_g"] is None
 
     if photos_ok == 0:
         print("FAIL: no plate photos successfully classified")

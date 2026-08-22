@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import Response
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -25,6 +26,7 @@ from app.schemas.progress import (
 )
 from app.security import get_current_user
 from app.services.gamification import apply_event, state_dict, status_for_user
+from app.services.photo_crypto import read_decrypted, write_encrypted
 from app.services.pose import PoseFailure, PoseSuccess, estimate_pose
 
 router = APIRouter(prefix="/progress", tags=["progress"])
@@ -155,15 +157,20 @@ def upload_progress_photo(
     file_id = uuid4()
     relative_key = f"progress/{file_id}{suffix}"
     stored = _storage_root() / f"{file_id}{suffix}"
-    stored.write_bytes(file.file.read())
-
-    result = estimate_pose(stored)
-    if isinstance(result, PoseFailure):
-        stored.unlink(missing_ok=True)
-        raise HTTPException(
-            status_code=422,
-            detail=result.message,
-        )
+    plaintext = file.file.read()
+    with NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        tmp.write(plaintext)
+    try:
+        result = estimate_pose(tmp_path)
+        if isinstance(result, PoseFailure):
+            raise HTTPException(
+                status_code=422,
+                detail=result.message,
+            )
+        write_encrypted(stored, plaintext)
+    finally:
+        tmp_path.unlink(missing_ok=True)
 
     assert isinstance(result, PoseSuccess)
     existing = _user_photos(db, user.id)
@@ -213,7 +220,7 @@ def get_progress_photo_image(
     photo_id: UUID,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> FileResponse:
+) -> Response:
     # Ownership check: unknown or other user's id → 404 (not 403) to avoid leaking existence.
     photo = db.scalar(
         select(ProgressPhoto).where(
@@ -225,12 +232,18 @@ def get_progress_photo_image(
     path = _resolve_storage_path(photo.image_url)
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Photo not found")
+    try:
+        plaintext = read_decrypted(path)
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=500, detail="Photo decrypt failed") from exc
     media = "image/jpeg"
     if path.suffix.lower() == ".png":
         media = "image/png"
     elif path.suffix.lower() == ".webp":
         media = "image/webp"
-    return FileResponse(path, media_type=media, filename=path.name)
+    elif plaintext.startswith(b"\x89PNG"):
+        media = "image/png"
+    return Response(content=plaintext, media_type=media)
 
 
 @router.get("/timeline", response_model=ProgressTimelineOut)

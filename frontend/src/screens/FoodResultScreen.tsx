@@ -4,7 +4,13 @@ import { useCallback, useState } from "react";
 import { Image, Text, View } from "react-native";
 
 import { api } from "../api";
-import { Badge, Button, Card, Screen } from "../components/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  NutritionConfidenceBadge,
+  Screen,
+} from "../components/ui";
 import { FoodDraft, getFoodDraft, setFoodDraft } from "../foodDraft";
 import { RootStackParamList } from "../navigation/types";
 
@@ -98,6 +104,12 @@ export default function FoodResultScreen() {
                 {item.matched ? "Matched" : "No dish match"} · portion{" "}
                 {item.portion} · conf {conf}
               </Text>
+              {item.dish ? (
+                <NutritionConfidenceBadge
+                  confidence={item.dish.nutrition_confidence}
+                  className="mt-sm"
+                />
+              ) : null}
               {!item.matched ? (
                 <Text className="mt-xs text-caption text-warning">
                   Pick a dish to include this item in the log.
@@ -145,6 +157,10 @@ export default function FoodResultScreen() {
       <Text className="mt-sm text-heading font-semibold text-ink">
         Confidence {pct}%
       </Text>
+      <NutritionConfidenceBadge
+        confidence={draft.dish.nutrition_confidence}
+        className="mt-sm"
+      />
       <Text className="mb-lg mt-sm text-caption text-muted">
         Predictions are estimates. If this is the wrong dish, edit it before
         logging.

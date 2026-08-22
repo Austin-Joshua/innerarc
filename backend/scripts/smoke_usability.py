@@ -4,10 +4,16 @@ logging flows (food, workout, progress), and feedback stores rating+comment.
 
 from __future__ import annotations
 
+import os
 import sys
 import time
 from pathlib import Path
 from uuid import UUID
+
+if not (os.environ.get("PHOTO_ENCRYPTION_KEY") or "").strip():
+    from cryptography.fernet import Fernet
+
+    os.environ["PHOTO_ENCRYPTION_KEY"] = Fernet.generate_key().decode()
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select

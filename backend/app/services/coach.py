@@ -198,6 +198,8 @@ def _user_turn(message: str, snapshot: dict[str, Any]) -> str:
 
 def generate_coach_reply(message: str, snapshot: dict[str, Any]) -> str:
     """Call Gemini with hard rules via system_instruction (not user-turn prepend)."""
+    if not settings.gemini_enabled:
+        raise RuntimeError("AI coach is disabled (GEMINI_ENABLED=false)")
     api_key = (settings.gemini_api_key or "").strip()
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
