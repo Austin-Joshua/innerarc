@@ -2,16 +2,39 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Platform, Text } from "react-native";
 
 import { api } from "../api";
-import { AppearanceToggle, Button, Screen } from "../components/ui";
+import { AppearanceToggle, AppText, Button, Screen } from "../components/ui";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
+import { isAndroid, isIOS, isWeb } from "../platform";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WearableConnect">;
 
 export const LAST_SYNC_KEY = "wearable_last_synced_at";
+
+function UnavailablePanel({
+  title,
+  body,
+}: {
+  title: string;
+  body: string;
+}) {
+  return (
+    <Screen>
+      <AppText variant="title" className="mb-md">
+        {title}
+      </AppText>
+      <AppText variant="body" className="mb-md">
+        {body}
+      </AppText>
+      <AppText variant="overline" className="mb-sm">
+        Settings
+      </AppText>
+      <AppearanceToggle />
+    </Screen>
+  );
+}
 
 export default function WearableConnectScreen() {
   const navigation = useNavigation<Nav>();
@@ -19,16 +42,30 @@ export default function WearableConnectScreen() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (Platform.OS !== "android") {
+  if (isWeb) {
     return (
-      <Screen>
-        <Text className="mb-md text-title text-ink">Health Connect</Text>
-        <Text className="mb-md text-body text-ink">
-          Wearable sync is Android Health Connect only in this pass. Apple
-          HealthKit is deferred.
-        </Text>
-        <AppearanceToggle />
-      </Screen>
+      <UnavailablePanel
+        title="Connections"
+        body="Wearable sync runs in the Android app via Health Connect. On the web, you can log meals, follow workouts, chat with your coach, and review progress."
+      />
+    );
+  }
+
+  if (isIOS) {
+    return (
+      <UnavailablePanel
+        title="Connections"
+        body="Apple Health integration is not available yet. Wearable sync currently works on Android through Health Connect."
+      />
+    );
+  }
+
+  if (!isAndroid) {
+    return (
+      <UnavailablePanel
+        title="Connections"
+        body="Wearable sync is only supported on Android in this release."
+      />
     );
   }
 
@@ -56,7 +93,7 @@ export default function WearableConnectScreen() {
       }
       if (readings.length === 0) {
         setMessage(
-          "Permissions granted, but no recent steps / heart rate / sleep data was found.",
+          "Permissions granted, but no recent steps, heart rate, or sleep data was found.",
         );
         return;
       }
@@ -75,21 +112,27 @@ export default function WearableConnectScreen() {
 
   return (
     <Screen>
-      <Text className="mb-md text-title text-ink">Connect Health Connect</Text>
-      <Text className="mb-md text-body text-ink">
+      <AppText variant="title" className="mb-md">
+        Connect Health Connect
+      </AppText>
+      <AppText variant="body" className="mb-md">
         Innerarc reads steps, heart rate, and sleep from Android Health Connect
-        so you can see them on Home. Data stays on your device until you tap
-        Sync — nothing is shared automatically.
-      </Text>
-      <Text className="mb-md text-body text-ink">
+        so you can see them on Home. Data stays on your device until you sync
+        it — nothing is shared automatically.
+      </AppText>
+      <AppText variant="body" className="mb-md">
         Next, Android will ask for Health Connect read access. You can revoke
         this anytime in system settings.
-      </Text>
+      </AppText>
       {error ? (
-        <Text className="mb-sm text-caption text-danger">{error}</Text>
+        <AppText variant="caption" className="mb-sm text-danger">
+          {error}
+        </AppText>
       ) : null}
       {message ? (
-        <Text className="mb-sm text-caption text-muted">{message}</Text>
+        <AppText variant="caption" className="mb-sm">
+          {message}
+        </AppText>
       ) : null}
       <Button
         label="Continue to permissions"
@@ -98,9 +141,9 @@ export default function WearableConnectScreen() {
         disabled={busy}
         busy={busy}
       />
-      <Text className="mb-sm mt-xl text-heading font-semibold text-ink">
+      <AppText variant="overline" className="mb-sm mt-xl">
         Settings
-      </Text>
+      </AppText>
       <AppearanceToggle />
     </Screen>
   );

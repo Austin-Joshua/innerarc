@@ -6,6 +6,44 @@ export function setToken(value: string | null) {
   token = value;
 }
 
+function formatApiDetail(detail: unknown): string {
+  if (detail == null) return "Request failed";
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) => {
+        if (item && typeof item === "object" && "msg" in item) {
+          const loc =
+            "loc" in item && Array.isArray(item.loc)
+              ? String(item.loc[item.loc.length - 1] ?? "")
+              : "";
+          const msg = String((item as { msg: unknown }).msg);
+          return loc ? `${loc}: ${msg}` : msg;
+        }
+        return typeof item === "string" ? item : JSON.stringify(item);
+      })
+      .join(" · ");
+  }
+  if (typeof detail === "object" && "msg" in detail) {
+    return String((detail as { msg: unknown }).msg);
+  }
+  try {
+    return JSON.stringify(detail);
+  } catch {
+    return "Request failed";
+  }
+}
+
+/** Safe message for UI — never renders [object Object]. */
+export function apiErrorMessage(err: unknown): string {
+  if (err instanceof Error) {
+    const msg = err.message?.trim();
+    if (msg && !msg.includes("[object Object]")) return msg;
+  }
+  if (typeof err === "string") return err;
+  return "Something went wrong. Check your email (must include @) and password (8+ characters).";
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);
   if (!(options.body instanceof FormData)) {
@@ -19,7 +57,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     let detail = response.statusText;
     try {
       const body = await response.json();
-      detail = body.detail ?? JSON.stringify(body);
+      detail = formatApiDetail(body.detail ?? body);
     } catch {
       /* ignore */
     }

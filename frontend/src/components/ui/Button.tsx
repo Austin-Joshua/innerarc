@@ -47,7 +47,7 @@ export function Button({
           color={variant === "primary" ? colors.white : colors.accent}
         />
       ) : (
-        <Text className={`text-body font-semibold ${labelClass[variant]}`}>
+        <Text className={`text-bodyStrong ${labelClass[variant]}`}>
           {label}
         </Text>
       )}

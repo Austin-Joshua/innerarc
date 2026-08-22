@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import "./src/setDarkModeFlag";
 import "./global.css";
+import { WebShell } from "./src/components/layout/WebShell";
 import { ThemeProvider, useTheme } from "./src/ThemeProvider";
 import RootNavigator from "./src/navigation/RootNavigator";
 
@@ -20,7 +21,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <AppShell />
+        <WebShell>
+          <AppShell />
+        </WebShell>
       </ThemeProvider>
     </SafeAreaProvider>
   );

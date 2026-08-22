@@ -38,7 +38,7 @@ function RingArc({
   const strokeDashoffset = circumference * (1 - progress);
 
   return (
-    <G rotation={-90} origin={`${CENTER}, ${CENTER}`}>
+    <G transform={`rotate(-90 ${CENTER} ${CENTER})`}>
       <Circle
         cx={CENTER}
         cy={CENTER}

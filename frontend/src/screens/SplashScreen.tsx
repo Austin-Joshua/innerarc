@@ -1,18 +1,20 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 import { api, setToken } from "../api";
+import { AppText } from "../components/ui";
 import { runModule7Verify } from "../m7Verify";
 import { RootStackParamList } from "../navigation/types";
-import { colors, spacing, typography } from "../theme";
+import { useTheme } from "../ThemeProvider";
 import { getStoredToken } from "../storage";
 
 type SplashNav = NativeStackNavigationProp<RootStackParamList, "Splash">;
 
 export default function SplashScreen() {
   const navigation = useNavigation<SplashNav>();
+  const { colors } = useTheme();
 
   useEffect(() => {
     let cancelled = false;
@@ -25,7 +27,7 @@ export default function SplashScreen() {
       try {
         const stored = await getStoredToken();
         if (!stored) {
-          navigation.replace("Auth");
+          navigation.replace("Login");
           return;
         }
         setToken(stored);
@@ -34,7 +36,7 @@ export default function SplashScreen() {
         navigation.replace(user.profile ? "Home" : "Onboarding");
       } catch {
         setToken(null);
-        if (!cancelled) navigation.replace("Auth");
+        if (!cancelled) navigation.replace("Login");
       }
     })();
     return () => {
@@ -43,36 +45,16 @@ export default function SplashScreen() {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.wordmark}>Innerarc</Text>
-      <Text style={styles.tagline}>
+    <View className="flex-1 items-center justify-center bg-background px-xl">
+      <AppText variant="wordmark" accent>
+        Innerarc
+      </AppText>
+      <AppText variant="caption" className="mt-sm text-center">
         {process.env.EXPO_PUBLIC_M7_VERIFY === "1"
-          ? "Module 7 Health Connect verification…"
-          : "Nutrition, training, and progress — one loop."}
-      </Text>
-      <ActivityIndicator
-        color={colors.accent}
-        style={{ marginTop: spacing.lg }}
-      />
+          ? "Verifying Health Connect integration…"
+          : "Nutrition, training, and progress in one place."}
+      </AppText>
+      <ActivityIndicator color={colors.accent} style={{ marginTop: 24 }} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: spacing.xl,
-  },
-  wordmark: {
-    ...typography.title,
-    letterSpacing: 0.5,
-  },
-  tagline: {
-    ...typography.muted,
-    marginTop: spacing.sm,
-    textAlign: "center",
-  },
-});

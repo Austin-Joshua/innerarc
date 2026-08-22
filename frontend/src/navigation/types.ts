@@ -1,6 +1,7 @@
 export type RootStackParamList = {
   Splash: undefined;
-  Auth: undefined;
+  Login: undefined;
+  SignUp: undefined;
   Onboarding: undefined;
   Home: undefined;
   FoodCapture: undefined;
@@ -15,4 +16,5 @@ export type RootStackParamList = {
   ProgressCompare: undefined;
   CoachChat: undefined;
   WearableConnect: undefined;
+  ProfileSettings: undefined;
 };

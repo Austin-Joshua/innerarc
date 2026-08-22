@@ -114,17 +114,24 @@ export const elevation = getElevation(lightColors);
 
 export function getTypography(palette: ThemeColors) {
   return {
+    wordmark: {
+      fontSize: 32,
+      fontWeight: "700" as const,
+      color: palette.text,
+      lineHeight: 38,
+      letterSpacing: 1.2,
+    },
     display: {
-      fontSize: 28,
+      fontSize: 30,
       fontWeight: "600" as const,
       color: palette.text,
-      lineHeight: 34,
+      lineHeight: 36,
     },
     title: {
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: "600" as const,
       color: palette.text,
-      lineHeight: 34,
+      lineHeight: 30,
     },
     heading: {
       fontSize: 20,
@@ -132,9 +139,21 @@ export function getTypography(palette: ThemeColors) {
       color: palette.text,
       lineHeight: 26,
     },
+    subhead: {
+      fontSize: 17,
+      fontWeight: "600" as const,
+      color: palette.text,
+      lineHeight: 24,
+    },
     body: {
       fontSize: 16,
       fontWeight: "400" as const,
+      color: palette.text,
+      lineHeight: 24,
+    },
+    bodyStrong: {
+      fontSize: 16,
+      fontWeight: "600" as const,
       color: palette.text,
       lineHeight: 24,
     },
@@ -143,6 +162,20 @@ export function getTypography(palette: ThemeColors) {
       fontWeight: "400" as const,
       color: palette.textMuted,
       lineHeight: 20,
+    },
+    label: {
+      fontSize: 13,
+      fontWeight: "600" as const,
+      color: palette.text,
+      lineHeight: 18,
+    },
+    overline: {
+      fontSize: 11,
+      fontWeight: "600" as const,
+      color: palette.textMuted,
+      lineHeight: 14,
+      letterSpacing: 0.8,
+      textTransform: "uppercase" as const,
     },
     muted: {
       fontSize: 14,

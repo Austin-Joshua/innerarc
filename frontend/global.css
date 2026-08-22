@@ -39,3 +39,17 @@
   --color-neutral: #8b9199;
   --color-white: #ffffff;
 }
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

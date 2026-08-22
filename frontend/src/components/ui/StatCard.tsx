@@ -1,4 +1,6 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+
+import { AppText } from "./AppText";
 
 type StatCardProps = {
   value: string | number;
@@ -11,8 +13,10 @@ export function StatCard({ value, label, className = "" }: StatCardProps) {
     <View
       className={`rounded-lg border border-border bg-surface p-lg ${className}`.trim()}
     >
-      <Text className="text-numeral font-bold text-ink">{value}</Text>
-      <Text className="mt-xxs text-caption text-muted">{label}</Text>
+      <AppText variant="numeral">{value}</AppText>
+      <AppText variant="caption" className="mt-xxs">
+        {label}
+      </AppText>
     </View>
   );
 }

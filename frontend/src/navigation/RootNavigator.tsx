@@ -2,7 +2,8 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { useTheme } from "../ThemeProvider";
-import AuthScreen from "../screens/AuthScreen";
+import { linking } from "./linking";import LoginScreen from "../screens/LoginScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 import CoachChatScreen from "../screens/CoachChatScreen";
 import FoodCaptureScreen from "../screens/FoodCaptureScreen";
 import FoodEditScreen from "../screens/FoodEditScreen";
@@ -10,6 +11,7 @@ import FoodNutritionScreen from "../screens/FoodNutritionScreen";
 import FoodResultScreen from "../screens/FoodResultScreen";
 import HomeScreen from "../screens/HomeScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import ProfileSettingsScreen from "../screens/ProfileSettingsScreen";
 import ProgramDetailScreen from "../screens/ProgramDetailScreen";
 import ProgressCaptureScreen from "../screens/ProgressCaptureScreen";
 import ProgressCompareScreen from "../screens/ProgressCompareScreen";
@@ -40,64 +42,8 @@ export default function RootNavigator() {
   return (
     <NavigationContainer
       theme={navTheme}
-      linking={
-        __DEV__
-          ? {
-              prefixes: [
-    "http://localhost:8095",
-                "http://localhost:8094",
-                "http://localhost:8093",
-                "http://localhost:8092",
-                "http://localhost:8091",
-                "http://localhost:8090",
-                "http://localhost:8089",
-                "http://localhost:8088",
-                "http://localhost:8087",
-                "http://localhost:8086",
-                "http://localhost:8085",
-                "http://localhost:8084",
-                "http://localhost:8083",
-                "http://localhost:8082",
-                "http://localhost:8081",
-                "http://127.0.0.1:8095",
-                "http://127.0.0.1:8094",
-                "http://127.0.0.1:8093",
-                "http://127.0.0.1:8092",
-                "http://127.0.0.1:8091",
-                "http://127.0.0.1:8090",
-                "http://127.0.0.1:8087",
-                "http://127.0.0.1:8086",
-                "http://127.0.0.1:8085",
-                "http://127.0.0.1:8084",
-                "http://127.0.0.1:8083",
-                "http://127.0.0.1:8082",
-                "http://127.0.0.1:8081",
-              ],
-              config: {
-                screens: {
-                  Splash: "",
-                  Home: "home",
-                  Auth: "auth",
-                  Onboarding: "onboarding",
-                  FoodCapture: "food-capture",
-                  FoodResult: "food-result",
-                  FoodEdit: "food-edit",
-                  FoodNutrition: "food-nutrition",
-                  WorkoutLibrary: "workouts",
-                  WorkoutDetail: "workout/:workoutId",
-                  ProgramDetail: "program/:programId",
-                  WorkoutSession: "session/:workoutId",
-                  ProgressCapture: "progress",
-                  ProgressCompare: "compare",
-                  CoachChat: "coach",
-                  WearableConnect: "connections",
-                },
-              },
-            }
-          : undefined
-      }
-    >
-      <Stack.Navigator
+      linking={linking}
+    >      <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{
           headerShadowVisible: false,
@@ -112,9 +58,14 @@ export default function RootNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Auth"
-          component={AuthScreen}
-          options={{ title: "Sign in" }}
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Onboarding"
@@ -185,6 +136,11 @@ export default function RootNavigator() {
           name="WearableConnect"
           component={WearableConnectScreen}
           options={{ title: "Health Connect" }}
+        />
+        <Stack.Screen
+          name="ProfileSettings"
+          component={ProfileSettingsScreen}
+          options={{ title: "Profile & settings" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

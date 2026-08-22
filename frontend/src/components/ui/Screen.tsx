@@ -1,11 +1,12 @@
 import { PropsWithChildren, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { RootStackParamList } from "../../navigation/types";
 import { Button } from "./Button";
+import { AppText } from "./AppText";
 import { Card } from "./Card";
 
 type ScreenProps = PropsWithChildren<{
@@ -16,7 +17,7 @@ type ScreenProps = PropsWithChildren<{
 }>;
 
 const SKIP_APP_NAME = new Set(["Splash"]);
-const STATIC_APP_NAME = new Set(["Auth", "Onboarding", "Home"]);
+const STATIC_APP_NAME = new Set(["Login", "SignUp", "Onboarding", "Home"]);
 
 function goHome(
   navigation: NativeStackNavigationProp<RootStackParamList>,
@@ -40,9 +41,9 @@ function AppNameRow({
   if (SKIP_APP_NAME.has(name)) return null;
 
   const label = (
-    <Text className="text-caption font-semibold tracking-wide text-muted">
+    <AppText variant="overline" accent>
       Innerarc
-    </Text>
+    </AppText>
   );
 
   if (STATIC_APP_NAME.has(name)) {
@@ -109,11 +110,11 @@ export function Screen({
       {body}
       {leaveOpen ? (
         <View className="absolute inset-0 z-50 items-center justify-center bg-black/50 px-xl">
-          <Card className="w-full bg-elevated">
-            <Text className="text-heading text-ink">Leave workout?</Text>
-            <Text className="mb-lg mt-xs text-body text-muted">
+          <Card variant="elevated" className="w-full">
+            <AppText variant="heading">Leave workout?</AppText>
+            <AppText variant="body" muted className="mb-lg mt-xs">
               Your session progress will be lost.
-            </Text>
+            </AppText>
             <Button
               label="Stay"
               variant="secondary"

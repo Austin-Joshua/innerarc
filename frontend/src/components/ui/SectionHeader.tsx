@@ -1,4 +1,6 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+
+import { AppText } from "./AppText";
 
 type SectionHeaderProps = {
   title: string;
@@ -13,9 +15,11 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <View className={`mb-sm mt-lg ${className}`.trim()}>
-      <Text className="text-heading font-semibold text-ink">{title}</Text>
+      <AppText variant="overline">{title}</AppText>
       {caption ? (
-        <Text className="mt-xxs text-caption text-muted">{caption}</Text>
+        <AppText variant="caption" className="mt-xxs">
+          {caption}
+        </AppText>
       ) : null}
     </View>
   );

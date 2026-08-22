@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import {
   api,
@@ -12,9 +12,19 @@ import {
   WearableReading,
 } from "../api";
 import { HomeProgressRings } from "../charts/HomeProgressRings";
-import { Badge, Button, Card, Screen, SectionHeader, StatCard } from "../components/ui";
+import {
+  AppText,
+  Badge,
+  Button,
+  Card,
+  NavCard,
+  Screen,
+  SectionHeader,
+  StatCard,
+} from "../components/ui";
 import { healthConnect } from "../healthConnect";
 import { RootStackParamList } from "../navigation/types";
+import { isAndroid, isWeb } from "../platform";
 import { LAST_SYNC_KEY } from "./WearableConnectScreen";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Home">;
@@ -32,25 +42,6 @@ function formatMetric(
       ? reading.value.toFixed(1)
       : Math.round(reading.value);
   return `${v} ${unit}`;
-}
-
-function NavCard({
-  title,
-  caption,
-  onPress,
-}: {
-  title: string;
-  caption: string;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable onPress={onPress} className="mt-sm">
-      <Card>
-        <Text className="text-heading font-semibold text-ink">{title}</Text>
-        <Text className="mt-xxs text-caption text-muted">{caption}</Text>
-      </Card>
-    </Pressable>
-  );
 }
 
 export default function HomeScreen() {
@@ -122,8 +113,14 @@ export default function HomeScreen() {
   const byType = (t: string) => wearable.find((r) => r.metric_type === t);
 
   const onSyncNow = async () => {
-    if (Platform.OS !== "android") {
-      setSyncMsg("Health Connect is Android-only in this pass.");
+    if (isWeb) {
+      setSyncMsg(
+        "Wearable sync is available in the Android app. On the web, you can still log meals, follow workouts, and track progress.",
+      );
+      return;
+    }
+    if (!isAndroid) {
+      setSyncMsg("Wearable sync requires the Android app with Health Connect.");
       return;
     }
     setSyncBusy(true);
@@ -166,22 +163,26 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <Text className="mb-xs text-display font-semibold text-ink">Today</Text>
-      <Text className="text-caption text-muted">
-        Logged vs your calculated target{data ? ` (${data.target.source})` : ""}
-        .
-      </Text>
+      <AppText variant="display" className="mb-xs">
+        Today
+      </AppText>
+      <AppText variant="caption">
+        Intake compared with your daily target
+        {data ? ` (${data.target.source})` : ""}.
+      </AppText>
       {game ? (
-        <Text className="mb-sm mt-xs text-caption text-muted">
-          {game.streak_count} day streak · {game.points} pts
-        </Text>
+        <AppText variant="caption" className="mb-sm mt-xs">
+          {game.streak_count}-day streak · {game.points} points
+        </AppText>
       ) : null}
       {error ? (
-        <Text className="text-caption text-danger">{error}</Text>
+        <AppText variant="caption" className="text-danger">
+          {error}
+        </AppText>
       ) : null}
 
       {nudge ? (
-        <Card className="mb-md mt-sm border-2 border-accent bg-accent-soft">
+        <Card variant="accent" className="mb-md mt-sm">
           <View className="mb-xs flex-row items-center justify-between">
             <Badge label="Coach note" tone="accent" />
             <Pressable
@@ -189,16 +190,16 @@ export default function HomeScreen() {
               hitSlop={12}
               accessibilityRole="button"
             >
-              <Text className="text-caption font-semibold text-muted">
+              <AppText variant="caption" className="font-semibold">
                 Dismiss
-              </Text>
+              </AppText>
             </Pressable>
           </View>
-          <Text className="text-body text-ink">{nudge.response}</Text>
+          <AppText variant="body">{nudge.response}</AppText>
         </Card>
       ) : null}
 
-      <Card className="mb-lg mt-sm bg-surface">
+      <Card variant="surface" className="mb-lg mt-sm">
         {data ? (
           <HomeProgressRings
             data={data}
@@ -206,17 +207,19 @@ export default function HomeScreen() {
           />
         ) : (
           <>
-            <Text className="mb-xs text-numeral font-bold text-ink">—</Text>
-            <Text className="text-caption text-muted">of — kcal</Text>
+            <AppText variant="numeral" className="mb-xs">
+              —
+            </AppText>
+            <AppText variant="caption">of — kcal</AppText>
           </>
         )}
       </Card>
 
       <SectionHeader
         title="Wearables"
-        caption={`Steps today · latest heart rate · latest sleep${
+        caption={`Steps today, latest heart rate, and sleep${
           lastSynced
-            ? ` · last sync ${new Date(lastSynced).toLocaleString()}`
+            ? ` · Last synced ${new Date(lastSynced).toLocaleString()}`
             : ""
         }`}
       />
@@ -228,7 +231,7 @@ export default function HomeScreen() {
         />
         <StatCard
           value={formatMetric(byType("heart_rate"), "bpm")}
-          label="HR"
+          label="Heart rate"
           className="flex-1"
         />
         <StatCard
@@ -238,22 +241,27 @@ export default function HomeScreen() {
         />
       </View>
       {syncMsg ? (
-        <Text className="text-caption text-muted">{syncMsg}</Text>
+        <AppText variant="caption">{syncMsg}</AppText>
       ) : null}
       <Button
-        label="Sync Now"
+        label="Sync now"
         variant="secondary"
         onPress={onSyncNow}
         disabled={syncBusy}
         busy={syncBusy}
         className="mt-sm"
       />
-      <Text className="mb-sm mt-xxs text-center text-caption text-muted">
-        Pull from Health Connect (manual)
-      </Text>
+      <AppText variant="caption" className="mb-sm mt-xxs text-center">
+        Manually sync data from Health Connect
+      </AppText>
+      <NavCard
+        title="Profile & settings"
+        caption="Edit your goals, body stats, and equipment"
+        onPress={() => navigation.navigate("ProfileSettings")}
+      />
       <NavCard
         title="Connections"
-        caption="Explain permissions before first grant"
+        caption="Manage Health Connect permissions"
         onPress={() => navigation.navigate("WearableConnect")}
       />
 
@@ -264,17 +272,17 @@ export default function HomeScreen() {
       />
       <NavCard
         title="Workouts"
-        caption="Library, programs, and session player"
+        caption="Browse programs and start a session"
         onPress={() => navigation.navigate("WorkoutLibrary")}
       />
       <NavCard
         title="Progress"
-        caption="Pose ratios and side-by-side check-in"
+        caption="Capture photos and compare check-ins"
         onPress={() => navigation.navigate("ProgressCapture")}
       />
       <NavCard
         title="Coach"
-        caption="Ask about your logged week"
+        caption="Ask questions about your recent activity"
         onPress={() => navigation.navigate("CoachChat")}
       />
     </Screen>

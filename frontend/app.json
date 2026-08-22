@@ -2,10 +2,11 @@
   "expo": {
     "name": "Innerarc",
     "slug": "innerarc",
+    "scheme": "innerarc",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "plugins": [
       "expo-dev-client",
       "react-native-health-connect",
@@ -51,7 +52,14 @@
     },
     "web": {
       "bundler": "metro",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "name": "Innerarc",
+      "shortName": "Innerarc",
+      "description": "Nutrition, training, and progress in one place.",
+      "themeColor": "#3F63C4",
+      "backgroundColor": "#F6F4F1",
+      "output": "single",
+      "lang": "en"
     }
   }
 }
