@@ -1,15 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 
 import { api } from "../api";
-import { AppearanceToggle, AppText, Button, Screen } from "../components/ui";
+import { ContentContainer } from "../components/layout";
+import { AppearanceShortcut, AppText, Button, PageTitle, Screen } from "../components/ui";
 import { healthConnect } from "../healthConnect";
-import { RootStackParamList } from "../navigation/types";
+import { goToHome } from "../navigation/navHelpers";
+import { MainDrawerParamList } from "../navigation/types";
 import { isAndroid, isIOS, isWeb } from "../platform";
 
-type Nav = NativeStackNavigationProp<RootStackParamList, "WearableConnect">;
+type Nav = DrawerNavigationProp<MainDrawerParamList, "WearableConnect">;
 
 export const LAST_SYNC_KEY = "wearable_last_synced_at";
 
@@ -21,17 +23,16 @@ function UnavailablePanel({
   body: string;
 }) {
   return (
-    <Screen>
-      <AppText variant="title" className="mb-md">
+    <Screen hideAppName scroll className="pt-md">
+      <ContentContainer width="content">
+      <PageTitle variant="title" className="mb-md">
         {title}
-      </AppText>
-      <AppText variant="body" className="mb-md">
+      </PageTitle>
+      <AppText variant="body" className="mb-md w-full text-center">
         {body}
       </AppText>
-      <AppText variant="overline" className="mb-sm">
-        Settings
-      </AppText>
-      <AppearanceToggle />
+      <AppearanceShortcut />
+      </ContentContainer>
     </Screen>
   );
 }
@@ -102,7 +103,7 @@ export default function WearableConnectScreen() {
       setMessage(
         `Synced ${result.total} reading(s) (${result.inserted} new, ${result.updated} updated).`,
       );
-      navigation.navigate("Home");
+      goToHome(navigation);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sync failed");
     } finally {
@@ -111,21 +112,22 @@ export default function WearableConnectScreen() {
   };
 
   return (
-    <Screen>
-      <AppText variant="title" className="mb-md">
+    <Screen hideAppName scroll className="pt-md">
+      <ContentContainer width="content">
+      <PageTitle variant="title" className="mb-md">
         Connect Health Connect
-      </AppText>
-      <AppText variant="body" className="mb-md">
+      </PageTitle>
+      <AppText variant="body" className="mb-md w-full text-center">
         Innerarc reads steps, heart rate, and sleep from Android Health Connect
         so you can see them on Home. Data stays on your device until you sync
         it — nothing is shared automatically.
       </AppText>
-      <AppText variant="body" className="mb-md">
+      <AppText variant="body" className="mb-md w-full text-center">
         Next, Android will ask for Health Connect read access. You can revoke
         this anytime in system settings.
       </AppText>
       {error ? (
-        <AppText variant="caption" className="mb-sm text-danger">
+        <AppText variant="caption" className="mb-sm w-full text-center text-danger">
           {error}
         </AppText>
       ) : null}
@@ -141,10 +143,8 @@ export default function WearableConnectScreen() {
         disabled={busy}
         busy={busy}
       />
-      <AppText variant="overline" className="mb-sm mt-xl">
-        Settings
-      </AppText>
-      <AppearanceToggle />
+      <AppearanceShortcut />
+      </ContentContainer>
     </Screen>
   );
 }

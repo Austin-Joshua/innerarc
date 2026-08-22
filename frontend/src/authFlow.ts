@@ -30,5 +30,11 @@ export async function completeAuthSession(
   setToken(accessToken);
   await storeToken(accessToken);
   const user = await api.me();
-  navigation.replace(user.profile ? "Home" : "Onboarding");
+  navigation.replace(user.profile ? "Main" : "Onboarding");
+}
+
+export async function signOut(navigation: AuthNavigation) {
+  setToken(null);
+  await storeToken(null);
+  navigation.replace("Login");
 }

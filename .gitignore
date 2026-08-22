@@ -76,3 +76,6 @@ docker-compose.override.yml
 postgres-data/
 ml/reports/e2e_food_smoke.json
 m7_home_sync.png
+
+# Large design reference PDF (keep local only)
+docs/Photo (1).pdf

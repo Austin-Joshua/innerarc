@@ -44,7 +44,7 @@ function resolveIsDark(
 export function ThemeProvider({ children }: PropsWithChildren) {
   const rnScheme = useColorScheme();
   const [webScheme, setWebScheme] = useState<ColorSchemeName | null>(null);
-  const [preference, setPreferenceState] = useState<ThemePreference>("system");
+  const [preference, setPreferenceState] = useState<ThemePreference>("dark");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -52,8 +52,13 @@ export function ThemeProvider({ children }: PropsWithChildren) {
     AsyncStorage.getItem(STORAGE_KEY)
       .then((stored) => {
         if (!active) return;
-        if (stored === "light" || stored === "dark" || stored === "system") {
+        if (stored === "light" || stored === "dark") {
           setPreferenceState(stored);
+        } else if (stored === "system") {
+          const prefersDark =
+            typeof window !== "undefined" &&
+            window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+          setPreferenceState(prefersDark ? "dark" : "light");
         }
       })
       .finally(() => {

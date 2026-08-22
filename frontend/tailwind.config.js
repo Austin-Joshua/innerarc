@@ -12,7 +12,10 @@ module.exports = {
         ink: "var(--color-ink)",
         muted: "var(--color-muted)",
         accent: "var(--color-accent)",
+        "accent-bright": "var(--color-accent-bright)",
         "accent-soft": "var(--color-accent-soft)",
+        "ring-secondary": "var(--color-ring-secondary)",
+        "ring-track": "var(--color-ring-track)",
         border: "var(--color-border)",
         success: "var(--color-success)",
         "success-muted": "var(--color-success-muted)",
@@ -39,6 +42,9 @@ module.exports = {
       },
       maxWidth: {
         app: "560px",
+        content: "720px",
+        prose: "560px",
+        wide: "1280px",
       },
       letterSpacing: {
         brand: "1.2px",
@@ -46,8 +52,8 @@ module.exports = {
       },
       fontSize: {
         wordmark: ["32px", { lineHeight: "38px", fontWeight: "700" }],
-        display: ["30px", { lineHeight: "36px", fontWeight: "600" }],
-        title: ["24px", { lineHeight: "30px", fontWeight: "600" }],
+        display: ["30px", { lineHeight: "36px", fontWeight: "800" }],
+        title: ["24px", { lineHeight: "30px", fontWeight: "800" }],
         heading: ["20px", { lineHeight: "26px", fontWeight: "600" }],
         subhead: ["17px", { lineHeight: "24px", fontWeight: "600" }],
         body: ["16px", { lineHeight: "24px" }],
@@ -58,5 +64,16 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    ({ addVariant }) => {
+      addVariant(
+        "fine-hover",
+        "@media (hover: hover) and (pointer: fine) { &:hover }",
+      );
+      addVariant(
+        "fine-group-hover",
+        "@media (hover: hover) and (pointer: fine) { .group:hover & }",
+      );
+    },
+  ],
 };

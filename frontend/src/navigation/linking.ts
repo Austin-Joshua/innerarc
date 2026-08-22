@@ -5,24 +5,46 @@ import { RootStackParamList } from "./types";
 
 const screens: LinkingOptions<RootStackParamList>["config"] = {
   screens: {
-    Splash: "",
-    Home: "home",
+    Landing: "",
+    Splash: "splash",
     Login: "login",
     SignUp: "signup",
     Onboarding: "onboarding",
-    FoodCapture: "food-capture",
-    FoodResult: "food-result",
-    FoodEdit: "food-edit",
-    FoodNutrition: "food-nutrition",
-    WorkoutLibrary: "workouts",
-    WorkoutDetail: "workout/:workoutId",
-    ProgramDetail: "program/:programId",
+    Main: {
+      screens: {
+        Tabs: {
+          screens: {
+            Home: "home",
+            Coach: "coach",
+            LogMeal: {
+              screens: {
+                FoodCapture: "log-meal",
+                FoodResult: "food-result",
+                FoodEdit: "food-edit",
+                FoodNutrition: "food-nutrition",
+              },
+            },
+            Progress: {
+              screens: {
+                ProgressCapture: "progress",
+                ProgressCompare: "compare",
+              },
+            },
+            Workouts: {
+              screens: {
+                WorkoutLibrary: "workouts",
+                WorkoutDetail: "workout/:workoutId",
+                ProgramDetail: "program/:programId",
+              },
+            },
+          },
+        },
+        WearableConnect: "connections",
+        Profile: "profile",
+        Settings: "settings",
+      },
+    },
     WorkoutSession: "session/:workoutId",
-    ProgressCapture: "progress",
-    ProgressCompare: "compare",
-    CoachChat: "coach",
-    WearableConnect: "connections",
-    ProfileSettings: "settings",
   },
 };
 

@@ -4,8 +4,7 @@ import { View } from "react-native";
 import { isWeb } from "../../platform";
 
 /**
- * Centers the app in a phone-width column on desktop browsers.
- * Native builds render children full-screen.
+ * Full-width shell wrapper on web. Navigation chrome handles layout breakpoints.
  */
 export function WebShell({ children }: PropsWithChildren) {
   if (!isWeb) {
@@ -13,10 +12,8 @@ export function WebShell({ children }: PropsWithChildren) {
   }
 
   return (
-    <View className="min-h-full flex-1 items-center bg-surface">
-      <View className="min-h-full w-full max-w-app flex-1 border-x border-border bg-background shadow-sm">
-        {children}
-      </View>
+    <View className="min-h-full flex-1 bg-background">
+      {children}
     </View>
   );
 }

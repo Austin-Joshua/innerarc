@@ -4,21 +4,32 @@ import { useEffect, useState } from "react";
 import { Pressable, Text, TextInput } from "react-native";
 
 import { api, Dish } from "../api";
+import { ContentContainer, ResponsiveGrid } from "../components/layout";
 import { Card, Screen } from "../components/ui";
+import { INTERACTIVE_CARD_PRESSABLE } from "../components/ui/interactiveStyles";
 import { getFoodDraft, setFoodDraft } from "../foodDraft";
-import { RootStackParamList } from "../navigation/types";
+import {
+  isFoodPreview,
+  PREVIEW_DISHES,
+  seedFoodPreviewDraft,
+} from "../foodPreviewSeed";
+import { LogMealStackParamList } from "../navigation/types";
 import { useTheme } from "../ThemeProvider";
 
-type Nav = NativeStackNavigationProp<RootStackParamList, "FoodEdit">;
+type Nav = NativeStackNavigationProp<LogMealStackParamList, "FoodEdit">;
 
 export default function FoodEditScreen() {
   const navigation = useNavigation<Nav>();
   const { colors } = useTheme();
   const draft = getFoodDraft();
-  const [dishes, setDishes] = useState<Dish[]>([]);
+  const [dishes, setDishes] = useState<Dish[]>(() =>
+    isFoodPreview() ? PREVIEW_DISHES : [],
+  );
   const [query, setQuery] = useState("");
 
   useEffect(() => {
+    seedFoodPreviewDraft();
+    if (isFoodPreview()) return;
     let active = true;
     api
       .dishes()
@@ -60,6 +71,7 @@ export default function FoodEditScreen() {
 
   return (
     <Screen>
+      <ContentContainer width="content">
       <Text className="mb-md text-display font-semibold text-ink">
         Correct the dish
       </Text>
@@ -70,18 +82,25 @@ export default function FoodEditScreen() {
         value={query}
         onChangeText={setQuery}
       />
-      {filtered.map((dish) => (
-        <Pressable key={dish.id} onPress={() => select(dish)} className="mb-sm">
-          <Card>
-            <Text className="text-heading font-semibold text-ink">
-              {dish.name}
-            </Text>
-            <Text className="mt-xxs text-caption text-muted">
-              {dish.nutrition_source}
-            </Text>
-          </Card>
-        </Pressable>
-      ))}
+      <ResponsiveGrid>
+        {filtered.map((dish) => (
+          <Pressable
+            key={dish.id}
+            className={INTERACTIVE_CARD_PRESSABLE}
+            onPress={() => select(dish)}
+          >
+            <Card interactive>
+              <Text className="text-heading font-semibold text-ink">
+                {dish.name}
+              </Text>
+              <Text className="mt-xxs text-caption text-muted">
+                {dish.nutrition_source}
+              </Text>
+            </Card>
+          </Pressable>
+        ))}
+      </ResponsiveGrid>
+      </ContentContainer>
     </Screen>
   );
 }

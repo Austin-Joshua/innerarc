@@ -21,22 +21,26 @@ export default function SplashScreen() {
     (async () => {
       if (process.env.EXPO_PUBLIC_M7_VERIFY === "1") {
         await runModule7Verify();
-        if (!cancelled) navigation.replace("Home");
+        if (!cancelled) navigation.replace("Main");
+        return;
+      }
+      if (process.env.EXPO_PUBLIC_SHELL_PREVIEW === "1") {
+        if (!cancelled) navigation.replace("Main");
         return;
       }
       try {
         const stored = await getStoredToken();
         if (!stored) {
-          navigation.replace("Login");
+          navigation.replace("Landing");
           return;
         }
         setToken(stored);
         const user = await api.me();
         if (cancelled) return;
-        navigation.replace(user.profile ? "Home" : "Onboarding");
+        navigation.replace(user.profile ? "Main" : "Onboarding");
       } catch {
         setToken(null);
-        if (!cancelled) navigation.replace("Login");
+        if (!cancelled) navigation.replace("Landing");
       }
     })();
     return () => {

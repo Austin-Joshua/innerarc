@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { Text, TextInput } from "react-native";
 
 import { api, BadgeEarned, Dish } from "../api";
+import { MealNutritionCharts } from "../charts/NutritionCharts";
+import { ContentContainer } from "../components/layout";
 import {
   Button,
   Card,
@@ -17,9 +19,11 @@ import {
   FoodDraftSingle,
   getFoodDraft,
 } from "../foodDraft";
-import { RootStackParamList } from "../navigation/types";
+import { seedFoodPreviewDraft } from "../foodPreviewSeed";
+import { LogMealStackParamList } from "../navigation/types";
+import { goToHome } from "../navigation/navHelpers";
 
-type Nav = NativeStackNavigationProp<RootStackParamList, "FoodNutrition">;
+type Nav = NativeStackNavigationProp<LogMealStackParamList, "FoodNutrition">;
 
 type MatchedItem = {
   dish: Dish;
@@ -63,11 +67,14 @@ function plateSourceKey(draft: FoodDraftMulti): string {
 }
 
 export default function FoodNutritionScreen() {
+  seedFoodPreviewDraft();
   const draft = getFoodDraft();
   if (!draft) {
     return (
       <Screen>
+        <ContentContainer width="content">
         <Text className="text-caption text-muted">No dish selected.</Text>
+        </ContentContainer>
       </Screen>
     );
   }
@@ -121,6 +128,7 @@ function SingleFoodNutrition({ draft }: { draft: FoodDraftSingle }) {
 
   return (
     <Screen>
+      <ContentContainer width="content">
       <Text className="text-display font-semibold text-ink">
         {draft.dish.name}
       </Text>
@@ -136,7 +144,7 @@ function SingleFoodNutrition({ draft }: { draft: FoodDraftSingle }) {
             label="Continue"
             onPress={() => {
               navigation.popToTop();
-              navigation.navigate("Home");
+              goToHome(navigation);
             }}
           />
         </>
@@ -162,6 +170,7 @@ function SingleFoodNutrition({ draft }: { draft: FoodDraftSingle }) {
         value={serving}
         onChangeText={setServing}
       />
+      <MealNutritionCharts macros={scaled} />
       <Text className="my-md text-heading font-semibold text-ink">
         {Math.round(scaled.calories)} kcal · P {scaled.protein.toFixed(1)} · C{" "}
         {scaled.carbs.toFixed(1)} · F {scaled.fat.toFixed(1)}
@@ -178,6 +187,7 @@ function SingleFoodNutrition({ draft }: { draft: FoodDraftSingle }) {
           className="mt-lg"
         />
       ) : null}
+      </ContentContainer>
     </Screen>
   );
 }
@@ -253,16 +263,19 @@ function MultiFoodNutrition({ draft }: { draft: FoodDraftMulti }) {
   if (multiReady.length === 0) {
     return (
       <Screen>
+        <ContentContainer width="content">
         <Text className="text-caption text-muted">
           No matched plate items yet. Go back and pick dishes for unmatched
           items.
         </Text>
+        </ContentContainer>
       </Screen>
     );
   }
 
   return (
     <Screen>
+      <ContentContainer width="content">
       <Text className="text-display font-semibold text-ink">
         Plate nutrition
       </Text>
@@ -274,7 +287,7 @@ function MultiFoodNutrition({ draft }: { draft: FoodDraftMulti }) {
             label="Continue"
             onPress={() => {
               navigation.popToTop();
-              navigation.navigate("Home");
+              goToHome(navigation);
             }}
           />
         </>
@@ -324,6 +337,7 @@ function MultiFoodNutrition({ draft }: { draft: FoodDraftMulti }) {
         {multiTotals.protein.toFixed(1)} · C {multiTotals.carbs.toFixed(1)} · F{" "}
         {multiTotals.fat.toFixed(1)}
       </Text>
+      <MealNutritionCharts macros={multiTotals} />
       {error ? (
         <Text className="text-caption text-danger">{error}</Text>
       ) : null}
@@ -336,6 +350,7 @@ function MultiFoodNutrition({ draft }: { draft: FoodDraftMulti }) {
           className="mt-lg"
         />
       ) : null}
+      </ContentContainer>
     </Screen>
   );
 }

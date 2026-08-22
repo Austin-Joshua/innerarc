@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { api } from "../api";
 import { colors, spacing, typography } from "../theme";
@@ -30,7 +31,7 @@ export default function FeedbackPrompt({ screen }: { screen: string }) {
   }
 
   return (
-    <View style={styles.wrap}>
+    <Animated.View entering={FadeInDown.duration(240)} style={styles.wrap}>
       <Text style={styles.prompt}>How did that go?</Text>
       <TextInput
         placeholder="Optional note"
@@ -53,7 +54,7 @@ export default function FeedbackPrompt({ screen }: { screen: string }) {
           <Text style={styles.skipLabel}>Skip</Text>
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

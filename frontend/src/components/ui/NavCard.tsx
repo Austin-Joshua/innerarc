@@ -2,10 +2,11 @@ import { Pressable } from "react-native";
 
 import { AppText } from "./AppText";
 import { Card } from "./Card";
+import { INTERACTIVE_CARD_PRESSABLE } from "./interactiveStyles";
 
 type NavCardProps = {
   title: string;
-  caption: string;
+  caption?: string;
   onPress: () => void;
   className?: string;
 };
@@ -17,12 +18,18 @@ export function NavCard({
   className = "",
 }: NavCardProps) {
   return (
-    <Pressable onPress={onPress} className={`mt-sm ${className}`.trim()}>
-      <Card variant="elevated">
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      className={`mt-sm ${INTERACTIVE_CARD_PRESSABLE} ${className}`.trim()}
+    >
+      <Card variant="elevated" interactive>
         <AppText variant="subhead">{title}</AppText>
-        <AppText variant="caption" className="mt-xxs">
-          {caption}
-        </AppText>
+        {caption ? (
+          <AppText variant="caption" className="mt-xxs">
+            {caption}
+          </AppText>
+        ) : null}
       </Card>
     </Pressable>
   );

@@ -6,8 +6,15 @@ import { Text } from "react-native";
 import { api, BadgeEarned, WorkoutDetail } from "../api";
 import BadgeBanner from "../components/BadgeBanner";
 import FeedbackPrompt from "../components/FeedbackPrompt";
+import { SessionColumn } from "../components/layout";
 import { Button, Card, Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
+import { goToHome } from "../navigation/navHelpers";
+import {
+  isWorkoutPreview,
+  PREVIEW_WORKOUT_DETAIL,
+  PREVIEW_WORKOUT_ID,
+} from "../workoutPreviewSeed";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutSession">;
 type R = RouteProp<RootStackParamList, "WorkoutSession">;
@@ -17,18 +24,28 @@ type Phase = "work" | "rest";
 export default function WorkoutSessionScreen() {
   const navigation = useNavigation<Nav>();
   const { params } = useRoute<R>();
-  const [workout, setWorkout] = useState<WorkoutDetail | null>(null);
+  const [workout, setWorkout] = useState<WorkoutDetail | null>(() =>
+    isWorkoutPreview() && params.workoutId === PREVIEW_WORKOUT_ID
+      ? PREVIEW_WORKOUT_DETAIL
+      : null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [setIndex, setSetIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("work");
-  const [secondsLeft, setSecondsLeft] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(() => {
+    if (isWorkoutPreview() && params.workoutId === PREVIEW_WORKOUT_ID) {
+      return PREVIEW_WORKOUT_DETAIL.exercises[0]?.duration_seconds ?? 45;
+    }
+    return 0;
+  });
   const [logging, setLogging] = useState(false);
   const [doneMessage, setDoneMessage] = useState<string | null>(null);
   const [badges, setBadges] = useState<BadgeEarned[]>([]);
   const startedAt = useRef(Date.now());
 
   useEffect(() => {
+    if (isWorkoutPreview() && params.workoutId === PREVIEW_WORKOUT_ID) return;
     api
       .workout(params.workoutId)
       .then((value) => {
@@ -124,14 +141,18 @@ export default function WorkoutSessionScreen() {
   if (error && !workout) {
     return (
       <Screen scroll={false} confirmLeaveHome={false}>
-        <Text className="text-caption text-muted">{error}</Text>
+        <SessionColumn>
+          <Text className="text-caption text-muted">{error}</Text>
+        </SessionColumn>
       </Screen>
     );
   }
   if (!workout || !current) {
     return (
       <Screen scroll={false} confirmLeaveHome={false}>
-        <Text className="text-caption text-muted">Loading session…</Text>
+        <SessionColumn>
+          <Text className="text-caption text-muted">Loading session…</Text>
+        </SessionColumn>
       </Screen>
     );
   }
@@ -139,6 +160,7 @@ export default function WorkoutSessionScreen() {
   if (doneMessage) {
     return (
       <Screen scroll={false} confirmLeaveHome={false}>
+        <SessionColumn>
         <Text className="text-title text-ink">Session complete</Text>
         <Text className="mb-sm mt-xs text-heading text-ink">{workout.name}</Text>
         <Text className="text-caption text-muted">{doneMessage}</Text>
@@ -150,14 +172,16 @@ export default function WorkoutSessionScreen() {
         <Button
           label="Back to Home"
           className="mt-lg"
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => goToHome(navigation)}
         />
+        </SessionColumn>
       </Screen>
     );
   }
 
   return (
     <Screen scroll={false}>
+      <SessionColumn>
       <Text className="text-caption text-muted">{progressLabel}</Text>
       <Text className="mb-sm mt-sm text-title text-ink">{current.name}</Text>
       <Text className="mb-sm text-body text-ink">{current.description}</Text>
@@ -196,6 +220,7 @@ export default function WorkoutSessionScreen() {
       {logging ? (
         <Text className="mt-sm text-caption text-muted">Saving log…</Text>
       ) : null}
+      </SessionColumn>
     </Screen>
   );
 }

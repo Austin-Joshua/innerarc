@@ -9,7 +9,8 @@ import {
   ProfileFields,
   ProfileFormState,
 } from "../components/ProfileFields";
-import { AppText, Button, Screen } from "../components/ui";
+import { ContentContainer } from "../components/layout";
+import { AppText, Button, PageTitle, Screen } from "../components/ui";
 import { RootStackParamList } from "../navigation/types";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Onboarding">;
@@ -23,7 +24,7 @@ export default function OnboardingScreen() {
     setError(null);
     try {
       await api.saveProfile(formToProfile(form));
-      navigation.replace("Home");
+      navigation.replace("Main");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save profile");
     }
@@ -31,10 +32,9 @@ export default function OnboardingScreen() {
 
   return (
     <Screen>
-      <AppText variant="display" className="mb-xs">
-        Your starting point
-      </AppText>
-      <AppText variant="caption" className="mb-lg">
+      <ContentContainer width="prose">
+      <PageTitle className="mb-xs">Your starting point</PageTitle>
+      <AppText variant="caption" className="mb-lg w-full text-center">
         We use this to calculate calorie targets. It does not limit which
         workouts you can do. You can update it anytime under Profile &
         settings.
@@ -46,6 +46,7 @@ export default function OnboardingScreen() {
         </AppText>
       ) : null}
       <Button label="Continue" onPress={save} className="mt-lg" />
+      </ContentContainer>
     </Screen>
   );
 }

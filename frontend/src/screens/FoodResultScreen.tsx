@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { Image, Text, View } from "react-native";
 
 import { api } from "../api";
+import { ContentContainer } from "../components/layout";
 import {
   Badge,
   Button,
@@ -12,9 +13,10 @@ import {
   Screen,
 } from "../components/ui";
 import { FoodDraft, getFoodDraft, setFoodDraft } from "../foodDraft";
-import { RootStackParamList } from "../navigation/types";
+import { seedFoodPreviewDraft } from "../foodPreviewSeed";
+import { LogMealStackParamList } from "../navigation/types";
 
-type Nav = NativeStackNavigationProp<RootStackParamList, "FoodResult">;
+type Nav = NativeStackNavigationProp<LogMealStackParamList, "FoodResult">;
 
 const photoStyle = { width: "100%" as const, height: 220 };
 
@@ -26,6 +28,7 @@ export default function FoodResultScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      seedFoodPreviewDraft();
       setDraft(getFoodDraft());
     }, []),
   );
@@ -33,9 +36,11 @@ export default function FoodResultScreen() {
   if (!draft) {
     return (
       <Screen>
+        <ContentContainer width="content">
         <Text className="text-caption text-muted">
           No prediction yet. Go back and add a photo.
         </Text>
+        </ContentContainer>
       </Screen>
     );
   }
@@ -70,6 +75,7 @@ export default function FoodResultScreen() {
     ).length;
     return (
       <Screen>
+        <ContentContainer width="content">
         <Text className="text-display font-semibold text-ink">Plate items</Text>
         <Text className="mb-lg mt-xs text-caption text-muted">
           Each item is separate — edit unmatched dishes before logging.
@@ -143,6 +149,7 @@ export default function FoodResultScreen() {
           onPress={() => navigation.navigate("FoodNutrition")}
           disabled={!draft.items.some((item) => item.matched && item.dish)}
         />
+        </ContentContainer>
       </Screen>
     );
   }
@@ -151,6 +158,7 @@ export default function FoodResultScreen() {
 
   return (
     <Screen>
+      <ContentContainer width="content">
       <Text className="text-display font-semibold text-ink">
         {draft.dish.name}
       </Text>
@@ -194,6 +202,7 @@ export default function FoodResultScreen() {
         label="This looks right"
         onPress={() => navigation.navigate("FoodNutrition")}
       />
+      </ContentContainer>
     </Screen>
   );
 }

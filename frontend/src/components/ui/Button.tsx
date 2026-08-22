@@ -1,6 +1,7 @@
 import { ActivityIndicator, Pressable, Text } from "react-native";
 
 import { useTheme } from "../../ThemeProvider";
+import { INTERACTIVE_BUTTON, INTERACTIVE_PRIMARY } from "./interactiveStyles";
 
 type Variant = "primary" | "secondary" | "destructive";
 
@@ -35,19 +36,28 @@ export function Button({
 }: ButtonProps) {
   const { colors } = useTheme();
   const inactive = disabled || busy;
+  const interactiveClass = inactive
+    ? ""
+    : variant === "primary"
+      ? INTERACTIVE_PRIMARY
+      : INTERACTIVE_BUTTON;
   return (
     <Pressable
       onPress={onPress}
       disabled={inactive}
       accessibilityRole="button"
-      className={`items-center rounded-md px-md py-md ${variantClass[variant]} ${inactive ? "opacity-50" : ""} ${className}`.trim()}
+      className={`items-center rounded-full px-lg py-md shadow-sm fine-hover:shadow-md ${variantClass[variant]} ${interactiveClass} ${inactive ? "opacity-50" : ""} ${className}`.trim()}
     >
       {busy ? (
         <ActivityIndicator
           color={variant === "primary" ? colors.white : colors.accent}
         />
       ) : (
-        <Text className={`text-bodyStrong ${labelClass[variant]}`}>
+        <Text
+          accessible={false}
+          importantForAccessibility="no"
+          className={`text-bodyStrong ${labelClass[variant]}`}
+        >
           {label}
         </Text>
       )}

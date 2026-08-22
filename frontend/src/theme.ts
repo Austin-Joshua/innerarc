@@ -1,8 +1,7 @@
 /**
- * Innerarc design tokens. Calm / wellness, not clinical.
- * Keep hex values in sync with tailwind.config.js + global.css variables.
+ * Fluorescent green + pitch-black dark palette.
+ * Light mode uses readable forest/emerald accents on soft grey.
  */
-
 export type ThemeColors = {
   background: string;
   surface: string;
@@ -10,7 +9,11 @@ export type ThemeColors = {
   text: string;
   textMuted: string;
   accent: string;
+  accentBright: string;
   accentSoft: string;
+  ringSecondary: string;
+  ringStreak: string;
+  ringTrack: string;
   border: string;
   white: string;
   success: string;
@@ -22,50 +25,54 @@ export type ThemeColors = {
   neutral: string;
 };
 
-/** Light palette — Module 12 keep-all except blue accent swap. */
 export const lightColors: ThemeColors = {
-  background: "#F6F4F1",
-  surface: "#EFECE8",
+  background: "#FFFFFF",
+  surface: "#F5F5F7",
   elevated: "#FFFFFF",
-  text: "#2C2A28",
-  textMuted: "#6F6B66",
-  accent: "#3F63C4",
-  accentSoft: "#D8E2F7",
-  border: "#E0DCD6",
+  text: "#1A1A1A",
+  textMuted: "#6B7280",
+  accent: "#15803D",
+  accentBright: "#16A34A",
+  accentSoft: "#E5E7EB",
+  ringSecondary: "#0284C7",
+  ringStreak: "#CA8A04",
+  ringTrack: "#E5E7EB",
+  border: "#E5E7EB",
   white: "#FFFFFF",
-  success: "#5F7A68",
-  successMuted: "#E4EDE6",
+  success: "#166534",
+  successMuted: "#ECFDF5",
   warning: "#B0894F",
-  warningMuted: "#F3ECDD",
+  warningMuted: "#FEF3C7",
   danger: "#8B3A3A",
-  dangerMuted: "#F3E6E6",
-  neutral: "#9A958F",
+  dangerMuted: "#FEE2E2",
+  neutral: "#9CA3AF",
 };
 
-/**
- * Dark palette — Module 14.
- * Border/neutral derived muted from surface/tertiary; no neon.
- */
+/** Pitch black OLED-style with fluorescent green accent. */
 export const darkColors: ThemeColors = {
-  background: "#15171B",
-  surface: "#1E2126",
-  elevated: "#262A31",
-  text: "#F2F3F5",
-  textMuted: "#9AA0A8",
-  accent: "#3F6FD0",
-  accentSoft: "#223652",
-  border: "#32363E",
+  background: "#000000",
+  surface: "#0A0A0A",
+  elevated: "#111111",
+  text: "#FFFFFF",
+  textMuted: "#8A8A8A",
+  accent: "#39FF14",
+  accentBright: "#39FF14",
+  accentSoft: "#0A1F0A",
+  ringSecondary: "#00E5FF",
+  ringStreak: "#FFCC00",
+  ringTrack: "#1A1A1A",
+  border: "#1F1F1F",
   white: "#FFFFFF",
-  success: "#5FA98C",
-  successMuted: "#1E2E28",
-  warning: "#D3A968",
-  warningMuted: "#2E2A1F",
-  danger: "#D08080",
-  dangerMuted: "#2E2020",
-  neutral: "#8B9199",
+  success: "#39FF14",
+  successMuted: "#0A1F0A",
+  warning: "#FFD60A",
+  warningMuted: "#1F1A00",
+  danger: "#FF453A",
+  dangerMuted: "#2E1210",
+  neutral: "#6B6B6B",
 };
 
-/** @deprecated Prefer useTheme().colors — defaults to light for non-React callers. */
+/** @deprecated Prefer useTheme().colors */
 export const colors: ThemeColors = lightColors;
 
 export const spacing = {

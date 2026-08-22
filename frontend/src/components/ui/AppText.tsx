@@ -25,8 +25,8 @@ type AppTextProps = PropsWithChildren<
 
 const variantClass: Record<TextVariant, string> = {
   wordmark: "text-wordmark font-bold tracking-brand",
-  display: "text-display font-semibold",
-  title: "text-title font-semibold",
+  display: "text-display font-extrabold",
+  title: "text-title font-extrabold",
   heading: "text-heading font-semibold",
   subhead: "text-subhead font-semibold",
   body: "text-body",

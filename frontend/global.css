@@ -3,40 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --color-background: #f6f4f1;
-  --color-surface: #efece8;
+  --color-background: #ffffff;
+  --color-surface: #f5f5f7;
   --color-elevated: #ffffff;
-  --color-ink: #2c2a28;
-  --color-muted: #6f6b66;
-  --color-accent: #3f63c4;
-  --color-accent-soft: #d8e2f7;
-  --color-border: #e0dcd6;
-  --color-success: #5f7a68;
-  --color-success-muted: #e4ede6;
+  --color-ink: #1a1a1a;
+  --color-muted: #6b7280;
+  --color-accent: #15803d;
+  --color-accent-bright: #16a34a;
+  --color-accent-soft: #e5e7eb;
+  --color-ring-secondary: #0284c7;
+  --color-ring-streak: #ca8a04;
+  --color-ring-track: #e5e7eb;
+  --color-border: #e5e7eb;
+  --color-success: #166534;
+  --color-success-muted: #ecfdf5;
   --color-warning: #b0894f;
-  --color-warning-muted: #f3ecdd;
+  --color-warning-muted: #fef3c7;
   --color-danger: #8b3a3a;
-  --color-danger-muted: #f3e6e6;
-  --color-neutral: #9a958f;
+  --color-danger-muted: #fee2e2;
+  --color-neutral: #9ca3af;
   --color-white: #ffffff;
 }
 
 .dark {
-  --color-background: #15171b;
-  --color-surface: #1e2126;
-  --color-elevated: #262a31;
-  --color-ink: #f2f3f5;
-  --color-muted: #9aa0a8;
-  --color-accent: #3f6fd0;
-  --color-accent-soft: #223652;
-  --color-border: #32363e;
-  --color-success: #5fa98c;
-  --color-success-muted: #1e2e28;
-  --color-warning: #d3a968;
-  --color-warning-muted: #2e2a1f;
-  --color-danger: #d08080;
-  --color-danger-muted: #2e2020;
-  --color-neutral: #8b9199;
+  --color-background: #000000;
+  --color-surface: #0a0a0a;
+  --color-elevated: #111111;
+  --color-ink: #ffffff;
+  --color-muted: #8a8a8a;
+  --color-accent: #39ff14;
+  --color-accent-bright: #39ff14;
+  --color-accent-soft: #0a1f0a;
+  --color-ring-secondary: #00e5ff;
+  --color-ring-streak: #ffcc00;
+  --color-ring-track: #1a1a1a;
+  --color-border: #1f1f1f;
+  --color-success: #39ff14;
+  --color-success-muted: #0a1f0a;
+  --color-warning: #ffd60a;
+  --color-warning-muted: #1f1a00;
+  --color-danger: #ff453a;
+  --color-danger-muted: #2e1210;
+  --color-neutral: #6b6b6b;
   --color-white: #ffffff;
 }
 

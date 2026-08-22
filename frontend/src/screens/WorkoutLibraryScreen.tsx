@@ -1,254 +1,183 @@
+import { Ionicons } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useCallback, useMemo, useState } from "react";
-import { Pressable, ScrollView, Text } from "react-native";
+import { useCallback, useState } from "react";
+import { ScrollView, View } from "react-native";
 
 import { api, ProgramSummary, WorkoutSummary } from "../api";
-import { Card, Screen, SectionHeader } from "../components/ui";
-import { RootStackParamList } from "../navigation/types";
+import { PageShell, ResponsiveGrid } from "../components/layout";
+import {
+  FitnessHeroWorkoutCard,
+  FitnessListRow,
+  FitnessScreenTitle,
+} from "../components/fitness/FitnessMobileParts";
+import { FitnessListSection } from "../components/fitness/FitnessListSection";
+import { fitnessTokens } from "../components/fitness/fitnessLayout";
+import { AppText, Screen } from "../components/ui";
+import { useBreakpoint } from "../hooks/useBreakpoint";
+import { WorkoutStackParamList } from "../navigation/types";
+import {
+  isWorkoutPreview,
+  PREVIEW_PROGRAMS,
+  PREVIEW_RECOMMENDED,
+  PREVIEW_WORKOUTS,
+} from "../workoutPreviewSeed";
 
-type Nav = NativeStackNavigationProp<RootStackParamList, "WorkoutLibrary">;
+type Nav = NativeStackNavigationProp<WorkoutStackParamList, "WorkoutLibrary">;
 
-const MODALITIES = [
-  "all",
-  "bodyweight",
-  "home_gym",
-  "weighted",
-  "yoga",
-  "aerobics",
-] as const;
-const LEVELS = ["all", "beginner", "intermediate", "advanced"] as const;
-const GOALS = [
-  "all",
-  "fat_loss",
-  "muscle_gain",
-  "recomposition",
-  "endurance",
-  "general_fitness",
-] as const;
+const MODALITY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  bodyweight: "body-outline",
+  home_gym: "home-outline",
+  weighted: "barbell-outline",
+  yoga: "leaf-outline",
+  aerobics: "pulse-outline",
+  all: "grid-outline",
+};
 
-function Chip({
-  label,
-  active,
-  onPress,
-}: {
-  label: string;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={
-        active
-          ? "mr-xs rounded-full border border-accent bg-accent-soft px-sm py-xs"
-          : "mr-xs rounded-full border border-border bg-elevated px-sm py-xs"
-      }
-    >
-      <Text
-        className={
-          active
-            ? "text-caption font-semibold capitalize text-accent"
-            : "text-caption capitalize text-muted"
-        }
-      >
-        {label.replace(/_/g, " ")}
-      </Text>
-    </Pressable>
-  );
-}
+const HERO_GRADIENTS: [string, string][] = [
+  ["#0a1f12", "#000000"],
+  ["#142818", "#000000"],
+  ["#1a3020", "#050505"],
+  ["#102818", "#030303"],
+];
+
+const ACTIVITY_TYPES = ["bodyweight", "home_gym", "weighted", "yoga", "aerobics"] as const;
 
 export default function WorkoutLibraryScreen() {
   const navigation = useNavigation<Nav>();
-  const [workouts, setWorkouts] = useState<WorkoutSummary[]>([]);
-  const [programs, setPrograms] = useState<ProgramSummary[]>([]);
-  const [modality, setModality] = useState<(typeof MODALITIES)[number]>("all");
-  const [level, setLevel] = useState<(typeof LEVELS)[number]>("all");
-  const [goal, setGoal] = useState<(typeof GOALS)[number]>("all");
+  const { tier, isDesktop } = useBreakpoint();
+  const tokens = fitnessTokens(tier);
+
+  const [workouts, setWorkouts] = useState<WorkoutSummary[]>(() =>
+    isWorkoutPreview() ? PREVIEW_WORKOUTS : [],
+  );
+  const [programs, setPrograms] = useState<ProgramSummary[]>(() =>
+    isWorkoutPreview() ? PREVIEW_PROGRAMS : [],
+  );
   const [error, setError] = useState<string | null>(null);
-  const [recommended, setRecommended] = useState<WorkoutSummary[]>([]);
+  const [modalityFilter, setModalityFilter] = useState<string | null>(null);
+  const [recommended, setRecommended] = useState<WorkoutSummary[]>(() =>
+    isWorkoutPreview() ? PREVIEW_RECOMMENDED : [],
+  );
 
   const load = useCallback(() => {
+    if (isWorkoutPreview()) return () => undefined;
     let active = true;
-    Promise.all([api.me().catch(() => null), api.programs()])
-      .then(([user, p]) => {
+    Promise.all([api.me().catch(() => null), api.programs(), api.workouts({}), api.recommendWorkouts({}).catch(() => [])])
+      .then(([, p, w, r]) => {
         if (!active) return;
         setPrograms(p);
-        const equipment = user?.profile?.equipment_access;
-        const params = {
-          modality: modality === "all" ? undefined : modality,
-          level: level === "all" ? undefined : level,
-          goal: goal === "all" ? undefined : goal,
-          equipment_access: equipment,
-        };
-        return Promise.all([
-          api.workouts(params),
-          api
-            .recommendWorkouts({
-              modality: params.modality,
-              level: params.level,
-              goal: params.goal,
-            })
-            .catch(() => [] as WorkoutSummary[]),
-        ]).then(([w, r]) => {
-          if (!active) return;
-          setWorkouts(w);
-          setRecommended(r);
-          setError(null);
-        });
+        setWorkouts(w);
+        setRecommended(r);
+        setError(null);
       })
       .catch((err) => {
         if (active)
-          setError(
-            err instanceof Error ? err.message : "Could not load workouts",
-          );
+          setError(err instanceof Error ? err.message : "Could not load workouts");
       });
     return () => {
       active = false;
     };
-  }, [modality, level, goal]);
+  }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      return load();
-    }, [load]),
-  );
+  useFocusEffect(useCallback(() => load(), [load]));
 
-  const suggestedIds = useMemo(
-    () => new Set(recommended.map((item) => item.id)),
-    [recommended],
-  );
+  const openWorkout = (workoutId: string) => {
+    navigation.navigate("WorkoutDetail", { workoutId });
+  };
+
+  const openDrawer = () => {
+    navigation.getParent()?.dispatch(DrawerActions.openDrawer());
+  };
+
+  const visibleWorkouts = modalityFilter
+    ? workouts.filter((w) => w.modality === modalityFilter)
+    : workouts;
+  const heroCount = tier === "mobile" ? 3 : 1;
+  const featured = recommended.slice(0, heroCount);
 
   return (
     <Screen>
-      <Text className="text-title text-ink">Workouts</Text>
-      <Text className="mt-xs text-caption text-muted">
-        Filter by modality, level, and goal. Equipment is applied from your
-        profile on Recommend.
-      </Text>
-      {error ? (
-        <Text className="mt-sm text-caption text-danger">{error}</Text>
-      ) : null}
+      <PageShell centeredMobile={false}>
+        <FitnessScreenTitle
+          title="Workout"
+          tier={tier}
+          onMenu={!isDesktop ? openDrawer : undefined}
+        />
 
-      <Text className="mb-xs mt-md text-caption text-muted">Modality</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="mb-sm"
-      >
-        {MODALITIES.map((item) => (
-          <Chip
-            key={item}
-            label={item}
-            active={modality === item}
-            onPress={() => setModality(item)}
-          />
-        ))}
-      </ScrollView>
-      <Text className="mb-xs mt-md text-caption text-muted">Level</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="mb-sm"
-      >
-        {LEVELS.map((item) => (
-          <Chip
-            key={item}
-            label={item}
-            active={level === item}
-            onPress={() => setLevel(item)}
-          />
-        ))}
-      </ScrollView>
-      <Text className="mb-xs mt-md text-caption text-muted">Goal</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="mb-sm"
-      >
-        {GOALS.map((item) => (
-          <Chip
-            key={item}
-            label={item}
-            active={goal === item}
-            onPress={() => setGoal(item)}
-          />
-        ))}
-      </ScrollView>
+        {error ? (
+          <AppText variant="caption" className="mb-sm text-danger">
+            {error}
+          </AppText>
+        ) : null}
 
-      {recommended.length ? (
-        <>
-          <SectionHeader title="Recommended for you" />
-          {recommended.slice(0, 5).map((workout) => (
-            <Pressable
-              key={`rec-${workout.id}`}
-              onPress={() =>
-                navigation.navigate("WorkoutDetail", { workoutId: workout.id })
-              }
-            >
-              <Card className="mb-sm">
-                <Text className="mb-xxs text-body font-semibold text-ink">
-                  {workout.name}
-                </Text>
-                <Text className="text-caption text-muted">
-                  {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
-                  {workout.exercise_count} moves
-                </Text>
-              </Card>
-            </Pressable>
-          ))}
-        </>
-      ) : null}
-
-      <SectionHeader title="Programs" />
-      {programs.map((program) => (
-        <Pressable
-          key={program.id}
-          onPress={() =>
-            navigation.navigate("ProgramDetail", { programId: program.id })
-          }
-        >
-          <Card className="mb-sm">
-            <Text className="mb-xxs text-body font-semibold text-ink">
-              {program.name}
-            </Text>
-            <Text className="text-caption text-muted">
-              {program.duration_weeks} weeks · {program.workout_count} sessions
-            </Text>
-          </Card>
-        </Pressable>
-      ))}
-
-      <SectionHeader title="Library" />
-      {workouts.map((workout) => (
-        <Pressable
-          key={workout.id}
-          onPress={() =>
-            navigation.navigate("WorkoutDetail", { workoutId: workout.id })
-          }
-        >
-          <Card
-            className={
-              suggestedIds.has(workout.id)
-                ? "mb-sm border-accent bg-accent-soft"
-                : "mb-sm"
+        {featured.map((workout, i) => (
+          <FitnessHeroWorkoutCard
+            key={`hero-${workout.id}`}
+            title={workout.name}
+            subtitle={
+              tier === "mobile"
+                ? `${workout.exercise_count} exercises · ${workout.level}`
+                : `FOR TODAY · ${workout.modality.replace(/_/g, " ")} · ${workout.level}`
             }
-          >
-            <Text className="mb-xxs text-body font-semibold text-ink">
-              {workout.name}
-            </Text>
-            <Text className="text-caption text-muted">
-              {workout.modality.replace(/_/g, " ")} · {workout.level} ·{" "}
-              {workout.goal_tags[0]?.replace(/_/g, " ")}
-            </Text>
-          </Card>
-        </Pressable>
-      ))}
-      {!workouts.length ? (
-        <Text className="text-caption text-muted">
-          No workouts match these filters.
-        </Text>
-      ) : null}
+            icon={MODALITY_ICONS[workout.modality] ?? "fitness-outline"}
+            gradient={HERO_GRADIENTS[i % HERO_GRADIENTS.length]}
+            onPress={() => openWorkout(workout.id)}
+          />
+        ))}
+
+        <FitnessListSection title="Activity types" caption="Browse by modality">
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="py-md">
+            {ACTIVITY_TYPES.map((m) => (
+              <View key={m} className="mr-sm" style={{ width: tier === "mobile" ? 112 : 140 }}>
+                <FitnessHeroWorkoutCard
+                  title={m.replace(/_/g, " ")}
+                  icon={MODALITY_ICONS[m] ?? "fitness-outline"}
+                  gradient={["#1a1a1a", "#0a0a0a"]}
+                  onPress={() => setModalityFilter(m)}
+                  actionIcon="chevron-forward"
+                />
+              </View>
+            ))}
+          </ScrollView>
+        </FitnessListSection>
+
+        <FitnessListSection title="Programs">
+          {programs.map((program) => (
+            <FitnessListRow
+              key={program.id}
+              icon="calendar-outline"
+              label={program.name}
+              value={`${program.duration_weeks} wk`}
+              onPress={() =>
+                navigation.navigate("ProgramDetail", { programId: program.id })
+              }
+            />
+          ))}
+        </FitnessListSection>
+
+        <AppText variant="title" className="mb-md font-bold">
+          Library
+        </AppText>
+        <ResponsiveGrid desktopCols={tokens.gridCols} className="mb-xl w-full">
+          {visibleWorkouts.map((workout, i) => (
+            <FitnessHeroWorkoutCard
+              key={workout.id}
+              title={workout.name}
+              subtitle={`${workout.exercise_count} ex · ${workout.modality.replace(/_/g, " ")}`}
+              icon={MODALITY_ICONS[workout.modality] ?? "fitness-outline"}
+              gradient={HERO_GRADIENTS[i % HERO_GRADIENTS.length]}
+              onPress={() => openWorkout(workout.id)}
+            />
+          ))}
+        </ResponsiveGrid>
+        {!visibleWorkouts.length ? (
+          <AppText variant="caption" className="text-muted">
+            No workouts available.
+          </AppText>
+        ) : null}
+      </PageShell>
     </Screen>
   );
 }

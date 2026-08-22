@@ -39,3 +39,13 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Legacy local screenshot captures (superseded by module-17 _shot_*.mjs)
+/batch-*.png
+/module-13-*.png
+/module-14-*.png
+/module-16-*.png
+/design-system-*.png
+
+# PDF reference extraction temp files
+.tmp-*.png

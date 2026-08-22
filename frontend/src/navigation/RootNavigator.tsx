@@ -2,27 +2,22 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { useTheme } from "../ThemeProvider";
-import { linking } from "./linking";import LoginScreen from "../screens/LoginScreen";
-import SignUpScreen from "../screens/SignUpScreen";
-import CoachChatScreen from "../screens/CoachChatScreen";
-import FoodCaptureScreen from "../screens/FoodCaptureScreen";
-import FoodEditScreen from "../screens/FoodEditScreen";
-import FoodNutritionScreen from "../screens/FoodNutritionScreen";
-import FoodResultScreen from "../screens/FoodResultScreen";
-import HomeScreen from "../screens/HomeScreen";
+import LandingScreen from "../screens/LandingScreen";
+import LoginScreen from "../screens/LoginScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
-import ProfileSettingsScreen from "../screens/ProfileSettingsScreen";
-import ProgramDetailScreen from "../screens/ProgramDetailScreen";
-import ProgressCaptureScreen from "../screens/ProgressCaptureScreen";
-import ProgressCompareScreen from "../screens/ProgressCompareScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 import SplashScreen from "../screens/SplashScreen";
-import WorkoutDetailScreen from "../screens/WorkoutDetailScreen";
-import WorkoutLibraryScreen from "../screens/WorkoutLibraryScreen";
-import WearableConnectScreen from "../screens/WearableConnectScreen";
 import WorkoutSessionScreen from "../screens/WorkoutSessionScreen";
+import { AppDrawerNavigator } from "./AppDrawerNavigator";
+import { linking } from "./linking";
 import { RootStackParamList } from "./types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const focusScreenOptions = {
+  headerShown: false,
+  animation: "slide_from_right" as const,
+};
 
 export default function RootNavigator() {
   const { colors, isDark } = useTheme();
@@ -40,10 +35,8 @@ export default function RootNavigator() {
   };
 
   return (
-    <NavigationContainer
-      theme={navTheme}
-      linking={linking}
-    >      <Stack.Navigator
+    <NavigationContainer theme={navTheme} linking={linking}>
+      <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{
           headerShadowVisible: false,
@@ -55,6 +48,11 @@ export default function RootNavigator() {
         <Stack.Screen
           name="Splash"
           component={SplashScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Landing"
+          component={LandingScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -73,74 +71,14 @@ export default function RootNavigator() {
           options={{ title: "About you" }}
         />
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Main"
+          component={AppDrawerNavigator}
           options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="FoodCapture"
-          component={FoodCaptureScreen}
-          options={{ title: "Log meal" }}
-        />
-        <Stack.Screen
-          name="FoodResult"
-          component={FoodResultScreen}
-          options={{ title: "Is this right?" }}
-        />
-        <Stack.Screen
-          name="FoodEdit"
-          component={FoodEditScreen}
-          options={{ title: "Edit dish" }}
-        />
-        <Stack.Screen
-          name="FoodNutrition"
-          component={FoodNutritionScreen}
-          options={{ title: "Nutrition" }}
-        />
-        <Stack.Screen
-          name="WorkoutLibrary"
-          component={WorkoutLibraryScreen}
-          options={{ title: "Workouts" }}
-        />
-        <Stack.Screen
-          name="WorkoutDetail"
-          component={WorkoutDetailScreen}
-          options={{ title: "Workout" }}
-        />
-        <Stack.Screen
-          name="ProgramDetail"
-          component={ProgramDetailScreen}
-          options={{ title: "Program" }}
         />
         <Stack.Screen
           name="WorkoutSession"
           component={WorkoutSessionScreen}
-          options={{ title: "Session" }}
-        />
-        <Stack.Screen
-          name="ProgressCapture"
-          component={ProgressCaptureScreen}
-          options={{ title: "Progress" }}
-        />
-        <Stack.Screen
-          name="ProgressCompare"
-          component={ProgressCompareScreen}
-          options={{ title: "Compare" }}
-        />
-        <Stack.Screen
-          name="CoachChat"
-          component={CoachChatScreen}
-          options={{ title: "Coach" }}
-        />
-        <Stack.Screen
-          name="WearableConnect"
-          component={WearableConnectScreen}
-          options={{ title: "Health Connect" }}
-        />
-        <Stack.Screen
-          name="ProfileSettings"
-          component={ProfileSettingsScreen}
-          options={{ title: "Profile & settings" }}
+          options={focusScreenOptions}
         />
       </Stack.Navigator>
     </NavigationContainer>

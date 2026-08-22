@@ -1,22 +1,48 @@
-import { Text, View } from "react-native";
+import { Pressable, useWindowDimensions, View } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
 
 import { Dashboard } from "../api";
+import { AppText, Card } from "../components/ui";
+import { INTERACTIVE_CARD_PRESSABLE } from "../components/ui/interactiveStyles";
+import { useBreakpoint } from "../hooks/useBreakpoint";
 import { useTheme } from "../ThemeProvider";
-import { spacing } from "../theme";
 
 type Props = {
   data: Dashboard;
   streakCount: number;
+  wide?: boolean;
+  /** Mobile hero — fills width, rings scale to screen. */
+  mobileHero?: boolean;
+  onPress?: () => void;
 };
 
-const SIZE = 200;
-const CENTER = SIZE / 2;
-const STROKE = 12;
-const GAP = 10;
+function ringLayout(wide: boolean, mobileHero: boolean, maxWidth: number) {
+  if (mobileHero) {
+    const size = Math.min(maxWidth - 24, 260);
+    const center = size / 2;
+    const stroke = 12;
+    const gap = 10;
+    const outer = size * 0.42;
+    const radii = [
+      outer,
+      outer - (stroke + gap),
+      outer - 2 * (stroke + gap),
+    ] as const;
+    return { size, center, stroke, radii };
+  }
 
-/** Outer → middle → inner radii (centerline of each stroke). */
-const RADII = [88, 88 - (STROKE + GAP), 88 - 2 * (STROKE + GAP)] as const;
+  const size = wide ? 272 : Math.min(maxWidth - 24, 220);
+  const center = size / 2;
+  const stroke = wide ? 14 : 10;
+  const gap = wide ? 13 : 9;
+  const outer = wide ? 118 : size * 0.4;
+  const radii = [
+    outer,
+    outer - (stroke + gap),
+    outer - 2 * (stroke + gap),
+  ] as const;
+  return { size, center, stroke, radii };
+}
 
 function clampProgress(logged: number, target: number) {
   if (target <= 0) return 0;
@@ -28,32 +54,37 @@ function RingArc({
   progress,
   fill,
   track,
+  center,
+  stroke,
 }: {
   radius: number;
   progress: number;
   fill: string;
   track: string;
+  center: number;
+  stroke: number;
 }) {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - progress);
 
   return (
-    <G transform={`rotate(-90 ${CENTER} ${CENTER})`}>
+    <G transform={`rotate(-90 ${center} ${center})`}>
       <Circle
-        cx={CENTER}
-        cy={CENTER}
+        cx={center}
+        cy={center}
         r={radius}
         stroke={track}
-        strokeWidth={STROKE}
+        strokeWidth={stroke}
         fill="none"
         strokeLinecap="round"
+        opacity={0.35}
       />
       <Circle
-        cx={CENTER}
-        cy={CENTER}
+        cx={center}
+        cy={center}
         r={radius}
         stroke={fill}
-        strokeWidth={STROKE}
+        strokeWidth={stroke}
         fill="none"
         strokeLinecap="round"
         strokeDasharray={`${circumference} ${circumference}`}
@@ -63,8 +94,65 @@ function RingArc({
   );
 }
 
-export function HomeProgressRings({ data, streakCount }: Props) {
-  const { colors, typography } = useTheme();
+function RingLegend({
+  color,
+  label,
+  value,
+  compact,
+}: {
+  color: string;
+  label: string;
+  value: string;
+  compact?: boolean;
+}) {
+  if (compact) {
+    return (
+      <View className="min-w-0 flex-1 items-center px-xxs">
+        <View
+          className="mb-xxs h-2 w-2 rounded-full"
+          style={{ backgroundColor: color }}
+        />
+        <AppText variant="overline" muted numberOfLines={1}>
+          {label}
+        </AppText>
+        <AppText variant="caption" className="text-center font-semibold" numberOfLines={1}>
+          {value}
+        </AppText>
+      </View>
+    );
+  }
+
+  return (
+    <View className="mb-xs mr-md min-w-[88px] flex-row items-center">
+      <View
+        className="mr-xs h-2 w-2 rounded-full"
+        style={{ backgroundColor: color }}
+      />
+      <View>
+        <AppText variant="overline" muted>
+          {label}
+        </AppText>
+        <AppText variant="caption" className="font-semibold text-ink">
+          {value}
+        </AppText>
+      </View>
+    </View>
+  );
+}
+
+export function HomeProgressRings({
+  data,
+  streakCount,
+  wide = false,
+  mobileHero = false,
+  onPress,
+}: Props) {
+  const { colors } = useTheme();
+  const { width: screenW } = useWindowDimensions();
+  const { isMobile } = useBreakpoint();
+
+  const contentW = screenW - (isMobile ? 64 : 48);
+  const { size, center, stroke, radii } = ringLayout(wide, mobileHero, contentW);
   const calLogged = Math.max(0, data.logged.calories);
   const calTarget = Math.max(0, data.target.calories);
   const proteinLogged = Math.max(0, data.logged.protein_g);
@@ -75,34 +163,43 @@ export function HomeProgressRings({ data, streakCount }: Props) {
   const proteinProgress = clampProgress(proteinLogged, proteinTarget);
   const streakProgress = clampProgress(streakCount, streakTarget);
 
-  return (
-    <View style={{ alignItems: "center", marginTop: spacing.sm }}>
+  const innerDiameter = radii[2] * 2;
+  const centerNumSize = mobileHero ? 28 : wide ? 26 : 20;
+
+  const body = (
+    <View className={`w-full items-center ${mobileHero ? "py-sm" : ""}`}>
       <View
         style={{
-          width: SIZE,
-          height: SIZE,
+          width: size,
+          height: size,
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Svg width={SIZE} height={SIZE}>
+        <Svg width={size} height={size}>
           <RingArc
-            radius={RADII[0]}
+            radius={radii[0]}
             progress={calProgress}
-            fill={colors.accent}
-            track={colors.surface}
+            fill={colors.accentBright}
+            track={colors.ringTrack}
+            center={center}
+            stroke={stroke}
           />
           <RingArc
-            radius={RADII[1]}
+            radius={radii[1]}
             progress={proteinProgress}
-            fill={colors.success}
-            track={colors.successMuted}
+            fill={colors.ringSecondary}
+            track={colors.ringTrack}
+            center={center}
+            stroke={stroke}
           />
           <RingArc
-            radius={RADII[2]}
+            radius={radii[2]}
             progress={streakProgress}
-            fill={colors.neutral}
-            track={colors.border}
+            fill={colors.ringStreak}
+            track={colors.ringTrack}
+            center={center}
+            stroke={stroke}
           />
         </Svg>
         <View
@@ -110,39 +207,78 @@ export function HomeProgressRings({ data, streakCount }: Props) {
             position: "absolute",
             alignItems: "center",
             justifyContent: "center",
+            maxWidth: innerDiameter - stroke * 2,
+            paddingHorizontal: 4,
           }}
         >
-          <Text style={typography.numeral}>{Math.round(calLogged)}</Text>
-          <Text style={typography.muted}>kcal</Text>
+          <AppText
+            variant="numeral"
+            style={{
+              fontSize: centerNumSize,
+              lineHeight: centerNumSize + 4,
+              color: colors.accentBright,
+              textAlign: "center",
+            }}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+          >
+            {Math.round(calLogged)}
+          </AppText>
+          <AppText variant="overline" muted className="text-center">
+            kcal today
+          </AppText>
         </View>
       </View>
 
-      <Text
-        style={{
-          ...typography.body,
-          marginTop: spacing.md,
-          fontWeight: "700",
-          color: colors.text,
-        }}
+      <View
+        className={`mt-md w-full ${
+          mobileHero ? "flex-row px-xs" : "flex-row flex-wrap justify-center px-sm"
+        }`}
       >
-        {Math.round(calLogged)} / {calTarget} kcal
-      </Text>
-      <Text style={{ ...typography.muted, marginTop: spacing.xxs }}>
-        Protein {Math.round(proteinLogged)} / {proteinTarget} g
-      </Text>
-      <Text style={{ ...typography.muted, marginTop: spacing.xxs }}>
-        {streakCount} day streak · of {streakTarget}-day week
-      </Text>
-      <Text
-        style={{
-          ...typography.muted,
-          marginTop: spacing.sm,
-          textAlign: "center",
-        }}
-      >
-        Outer accent: calories · Middle muted green: protein · Inner grey:
-        streak
-      </Text>
+        <RingLegend
+          compact={mobileHero}
+          color={colors.accentBright}
+          label="Calories"
+          value={`${Math.round(calProgress * 100)}%`}
+        />
+        <RingLegend
+          compact={mobileHero}
+          color={colors.ringSecondary}
+          label="Protein"
+          value={`${Math.round(proteinLogged)}g`}
+        />
+        <RingLegend
+          compact={mobileHero}
+          color={colors.ringStreak}
+          label="Streak"
+          value={`${streakCount}d`}
+        />
+      </View>
+
+      {mobileHero ? (
+        <AppText variant="caption" muted className="mt-sm text-center">
+          Tap for today&apos;s nutrition report
+        </AppText>
+      ) : null}
     </View>
+  );
+
+  if (!onPress) return body;
+
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      className={`w-full ${INTERACTIVE_CARD_PRESSABLE}`}
+    >
+      <Card interactive variant="elevated" className="w-full overflow-hidden p-md">
+        {mobileHero ? (
+          <AppText variant="overline" muted className="mb-sm">
+            Today&apos;s progress
+          </AppText>
+        ) : null}
+        {body}
+      </Card>
+    </Pressable>
   );
 }
