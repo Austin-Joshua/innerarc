@@ -127,18 +127,7 @@ jobs:
           python -c "import os; n=os.path.getsize('ml/checkpoints/pose_landmarker_lite.task'); print('pose_model_bytes', n); raise SystemExit(0 if n>1_000_000 else 1)"
 
       - name: Sanity-check pose on progress fixture
-        run: |
-          python -c "
-          from pathlib import Path
-          from app.services.pose import PoseFailure, PoseSuccess, estimate_pose
-          img = Path('scripts/fixtures/progress/good_standing.jpg')
-          print('fixture', img.resolve(), 'bytes', img.stat().st_size)
-          r = estimate_pose(img)
-          print(type(r).__name__, getattr(r, 'message', None), getattr(r, 'mean_visibility', None), getattr(r, 'computed_ratios_json', None))
-          if not isinstance(r, PoseSuccess):
-              print('::error::pose fixture failed:', getattr(r, 'message', r))
-              raise SystemExit(1)
-          "
+        run: python -u scripts/ci_pose_sanity.py
 
       - name: Download plate smoke fixtures (Wikimedia Commons)
         working-directory: .
